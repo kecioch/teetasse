@@ -12,7 +12,7 @@ import { Button } from "flowbite-react";
 const Footer = () => {
   return (
     <footer className="bg-stone-600 text-white text-base border-t-4 border-solid border-green-800 p-5">
-      <Button outline>Test</Button>
+      {/* <Button outline>Test</Button> */}
       <ContentContainer>
         <div className="flex justify-between">
           <div className="flex flex-row gap-12">

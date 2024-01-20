@@ -1,8 +1,13 @@
 import React from "react";
 
-const ContentContainer = ({ children }: { children: React.ReactNode }) => {
+interface Props {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const ContentContainer = ({ children, className }: Props) => {
   return (
-    <div className="flex flex-row justify-center items-center">
+    <div className={`flex flex-row justify-center items-center ${className}`}>
       <div className="max-w-screen-xl w-full">{children}</div>
     </div>
   );

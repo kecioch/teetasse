@@ -10,11 +10,11 @@ import ContentContainer from "../UI/Container/ContentContainer";
 
 const NavBar = () => {
   return (
-    <nav className="bg-green-950 text-white p-4">
+    <nav className="bg-green-950 text-white p-4 fixed top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
       <ContentContainer>
         <div className="flex flex-row justify-between">
           <Link href="/">
-            <span className="">TEETASSE</span>
+            <span className="font-light">TEETASSE</span>
           </Link>
           <section className="flex flex-row gap-4">
             <FontAwesomeIcon icon={faSearch} style={{ height: "20px" }} />
