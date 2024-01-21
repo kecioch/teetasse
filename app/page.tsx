@@ -16,10 +16,8 @@ const Home = () => {
               Erlesene Auswahl, unvergleichlicher Genuss!
             </p>
             {/* Entdecke alle Teesorten */}
-            <Link href="/shop">
-              <Button className="mt-12 uppercase">
-                Entdecke alle Teesorten
-              </Button>
+            <Link href="/shop" className="mt-12">
+              <Button className="uppercase">Entdecke alle Teesorten</Button>
             </Link>
           </div>
         </ContentContainer>
