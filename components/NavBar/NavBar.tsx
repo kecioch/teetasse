@@ -7,17 +7,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useState } from "react";
+import React from "react";
 import ContentContainer from "../UI/Container/ContentContainer";
 import { Dropdown } from "flowbite-react";
 import DropDownItemLink from "./DropDownItemLink";
-import CartDrawer from "../Cart/CartDrawer";
+import { useAppDispatch } from "@/redux/hooks";
+import { ModalStates, closeModal, setModal } from "@/redux/features/modalSlice";
 
 const NavBar = () => {
-  const [showCartDrawer, setshowCartDrawer] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleOpenCartDrawer = () => {
+    dispatch(setModal(ModalStates.CART_DRAWER));
+  };
 
   return (
-    <nav className="bg-green-950 text-white p-4 fixed top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
+    <nav className="fixed bg-green-950 text-white p-4 z-20 top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
       <ContentContainer>
         <div className="flex flex-row justify-between">
           <Link href="/">
@@ -59,15 +64,7 @@ const NavBar = () => {
               <Dropdown.Divider />
               <DropDownItemLink href="/auth/logout">Logout</DropDownItemLink>
             </Dropdown>
-            <button
-              type="button"
-              onClick={() => {
-                setshowCartDrawer(true); // Disables Background Scrolling whilst the SideDrawer/Modal is open
-                if (typeof window != "undefined" && window.document) {
-                  document.body.style.overflow = "hidden";
-                }
-              }}
-            >
+            <button type="button" onClick={handleOpenCartDrawer}>
               <FontAwesomeIcon
                 icon={faCartShopping}
                 style={{ height: "20px" }}
@@ -76,13 +73,7 @@ const NavBar = () => {
           </section>
         </div>
       </ContentContainer>
-      <CartDrawer
-        show={showCartDrawer}
-        onClose={() => {
-          setshowCartDrawer(false); // Unsets Background Scrolling to use when SideDrawer/Modal is closed
-          document.body.style.overflow = "unset";
-        }}
-      />
+      {/* <CartDrawer show={showCartDrawer} onClose={handleCloseCartDrawer} /> */}
     </nav>
   );
 };
