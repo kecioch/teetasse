@@ -3,9 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
-import Backdrop from "@/components/UI/Modals/Backdrop";
 import { Providers } from "@/redux/provider";
-import CartDrawer from "@/components/Cart/CartDrawer";
 import Modals from "@/components/UI/Modals/Modals";
 
 const inter = Inter({ subsets: ["latin"] });

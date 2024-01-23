@@ -3,7 +3,7 @@
 import ProductModal from "@/components/Staff/Products/Modals/ProductModal/ProductModal";
 import ProductsTable from "@/components/Staff/Products/ProductsTable/ProductsTable";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
-import { Button } from "flowbite-react";
+import { Button, Tabs } from "flowbite-react";
 import React, { useState } from "react";
 
 const Products = () => {
@@ -14,8 +14,8 @@ const Products = () => {
   };
 
   return (
-    <ContentContainer className="mt-12 p-4">
-      <h1 className="text-3xl mt-10 mb-7 uppercase text-gray-800">
+    <div>
+      <h1 className="text-3xl mb-7 uppercase text-gray-800">
         Produktverwaltung
       </h1>
       <Button className="mb-5" color="success" onClick={handleAddProduct}>
@@ -26,7 +26,7 @@ const Products = () => {
         show={showProductModal}
         onClose={() => setShowProductModal(false)}
       />
-    </ContentContainer>
+    </div>
   );
 };
 

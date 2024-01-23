@@ -13,6 +13,12 @@ import {
   TextInput,
 } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
+import KeyValueInputTable, { InputField } from "./KeyValueInputTable";
+import KeyValueInput from "./KeyValueInput";
+
+interface Image {
+  file: File;
+}
 
 interface Props {
   show: boolean;
@@ -20,43 +26,56 @@ interface Props {
 }
 
 const ProductModal = ({ show, onClose }: Props) => {
-  const [attributes, setAttributes] = useState([
+  const [attributes, setAttributes] = useState<InputField[]>([
     {
-      titel: "Anbau",
+      key: "Anbau",
       value: "Bio",
     },
     {
-      titel: "Geschmack",
+      key: "Geschmack",
       value: "lieblich",
     },
     {
-      titel: "Geschmacksrichtung",
+      key: "Geschmacksrichtung",
       value: "herb-aromatisch",
     },
   ]);
-  const refs = useRef(
-    attributes.map(() => React.createRef<HTMLInputElement>())
-  );
 
-  const handleDelete = (i: number) => {
-    console.log("DELTE TITEL " + i);
-    setAttributes([...attributes.slice(0, i), ...attributes.slice(i + 1)]);
-    // const filtered = attributes.filter((item) =>
-    //   item.titel.localeCompare(titel)
-    // );
-    // setAttributes(filtered);
+  const [variants, setVariants] = useState<InputField[]>([
+    {
+      key: "100g",
+      value: "7",
+    },
+    {
+      key: "250g",
+      value: "10",
+    },
+  ]);
+
+  const [images, setImages] = useState<Image[]>([]);
+
+  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    console.log("SUBMIT");
   };
 
-  const handleChange = (e: any, i: any) => {
-    const text = e.target.value;
-    console.log(text);
-    const values = [...attributes];
-    values[i].titel = text;
-    setAttributes(values);
-    // document.getElementById(`fieldInput-${i}`)?.focus();
-    // refs.current[i].current?.focus();
-  };
+  const handleFileDropzone = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    const files = ev.target.files;
+    console.log(files);
+    if (!files || files?.length <= 0) return;
 
+    const newImages: Image[] = [];
+
+    Array.from(files).forEach((file) => {
+      if (file.type.includes("image")) {
+        newImages.push({
+          file,
+        });
+      }
+    });
+
+    setImages((prev) => [...prev, ...newImages]);
+  };
 
   return (
     <Modal show={show} onClose={onClose} position="top-center">
@@ -65,7 +84,7 @@ const ProductModal = ({ show, onClose }: Props) => {
       </Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
-          <form className="flex w-full flex-col gap-4">
+          <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="name" value="Produktname" />
@@ -96,132 +115,21 @@ const ProductModal = ({ show, onClose }: Props) => {
                 <option>Oolong</option>
               </Select>
             </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="#" value="Eigenschaften" />
-              </div>
-              <div className="overflow-x-auto">
-                <Table suppressContentEditableWarning={true}>
-                  <Table.Head>
-                    <Table.HeadCell>Attribut</Table.HeadCell>
-                    <Table.HeadCell>Wert</Table.HeadCell>
-                    <Table.HeadCell>
-                      <span className="sr-only">Bearbeiten</span>
-                    </Table.HeadCell>
-                  </Table.Head>
-                  <Table.Body className="divide-y">
-                    {attributes.map((item, i) => (
-                      <Table.Row
-                        key={`ATT_${item.titel}_${item.value}_${i}`}
-                        className="bg-white dark:border-gray-700 dark:bg-gray-800"
-                      >
-                        <Table.Cell
-                          className="whitespace-nowrap font-medium text-gray-900 dark:text-white"
-                          id={`attributes_${i}`}
-                          key={`cell-${i}`}
-                        >
-                          <input
-                            // id="attribute_titel"
-                            type="text"
-                            placeholder="Attribute"
-                            // value={item.titel}
-                            defaultValue={item.titel}
-                            key={`fieldInput-${i}`}
-                            id={`fieldInput-${i}`}
-                            // ref={refs.current[i]}
-                            onChange={(e) => handleChange(e, i)}
-                            required
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <TextInput
-                            // id="name"
-                            type="text"
-                            placeholder="Wert"
-                            defaultValue={item.value}
-                            required
-                          />
-                        </Table.Cell>
-                        <Table.Cell>
-                          <button type="button" onClick={() => handleDelete(i)}>
-                            <FontAwesomeIcon
-                              icon={faTrash}
-                              style={{ height: "20px" }}
-                            />
-                          </button>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table>
-              </div>
-              <Button
-                className="mt-3"
-                color="light"
-                pill
-                onClick={() => {
-                  setAttributes((prev) => {
-                    return [...prev, { titel: "", value: "" }];
-                  });
-                  console.log(attributes.length);
-                  // document
-                  //   .getElementById(`attributes_${attributes.length}`)
-                  //   ?.focus();
-                }}
-              >
-                Eigenschaft hinzufügen
-              </Button>
-            </div>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="#" value="Produktvarianten" />
-              </div>
-              <div className="overflow-x-auto">
-                <Table>
-                  <Table.Head>
-                    <Table.HeadCell>Titel</Table.HeadCell>
-                    <Table.HeadCell>Preis</Table.HeadCell>
-                    <Table.HeadCell>
-                      <span className="sr-only">Bearbeiten</span>
-                    </Table.HeadCell>
-                  </Table.Head>
-                  <Table.Body className="divide-y">
-                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        100g
-                      </Table.Cell>
-                      <Table.Cell itemType="number">7€</Table.Cell>
-                      <Table.Cell className="flex justify-center">
-                        <button type="button">
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            style={{ height: "20px" }}
-                          />
-                        </button>
-                      </Table.Cell>
-                    </Table.Row>
-                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                      <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                        250g
-                      </Table.Cell>
-                      <Table.Cell itemType="number">10€</Table.Cell>
-                      <Table.Cell className="flex justify-center">
-                        <button type="button">
-                          <FontAwesomeIcon
-                            icon={faTrash}
-                            style={{ height: "20px" }}
-                          />
-                        </button>
-                      </Table.Cell>
-                    </Table.Row>
-                  </Table.Body>
-                </Table>
-              </div>
-              <Button className="mt-3" color="light" pill>
-                Produktvariante hinzufügen
-              </Button>
-            </div>
-
+            <KeyValueInput
+              title="Eigenschaften"
+              buttonTitle="Eigenschaft hinzufügen"
+              description={{ key: "Attribut", value: "Wert" }}
+              inputFields={attributes}
+              setInputFields={setAttributes}
+            />
+            <KeyValueInput
+              title="Produktvarianten"
+              buttonTitle="Produktvariante hinzufügen"
+              description={{ key: "Titel", value: "Preis (€)" }}
+              inputFields={variants}
+              setInputFields={setVariants}
+              config={{ type: "number", min: 0 }}
+            />
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="dropzone-file" value="Produktbilder" />
@@ -258,22 +166,57 @@ const ProductModal = ({ show, onClose }: Props) => {
                   id="dropzone-file"
                   className="hidden"
                   accept=".png,.jpg,.jpeg"
+                  onChange={handleFileDropzone}
                   multiple
                 />
               </Label>
-              <div className="mt-5 flex flex-wrap gap-3">
-                <div className="bg-gray-200 w-20 h-20" />
-                <div className="bg-gray-200 w-20 h-20" />
-                <div className="bg-gray-200 w-20 h-20" />
-                <div className="bg-gray-200 w-20 h-20" />
-              </div>
+              {images.length > 0 && (
+                <div className="mt-5 flex flex-wrap gap-3">
+                  {images.map((image, index) => (
+                    <div
+                      key={index}
+                      className="bg-gray-200 w-20 h-20 flex flex-col justify-start rounded-md"
+                    >
+                      <button
+                        aria-label="Close"
+                        className="ml-auto inline-flex items-center bg-transparent p-0.5 text-sm text-gray-400  hover:text-gray-900 "
+                        type="button"
+                        onClick={() => {
+                          const newImages = [...images];
+                          newImages.splice(index, 1);
+                          setImages(newImages);
+                        }}
+                      >
+                        <svg
+                          stroke="currentColor"
+                          fill="none"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          className="h-5 w-5"
+                          height="1em"
+                          width="1em"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          ></path>
+                        </svg>
+                      </button>
+                      {image.file.name}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+            <Button color="success" type="submit" className="mt-5">
+              Hinzufügen
+            </Button>
           </form>
         </div>
       </Modal.Body>
-      <Modal.Footer>
-        <Button color="success">Hinzufügen</Button>
-      </Modal.Footer>
     </Modal>
   );
 };

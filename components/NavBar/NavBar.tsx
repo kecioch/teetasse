@@ -50,16 +50,19 @@ const NavBar = () => {
               </DropDownItemLink>
               <Dropdown.Divider />
               <Dropdown.Header>
-                <span className="font-semibold text">Admin</span>
+                <span className="font-semibold text">Staff</span>
               </Dropdown.Header>
+              <DropDownItemLink href="/staff/orders">
+                Bestellungen
+              </DropDownItemLink>
               <DropDownItemLink href="/staff/products">
                 Produktverwaltung
               </DropDownItemLink>
-              <DropDownItemLink href="/admin/staff">
-                Mitarbeiterverwaltung
+              <DropDownItemLink href="/staff/categories">
+                Kategorienverwaltung
               </DropDownItemLink>
-              <DropDownItemLink href="/staff/orders">
-                Bestellungen
+              <DropDownItemLink href="/staff/accounts">
+                Mitarbeiterverwaltung
               </DropDownItemLink>
               <Dropdown.Divider />
               <DropDownItemLink href="/auth/logout">Logout</DropDownItemLink>
