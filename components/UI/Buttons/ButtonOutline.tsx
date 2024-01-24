@@ -5,7 +5,7 @@ interface Props {
   className?: string;
 }
 
-const Button = ({ children, className }: Props) => {
+const ButtonOutline = ({ children, className }: Props) => {
   return (
     <button
       className={`bg-transparent outline outline-green-800 p-2 hover:bg-green-800 hover:text-white ${className}`}
@@ -15,4 +15,4 @@ const Button = ({ children, className }: Props) => {
   );
 };
 
-export default Button;
+export default ButtonOutline;

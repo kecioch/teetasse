@@ -1,4 +1,4 @@
-import Button from "@/components/UI/Buttons/Button";
+import ButtonOutline from "@/components/UI/Buttons/ButtonOutline";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import Link from "next/link";
 import React from "react";
@@ -17,7 +17,9 @@ const Home = () => {
             </p>
             {/* Entdecke alle Teesorten */}
             <Link href="/shop" className="mt-12">
-              <Button className="uppercase">Entdecke alle Teesorten</Button>
+              <ButtonOutline className="uppercase">
+                Entdecke alle Teesorten
+              </ButtonOutline>
             </Link>
           </div>
         </ContentContainer>
@@ -79,7 +81,7 @@ const Home = () => {
             <div className="bg-gray-400 min-w-56 h-56 rounded-full"></div>
           </section>
           <div className="flex justify-center">
-            <Button className="mt-8 mx-4">Alle Teesorten</Button>
+            <ButtonOutline className="mt-8 mx-4">Alle Teesorten</ButtonOutline>
           </div>
         </ContentContainer>
       </section>
@@ -107,7 +109,9 @@ const Home = () => {
             <div className="bg-gray-400 min-w-56 h-56 rounded-full"></div>
           </section>
           <div className="flex justify-center">
-            <Button className="mt-8 mx-4">Alle Zubehör Kategorien</Button>
+            <ButtonOutline className="mt-8 mx-4">
+              Alle Zubehör Kategorien
+            </ButtonOutline>
           </div>
         </ContentContainer>
       </section>

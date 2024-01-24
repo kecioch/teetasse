@@ -2,7 +2,9 @@
 
 import ProductModal from "@/components/Staff/Products/Modals/ProductModal/ProductModal";
 import ProductsTable from "@/components/Staff/Products/ProductsTable/ProductsTable";
+import ButtonFaIcon from "@/components/UI/Buttons/ButtonFaIcon";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
+import { faAdd } from "@fortawesome/free-solid-svg-icons";
 import { Button, Tabs } from "flowbite-react";
 import React, { useState } from "react";
 
@@ -18,9 +20,14 @@ const Products = () => {
       <h1 className="text-3xl mb-7 uppercase text-gray-800">
         Produktverwaltung
       </h1>
-      <Button className="mb-5" color="success" onClick={handleAddProduct}>
+      <ButtonFaIcon
+        className="mb-5"
+        color="success"
+        icon={faAdd}
+        onClick={handleAddProduct}
+      >
         Hinzufügen
-      </Button>
+      </ButtonFaIcon>
       <ProductsTable />
       <ProductModal
         show={showProductModal}

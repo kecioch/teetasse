@@ -25,7 +25,7 @@ const layout = ({ children }: { children: React.ReactNode }) => {
   ];
 
   return (
-    <ContentContainer className="mt-12 p-4">
+    <ContentContainer className="mt-12 mb-5 p-4">
       <Tabs items={tabItems} />
       <div className="mt-8">{children}</div>
     </ContentContainer>
