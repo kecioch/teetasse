@@ -9,31 +9,37 @@ interface InputFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-interface Props {
-  title: string;
-  btnTitle: string;
-  inputTitle: string;
+export interface TextInputModalProps {
+  title?: string;
+  button?: {
+    title?: string;
+  };
+  input?: {
+    title?: string;
+    placeholder?: string;
+    defaultValue?: string;
+  };
   show: boolean;
   dismissible?: boolean;
   position?: string;
-  onClose: () => void;
-  onSubmit: (input: string) => void;
+  onClose?: () => void;
+  onSubmit?: (input: string) => void;
 }
 
 const TextInputModal = ({
   title,
-  btnTitle,
-  inputTitle,
+  button,
+  input,
   show,
   onClose,
   onSubmit,
   position = "top-center",
   dismissible = false,
-}: Props) => {
+}: TextInputModalProps) => {
   const handleSubmit = (ev: React.FormEvent<InputFormElement>) => {
     ev.preventDefault();
     const inputText = ev.currentTarget.elements.textinput.value;
-    onSubmit(inputText);
+    if (onSubmit) onSubmit(inputText);
   };
 
   return (
@@ -49,17 +55,18 @@ const TextInputModal = ({
           <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="textinput" value={inputTitle} />
+                <Label htmlFor="textinput" value={input?.title} />
               </div>
               <TextInput
                 id="textinput"
                 type="text"
-                placeholder={inputTitle}
+                placeholder={input?.placeholder}
+                defaultValue={input?.defaultValue}
                 required
               />
             </div>
             <Button color="success" type="submit" className="mt-5">
-              {btnTitle}
+              {button?.title}
             </Button>
           </form>
         </div>

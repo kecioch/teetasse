@@ -20,14 +20,10 @@ const Products = () => {
       <h1 className="text-3xl mb-7 uppercase text-gray-800">
         Produktverwaltung
       </h1>
-      <ButtonFaIcon
-        className="mb-5"
-        color="success"
-        icon={faAdd}
-        onClick={handleAddProduct}
-      >
+      <ButtonFaIcon color="success" icon={faAdd} onClick={handleAddProduct}>
         Hinzufügen
       </ButtonFaIcon>
+      <hr className="my-5" />
       <ProductsTable />
       <ProductModal
         show={showProductModal}

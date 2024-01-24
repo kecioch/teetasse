@@ -6,12 +6,12 @@ import CategoryAccordionItem, { Category } from "./CategoryAccordionItem";
 export interface Actions {
   item: {
     onDelete: (index: number) => void;
-    onEdit: (index: number, newValue: string) => void;
+    onEdit: (index: number) => void;
   };
   subItem: {
     onDelete: (itemIndex: number, subItemIndex: number) => void;
-    onAdd: (itemIndex: number, value: string) => void;
-    onEdit: (itemIndex: number, subItemIndex: number, newValue: string) => void;
+    onAdd: (itemIndex: number) => void;
+    onEdit: (itemIndex: number, subItemIndex: number) => void;
   };
 }
 
