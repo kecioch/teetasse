@@ -15,8 +15,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CategoryAccordionSubItem from "./CategoryAccordionSubItem";
 
 export interface Category {
+  id: number;
   title: string;
-  subs: { title: string }[];
+  subs: { id: number; title: string }[];
 }
 
 interface Props {
