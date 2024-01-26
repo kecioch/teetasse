@@ -17,10 +17,35 @@ model Category {
 }
 
 model Subcategory {
-  id         Int      @id @default(autoincrement())
-  title      String
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  id            Int            @id @default(autoincrement())
+  title         String
+  category      Category       @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  productgroups Productgroup[]
 
   @@unique([title, categoryId])
+}
+
+model Productgroup {
+  id            Int         @id @default(autoincrement())
+  title         String      @unique
+  visible       Boolean     @default(true)
+  recommended   Boolean     @default(false)
+  description   String      @db.Text
+  features      Json?
+  imageUrls     String[]
+  products      Product[]
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  subcategoryId Int
+}
+
+model Product {
+  id             Int          @id @default(autoincrement())
+  title          String
+  counter        Int          @default(0)
+  price          Decimal      @default(0.00)
+  productgroup   Productgroup @relation(fields: [productgroupId], references: [id])
+  productgroupId Int
+
+  @@unique([title, productgroupId])
 }
