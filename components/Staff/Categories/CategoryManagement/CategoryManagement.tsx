@@ -240,6 +240,7 @@ const CategoryManagement = ({ data = [] }: Props) => {
           error={errorMsg}
           onClose={closeModal}
           onSubmit={inputModal.onSubmit}
+          isLoading={isFetching}
           dismissible
         />
         <ConfirmDeleteModal
@@ -247,6 +248,7 @@ const CategoryManagement = ({ data = [] }: Props) => {
           title={deleteModal.title}
           description={deleteModal.description}
           error={errorMsg}
+          isLoading={isFetching}
           onClose={closeModal}
           onYes={deleteModal.onYes}
           onNo={deleteModal.onNo}

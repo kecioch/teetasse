@@ -2,6 +2,7 @@
 
 import { Button, Modal } from "flowbite-react";
 import React from "react";
+import LoadingButton from "../Buttons/LoadingButton";
 
 export interface ConfirmDeleteModalProps {
   show: boolean;
@@ -10,6 +11,7 @@ export interface ConfirmDeleteModalProps {
   error?: string;
   dismissible?: boolean;
   position?: string;
+  isLoading?: boolean;
   onClose?: () => void;
   onYes?: () => void;
   onNo?: () => void;
@@ -21,6 +23,7 @@ const ConfirmDeleteModal = ({
   description,
   error,
   dismissible = false,
+  isLoading = false,
   position = "top-center",
   onClose,
   onNo,
@@ -43,9 +46,13 @@ const ConfirmDeleteModal = ({
         <div className="flex flex-col gap-3">
           {error && <p className="text-red-600">{error}</p>}
           <div className="flex gap-3">
-            <Button color="failure" onClick={onYes}>
+            <LoadingButton
+              color="failure"
+              onClick={onYes}
+              isLoading={isLoading}
+            >
               Löschen
-            </Button>
+            </LoadingButton>
             <Button color="gray" onClick={onNo}>
               Abbrechen
             </Button>

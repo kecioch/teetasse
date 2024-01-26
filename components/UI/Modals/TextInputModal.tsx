@@ -1,5 +1,6 @@
 import { Button, Label, Modal, TextInput } from "flowbite-react";
 import React from "react";
+import LoadingButton from "../Buttons/LoadingButton";
 
 interface FormElements extends HTMLFormControlsCollection {
   textinput: HTMLInputElement;
@@ -23,6 +24,7 @@ export interface TextInputModalProps {
   dismissible?: boolean;
   position?: string;
   error?: string;
+  isLoading?: boolean;
   onClose?: () => void;
   onSubmit?: (input: string) => void;
 }
@@ -35,6 +37,7 @@ const TextInputModal = ({
   error,
   onClose,
   onSubmit,
+  isLoading = false,
   position = "top-center",
   dismissible = false,
 }: TextInputModalProps) => {
@@ -68,9 +71,14 @@ const TextInputModal = ({
               />
             </div>
             {error && <span className="text-red-600">{error}</span>}
-            <Button color="success" type="submit" className="mt-5">
+            <LoadingButton
+              color="success"
+              type="submit"
+              className="mt-5"
+              isLoading={isLoading}
+            >
               {button?.title}
-            </Button>
+            </LoadingButton>
           </form>
         </div>
       </Modal.Body>
