@@ -7,11 +7,11 @@ import CategoryAccordion from "../CategoryAccordion/CategoryAccordion";
 import TextInputModal, {
   TextInputModalProps,
 } from "@/components/UI/Modals/TextInputModal";
-import { Category } from "../CategoryAccordion/CategoryAccordionItem";
 import useFetch from "@/hooks/useFetch";
 import ConfirmDeleteModal, {
   ConfirmDeleteModalProps,
 } from "@/components/UI/Modals/ConfirmDeleteModal";
+import { Category } from "@/types/category";
 
 interface Props {
   data?: Category[];

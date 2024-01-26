@@ -13,12 +13,7 @@ import React, { useState } from "react";
 import { Actions } from "./CategoryAccordion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CategoryAccordionSubItem from "./CategoryAccordionSubItem";
-
-export interface Category {
-  id: number;
-  title: string;
-  subs: { id: number; title: string }[];
-}
+import { Category } from "@/types/category";
 
 interface Props {
   category: Category;

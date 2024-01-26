@@ -19,12 +19,13 @@ export interface Config {
   type?: "number" | "text";
   min?: number;
   max?: number;
+  step?: string;
 }
 
 interface Props {
   description: Description;
   inputFields: InputField[];
-  setInputFields: React.Dispatch<React.SetStateAction<InputField[]>>;
+  setInputFields: (attributes: InputField[]) => void;
   config?: Config;
 }
 
@@ -88,6 +89,7 @@ const KeyValueInputTable = ({
                     type={config.type}
                     min={config.min}
                     max={config.max}
+                    step={config.step}
                     placeholder={description.value}
                     value={input.value}
                     onChange={(event) => handleInputChange(index, event)}

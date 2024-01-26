@@ -26,6 +26,15 @@ model Subcategory {
   @@unique([title, categoryId])
 }
 
+model Review {
+  id             Int          @id @default(autoincrement())
+  // ADD AUTHOR REF
+  rating         Decimal      @db.Decimal(2, 1)
+  comment        String
+  Productgroup   Productgroup @relation(fields: [productgroupId], references: [id])
+  productgroupId Int
+}
+
 model Productgroup {
   id            Int         @id @default(autoincrement())
   title         String      @unique
@@ -34,6 +43,8 @@ model Productgroup {
   description   String      @db.Text
   features      Json?
   imageUrls     String[]
+  rating        Decimal     @default(0.0) @db.Decimal(2, 1)
+  reviews       Review[]
   products      Product[]
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
   subcategoryId Int
@@ -42,7 +53,7 @@ model Productgroup {
 model Product {
   id             Int          @id @default(autoincrement())
   title          String
-  counter        Int          @default(0)
+  stock          Int          @default(0)
   price          Decimal      @default(0.00)
   productgroup   Productgroup @relation(fields: [productgroupId], references: [id])
   productgroupId Int

@@ -13,7 +13,7 @@ interface Props {
   buttonTitle: string;
   description: Description;
   inputFields: InputField[];
-  setInputFields: React.Dispatch<React.SetStateAction<InputField[]>>;
+  setInputFields: (attributes: InputField[]) => void;
   config?: Config;
 }
 

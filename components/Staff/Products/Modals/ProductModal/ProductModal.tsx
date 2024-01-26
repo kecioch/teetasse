@@ -11,10 +11,12 @@ import {
   Table,
   TableHead,
   TextInput,
+  Textarea,
 } from "flowbite-react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import KeyValueInputTable, { InputField } from "./KeyValueInputTable";
 import KeyValueInput from "./KeyValueInput";
+import { Category } from "@/types/category";
 
 interface Image {
   file: File;
@@ -22,41 +24,78 @@ interface Image {
 
 interface Props {
   show: boolean;
+  categories?: Category[];
   onClose: () => void;
 }
 
-const ProductModal = ({ show, onClose }: Props) => {
-  const [attributes, setAttributes] = useState<InputField[]>([
-    {
-      key: "Anbau",
-      value: "Bio",
-    },
-    {
-      key: "Geschmack",
-      value: "lieblich",
-    },
-    {
-      key: "Geschmacksrichtung",
-      value: "herb-aromatisch",
-    },
-  ]);
+interface Form {
+  name: string;
+  description: string;
+  categoryIndex: number;
+  subCategoryIndex: number;
+  images: Image[];
+  attributes: InputField[];
+  variants: InputField[];
+}
 
-  const [variants, setVariants] = useState<InputField[]>([
-    {
-      key: "100g",
-      value: "7",
-    },
-    {
-      key: "250g",
-      value: "10",
-    },
-  ]);
+const ProductModal = ({ show, categories = [], onClose }: Props) => {
+  const [formData, setFormData] = useState<Form>({
+    name: "",
+    description: "",
+    categoryIndex: 0,
+    subCategoryIndex: 0,
+    images: [],
+    attributes: [
+      {
+        key: "Anbau",
+        value: "Bio",
+      },
+      {
+        key: "Geschmack",
+        value: "lieblich",
+      },
+      {
+        key: "Geschmacksrichtung",
+        value: "herb-aromatisch",
+      },
+    ],
+    variants: [
+      {
+        key: "100g",
+        value: "7",
+      },
+      {
+        key: "250g",
+        value: "10",
+      },
+    ],
+  });
 
-  const [images, setImages] = useState<Image[]>([]);
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
-    ev.preventDefault();
-    console.log("SUBMIT");
+  const handleChangeCategory = (ev: ChangeEvent<HTMLSelectElement>) => {
+    const index = parseInt(ev.currentTarget.value);
+
+    // setSelectedCategoryIndex(index);
+    setFormData((prevData) => ({
+      ...prevData,
+      categoryIndex: index,
+    }));
+  };
+
+  const handleChangeSubCategory = (ev: ChangeEvent<HTMLSelectElement>) => {
+    const index = parseInt(ev.currentTarget.value);
+
+    setFormData((prevData) => ({
+      ...prevData,
+      subCategoryIndex: index,
+    }));
   };
 
   const handleFileDropzone = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +113,30 @@ const ProductModal = ({ show, onClose }: Props) => {
       }
     });
 
-    setImages((prev) => [...prev, ...newImages]);
+    setFormData((prev) => ({
+      ...prev,
+      images: [...prev.images, ...newImages],
+    }));
+  };
+
+  const handleDeleteImage = (index: number) => {
+    const newImages = [...formData.images];
+    newImages.splice(index, 1);
+    setFormData((prev) => ({ ...prev, images: [...newImages] }));
+  };
+
+  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault();
+    console.log("SUBMIT");
+    console.log(formData);
+  };
+
+  const setAttributes = (attributes: InputField[]) => {
+    setFormData((prev) => ({ ...prev, attributes }));
+  };
+
+  const setVariants = (variants: InputField[]) => {
+    setFormData((prev) => ({ ...prev, variants }));
   };
 
   return (
@@ -92,7 +154,24 @@ const ProductModal = ({ show, onClose }: Props) => {
               <TextInput
                 id="name"
                 type="text"
+                name="name"
                 placeholder="Produktname"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div>
+              <div className="mb-2 block">
+                <Label htmlFor="description" value="Beschreibung" />
+              </div>
+              <Textarea
+                id="description"
+                rows={5}
+                name="description"
+                placeholder="Beschreibung"
+                value={formData.description}
+                onChange={handleInputChange}
                 required
               />
             </div>
@@ -100,35 +179,50 @@ const ProductModal = ({ show, onClose }: Props) => {
               <div className="mb-2 block">
                 <Label htmlFor="categorie" value="Kategorie" />
               </div>
-              <Select id="categorie" required>
-                <option>Tee</option>
-                <option>Zubehör</option>
+              <Select
+                id="categorie"
+                onChange={handleChangeCategory}
+                value={formData.categoryIndex}
+                required
+              >
+                {categories.map((item, index) => (
+                  <option key={index} value={index}>
+                    {item.title} / {item.id}
+                  </option>
+                ))}
               </Select>
             </div>
             <div>
               <div className="mb-2 block">
                 <Label htmlFor="subcategorie" value="Sub-Kategorie" />
               </div>
-              <Select id="subcategorie" required>
-                <option>Schwarztee</option>
-                <option>Grüntee</option>
-                <option>Oolong</option>
+              <Select
+                id="subcategorie"
+                onChange={handleChangeSubCategory}
+                value={formData.subCategoryIndex}
+                required
+              >
+                {categories[formData.categoryIndex]?.subs.map((item, index) => (
+                  <option key={index} value={index}>
+                    {item.title} / {item.id}
+                  </option>
+                ))}
               </Select>
             </div>
             <KeyValueInput
               title="Eigenschaften"
               buttonTitle="Eigenschaft hinzufügen"
               description={{ key: "Attribut", value: "Wert" }}
-              inputFields={attributes}
+              inputFields={formData.attributes}
               setInputFields={setAttributes}
             />
             <KeyValueInput
               title="Produktvarianten"
               buttonTitle="Produktvariante hinzufügen"
               description={{ key: "Titel", value: "Preis (€)" }}
-              inputFields={variants}
+              inputFields={formData.variants}
               setInputFields={setVariants}
-              config={{ type: "number", min: 0 }}
+              config={{ type: "number", step: "0.01", min: 0 }}
             />
             <div>
               <div className="mb-2 block">
@@ -170,9 +264,9 @@ const ProductModal = ({ show, onClose }: Props) => {
                   multiple
                 />
               </Label>
-              {images.length > 0 && (
+              {formData.images.length > 0 && (
                 <div className="mt-5 flex flex-wrap gap-3">
-                  {images.map((image, index) => (
+                  {formData.images.map((image, index) => (
                     <div
                       key={index}
                       className="bg-gray-200 w-20 h-20 flex flex-col justify-start rounded-md"
@@ -181,11 +275,7 @@ const ProductModal = ({ show, onClose }: Props) => {
                         aria-label="Close"
                         className="ml-auto inline-flex items-center bg-transparent p-0.5 text-sm text-gray-400  hover:text-gray-900 "
                         type="button"
-                        onClick={() => {
-                          const newImages = [...images];
-                          newImages.splice(index, 1);
-                          setImages(newImages);
-                        }}
+                        onClick={() => handleDeleteImage(index)}
                       >
                         <svg
                           stroke="currentColor"

@@ -1,6 +1,6 @@
-import { Category } from "@/components/Staff/Categories/CategoryAccordion/CategoryAccordionItem";
 import CategoryManagement from "@/components/Staff/Categories/CategoryManagement/CategoryManagement";
 import { getCategories } from "@/lib/services/category";
+import { Category } from "@/types/category";
 
 import React from "react";
 

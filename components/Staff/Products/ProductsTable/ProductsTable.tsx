@@ -2,7 +2,9 @@ import { Table, TableBody, TableHead, TableHeadCell } from "flowbite-react";
 import React from "react";
 import ProductsTableRow from "./ProductsTableRow";
 
-const ProductsTable = () => {
+interface Props {}
+
+const ProductsTable = ({}: Props) => {
   return (
     <div className="overflow-x-auto">
       <Table striped hoverable>
