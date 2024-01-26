@@ -22,11 +22,10 @@ export interface Category {
 
 interface Props {
   category: Category;
-  index: number;
   actions: Actions;
 }
 
-const CategoryAccordionItem = ({ category, index, actions }: Props) => {
+const CategoryAccordionItem = ({ category, actions }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
@@ -34,23 +33,23 @@ const CategoryAccordionItem = ({ category, index, actions }: Props) => {
   };
 
   const handleDeleteItem = () => {
-    actions.item.onDelete(index);
+    actions.item.onDelete(category.id);
   };
 
   const handleEditItem = () => {
-    actions.item.onEdit(index);
+    actions.item.onEdit(category.id);
   };
 
   const handleAddSubItem = () => {
-    actions.subItem.onAdd(index);
+    actions.subItem.onAdd(category.id);
   };
 
-  const handleDeleteSubItem = (subItemIndex: number) => {
-    actions.subItem.onDelete(index, subItemIndex);
+  const handleDeleteSubItem = (subItemId: number) => {
+    actions.subItem.onDelete(category.id, subItemId);
   };
 
-  const handleEditSubItem = (subItemIndex: number) => {
-    actions.subItem.onEdit(index, subItemIndex);
+  const handleEditSubItem = (subItemId: number) => {
+    actions.subItem.onEdit(category.id, subItemId);
   };
 
   return (
@@ -69,7 +68,7 @@ const CategoryAccordionItem = ({ category, index, actions }: Props) => {
         <div className="flex gap-2">
           <ButtonFaIcon
             title="Löschen"
-            color="failure"
+            color="red"
             icon={faTrash}
             onClick={handleDeleteItem}
           >
@@ -77,7 +76,7 @@ const CategoryAccordionItem = ({ category, index, actions }: Props) => {
           </ButtonFaIcon>
           <ButtonFaIcon
             title="Ändern"
-            color="warning"
+            color="yellow"
             icon={faEdit}
             onClick={handleEditItem}
           >
@@ -85,7 +84,7 @@ const CategoryAccordionItem = ({ category, index, actions }: Props) => {
           </ButtonFaIcon>
           <ButtonFaIcon
             title={`${category.title} hinzufügen`}
-            color="success"
+            color="green"
             icon={faAdd}
             onClick={handleAddSubItem}
           >
@@ -98,7 +97,6 @@ const CategoryAccordionItem = ({ category, index, actions }: Props) => {
           category.subs.map((item, index) => (
             <CategoryAccordionSubItem
               key={index}
-              index={index}
               item={item}
               actions={{
                 onDelete: handleDeleteSubItem,

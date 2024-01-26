@@ -8,77 +8,114 @@ import TextInputModal, {
   TextInputModalProps,
 } from "@/components/UI/Modals/TextInputModal";
 import { Category } from "../CategoryAccordion/CategoryAccordionItem";
+import useFetch from "@/hooks/useFetch";
+import ConfirmDeleteModal, {
+  ConfirmDeleteModalProps,
+} from "@/components/UI/Modals/ConfirmDeleteModal";
 
 interface Props {
-  data: Category[];
+  data?: Category[];
 }
 
-const CategoryManagement = ({ data }: Props) => {
+const CategoryManagement = ({ data = [] }: Props) => {
+  const { fetch, errorMsg, isFetching, clearErrorMsg } = useFetch();
+
   const [categories, setCategories] = useState<Category[]>(data);
 
   const [inputModal, setInputModal] = useState<TextInputModalProps>({
     show: false,
   });
 
+  const [deleteModal, setDeleteModal] = useState<ConfirmDeleteModalProps>({
+    show: false,
+  });
+
   const handleAddCategory = (title: string) => {
-    fetch("/api/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Post successful:", data);
-        setCategories((prev) => [...prev, { title, subs: [] }]);
-        setInputModal({ show: false });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+    fetch.post("/api/categories", { title }).then((res) => {
+      if (res.status !== 200) return;
+
+      setCategories((prev) => [
+        ...prev,
+        { id: res.data.id, title: res.data.title, subs: [] },
+      ]);
+      setInputModal({ show: false });
+    });
   };
 
-  const handleEditCategory = (index: number, title: string) => {
-    const newCategories = [...categories];
-    newCategories[index].title = title;
-    setCategories(newCategories);
-    setInputModal({ show: false });
+  const handleEditCategory = (id: number, title: string) => {
+    fetch.put(`/api/categories/${id}`, { title }).then((res) => {
+      if (res.status !== 200) return;
+
+      const newCategories = [...categories];
+      const index = newCategories.findIndex((el) => el.id === id);
+      newCategories[index].title = title;
+      setCategories(newCategories);
+      setInputModal({ show: false });
+    });
   };
 
-  const handleDeleteCategory = (index: number) => {
-    const newCategories = [...categories];
-    newCategories.splice(index, 1);
-    setCategories(newCategories);
+  const handleDeleteCategory = (id: number) => {
+    fetch.delete(`/api/categories/${id}`).then((res) => {
+      if (res.status !== 200) return;
+
+      const newCategories = [...categories];
+      const index = newCategories.findIndex((el) => el.id === id);
+      newCategories.splice(index, 1);
+      setCategories(newCategories);
+      setDeleteModal({ show: false });
+    });
   };
 
-  const handleAddSubCategory = (index: number, title: string) => {
-    const newCategories = [...categories];
-    newCategories[index].subs.push({ title });
-    setCategories(newCategories);
-    setInputModal({ show: false });
+  const handleAddSubCategory = (id: number, title: string) => {
+    fetch.post("/api/subcategories", { categoryId: id, title }).then((res) => {
+      if (res.status !== 200) return;
+
+      const newCategories = [...categories];
+      const index = newCategories.findIndex((el) => el.id === id);
+      newCategories[index].subs.push({ id: res.data.id, title });
+      setCategories(newCategories);
+      setInputModal({ show: false });
+    });
   };
 
   const handleEditSubCategory = (
-    itemIndex: number,
-    subItemIndex: number,
+    itemId: number,
+    subItemId: number,
     title: string
   ) => {
-    const newCategories = [...categories];
-    newCategories[itemIndex].subs[subItemIndex].title = title;
-    setCategories(newCategories);
-    setInputModal({ show: false });
+    fetch.put(`/api/subcategories/${subItemId}`, { title }).then((res) => {
+      if (res.status !== 200) return;
+
+      const newCategories = [...categories];
+      const itemIndex = newCategories.findIndex((el) => el.id === itemId);
+      const subItemIndex = newCategories[itemIndex].subs.findIndex(
+        (el) => el.id === subItemId
+      );
+      newCategories[itemIndex].subs[subItemIndex].title = title;
+      setCategories(newCategories);
+      setInputModal({ show: false });
+    });
   };
 
-  const handleDeleteSubCategory = (itemIndex: number, subItemIndex: number) => {
-    const newCategories = [...categories];
-    newCategories[itemIndex].subs.splice(subItemIndex, 1);
-    setCategories(newCategories);
+  const handleDeleteSubCategory = (itemId: number, subItemId: number) => {
+    fetch.delete(`/api/subcategories/${subItemId}`).then((res) => {
+      if (res.status !== 200) return;
+
+      const newCategories = [...categories];
+      const itemIndex = newCategories.findIndex((el) => el.id === itemId);
+      const subItemIndex = newCategories[itemIndex].subs.findIndex(
+        (el) => el.id === subItemId
+      );
+      newCategories[itemIndex].subs.splice(subItemIndex, 1);
+      setCategories(newCategories);
+      setDeleteModal({ show: false });
+    });
+  };
+
+  const closeModal = () => {
+    setInputModal({ show: false });
+    setDeleteModal({ show: false });
+    clearErrorMsg();
   };
 
   const openAddCategory = () => {
@@ -96,7 +133,8 @@ const CategoryManagement = ({ data }: Props) => {
     });
   };
 
-  const openEditCategory = (itemIndex: number) => {
+  const openEditCategory = (itemId: number) => {
+    const itemIndex = categories.findIndex((el) => el.id === itemId);
     setInputModal({
       show: true,
       title: "Kategorie bearbeiten",
@@ -108,11 +146,21 @@ const CategoryManagement = ({ data }: Props) => {
         placeholder: "Titel",
         defaultValue: categories[itemIndex].title,
       },
-      onSubmit: (input) => handleEditCategory(itemIndex, input),
+      onSubmit: (input) => handleEditCategory(itemId, input),
     });
   };
 
-  const openAddSubCategory = (itemIndex: number) => {
+  const openDeleteCategory = (itemId: number) => {
+    setDeleteModal({
+      show: true,
+      title: "Kategorie löschen",
+      description: "Wollen Sie wirklich die Kategorie löschen?",
+      onYes: () => handleDeleteCategory(itemId),
+      onNo: closeModal,
+    });
+  };
+
+  const openAddSubCategory = (itemId: number) => {
     setInputModal({
       show: true,
       title: "Neue Subkategorie",
@@ -123,11 +171,16 @@ const CategoryManagement = ({ data }: Props) => {
         title: "Titel",
         placeholder: "Titel",
       },
-      onSubmit: (input) => handleAddSubCategory(itemIndex, input),
+      onSubmit: (input) => handleAddSubCategory(itemId, input),
     });
   };
 
-  const openEditSubCategory = (itemIndex: number, subItemIndex: number) => {
+  const openEditSubCategory = (itemId: number, subItemId: number) => {
+    const itemIndex = categories.findIndex((el) => el.id === itemId);
+    const subItemIndex = categories[itemIndex].subs.findIndex(
+      (el) => el.id === subItemId
+    );
+
     setInputModal({
       show: true,
       title: "Subkategorie bearbeiten",
@@ -139,40 +192,66 @@ const CategoryManagement = ({ data }: Props) => {
         placeholder: "Titel",
         defaultValue: categories[itemIndex].subs[subItemIndex].title,
       },
-      onSubmit: (input) =>
-        handleEditSubCategory(itemIndex, subItemIndex, input),
+      onSubmit: (input) => handleEditSubCategory(itemId, subItemId, input),
+    });
+  };
+
+  const openDeleteSubCategory = (itemId: number, subItemId: number) => {
+    setDeleteModal({
+      show: true,
+      title: "Subkategorie löschen",
+      description: "Wollen Sie wirklich die Subkategorie löschen?",
+      onYes: () => handleDeleteSubCategory(itemId, subItemId),
+      onNo: closeModal,
     });
   };
 
   return (
     <div>
-      <ButtonFaIcon icon={faAdd} color="success" onClick={openAddCategory}>
-        Hinzufügen
-      </ButtonFaIcon>
+      <div className="flex justify-between flex-wrap items-center gap-3">
+        <h1 className="text-3xl uppercase text-gray-800">
+          Kategorienverwaltung
+        </h1>
+        <ButtonFaIcon icon={faAdd} color="success" onClick={openAddCategory}>
+          Hinzufügen
+        </ButtonFaIcon>
+      </div>
       <hr className="my-5" />
-      <CategoryAccordion
-        categories={categories}
-        actions={{
-          item: {
-            onEdit: openEditCategory,
-            onDelete: handleDeleteCategory,
-          },
-          subItem: {
-            onAdd: openAddSubCategory,
-            onEdit: openEditSubCategory,
-            onDelete: handleDeleteSubCategory,
-          },
-        }}
-      />
-      <TextInputModal
-        show={inputModal.show}
-        title={inputModal.title}
-        button={inputModal.button}
-        input={inputModal.input}
-        onClose={() => setInputModal({ show: false })}
-        onSubmit={inputModal.onSubmit}
-        dismissible
-      />
+      <div>
+        <CategoryAccordion
+          categories={categories}
+          actions={{
+            item: {
+              onEdit: openEditCategory,
+              onDelete: openDeleteCategory,
+            },
+            subItem: {
+              onAdd: openAddSubCategory,
+              onEdit: openEditSubCategory,
+              onDelete: openDeleteSubCategory,
+            },
+          }}
+        />
+        <TextInputModal
+          show={inputModal.show}
+          title={inputModal.title}
+          button={inputModal.button}
+          input={inputModal.input}
+          error={errorMsg}
+          onClose={closeModal}
+          onSubmit={inputModal.onSubmit}
+          dismissible
+        />
+        <ConfirmDeleteModal
+          show={deleteModal.show}
+          title={deleteModal.title}
+          description={deleteModal.description}
+          error={errorMsg}
+          onClose={closeModal}
+          onYes={deleteModal.onYes}
+          onNo={deleteModal.onNo}
+        />
+      </div>
     </div>
   );
 };

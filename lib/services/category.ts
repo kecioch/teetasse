@@ -1,8 +1,15 @@
 import prisma from "../prisma";
 
 export async function getCategories() {
-  const categories = await prisma.category.findMany({
-    include: { subcategories: true },
-  });
-  return categories;
+  try {
+    const categories = await prisma.category.findMany({
+      include: { subcategories: { orderBy: { id: "asc" } } },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    return categories;
+  } catch (err) {
+    return undefined;
+  }
 }

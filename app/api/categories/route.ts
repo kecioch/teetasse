@@ -1,27 +1,37 @@
 import prisma from "@/lib/prisma";
 import { getCategories } from "@/lib/services/category";
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest } from "next/server";
+import { CustomError } from "@/utils/errors/CustomError";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   const categories = await getCategories();
-  return Response.json(categories);
+  if (!categories)
+    return NextResponse.json(
+      { status: 500, msg: "Fehler bei Serveranfrage" },
+      { status: 500 }
+    );
+  return NextResponse.json(categories);
 }
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    console.log(data);
 
     const { title } = data;
+    if (!title || title === null || title.length === 0)
+      throw new CustomError("Titel darf nicht leer sein");
+
     const category = { title };
-
     const newCategory = await prisma.category.create({ data: category });
-    console.log(newCategory);
 
-    return Response.json(newCategory);
-  } catch (err) {
-    // console.log(err);
-    return new Response("ERROR");
+    return NextResponse.json(newCategory);
+  } catch (e: any) {
+    let msg = "Fehler bei Serveranfrage";
+
+    if (e instanceof CustomError) {
+      msg = e.message;
+    } else if (e.code === "P2002") msg = "Kategorie exisitert bereits";
+
+    return NextResponse.json({ status: 500, msg }, { status: 500 });
   }
 }

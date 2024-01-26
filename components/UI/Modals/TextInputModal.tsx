@@ -22,6 +22,7 @@ export interface TextInputModalProps {
   show: boolean;
   dismissible?: boolean;
   position?: string;
+  error?: string;
   onClose?: () => void;
   onSubmit?: (input: string) => void;
 }
@@ -31,6 +32,7 @@ const TextInputModal = ({
   button,
   input,
   show,
+  error,
   onClose,
   onSubmit,
   position = "top-center",
@@ -65,6 +67,7 @@ const TextInputModal = ({
                 required
               />
             </div>
+            {error && <span className="text-red-600">{error}</span>}
             <Button color="success" type="submit" className="mt-5">
               {button?.title}
             </Button>

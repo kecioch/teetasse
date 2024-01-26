@@ -3,23 +3,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 
 interface Props {
-  index: number;
   item: {
+    id: number;
     title: string;
   };
   actions: {
-    onDelete: (index: number) => void;
-    onEdit: (index: number) => void;
+    onDelete: (id: number) => void;
+    onEdit: (id: number) => void;
   };
 }
 
-const CategoryAccordionSubItem = ({ index, item, actions }: Props) => {
+const CategoryAccordionSubItem = ({ item, actions }: Props) => {
   const handleDelete = () => {
-    actions.onDelete(index);
+    actions.onDelete(item.id);
   };
 
   const handleEdit = () => {
-    actions.onEdit(index);
+    actions.onEdit(item.id);
   };
 
   return (

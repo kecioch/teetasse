@@ -1,37 +1,55 @@
 import prisma from "@/lib/prisma";
-import { NextRequest } from "next/server";
+import { CustomError } from "@/utils/errors/CustomError";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
-  const subcategories = await prisma.subcategory.findMany({
-    include: {
-      category: true,
-    },
-  });
-  return Response.json(subcategories);
+export async function GET(req: Request) {
+  try {
+    const subcategories = await prisma.subcategory.findMany({
+      include: {
+        category: true,
+      },
+      orderBy: {
+        id: "asc"
+      }
+    });
+    return NextResponse.json(subcategories);
+  } catch (e) {
+    return NextResponse.json(
+      { status: 500, msg: "Fehler bei der Serveranfrage" },
+      { status: 500 }
+    );
+  }
 }
 
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    console.log(data);
 
-    const { title } = data;
+    const { title, categoryId } = data;
+    console.log(categoryId);
+    if (!title || title === null || title.length === 0)
+      throw new CustomError("Titel darf nicht leer sein");
+    if (!categoryId || categoryId === null)
+      throw new CustomError("KategorieId darf nicht leer sein");
 
     const category = await prisma.category.findFirst({
-      where: { title: "yaaa" },
+      where: { id: categoryId },
     });
-    if (!category) return new Response("ERROR CATEGORY NOT FOUND");
+    if (!category) throw new CustomError("Kategorie nicht gefunden");
 
     const subcategory = { title, categoryId: category.id };
 
     const newSubcategory = await prisma.subcategory.create({
       data: subcategory,
     });
-    console.log(newSubcategory);
+    return NextResponse.json(newSubcategory);
+  } catch (e: any) {
+    let msg = "Fehler bei Serveranfrage";
 
-    return Response.json(newSubcategory);
-  } catch (err) {
-    // console.log(err);
-    return new Response("ERROR");
+    if (e instanceof CustomError) {
+      msg = e.message;
+    } else if (e.code === "P2002") msg = "Subkategorie exisitert bereits";
+
+    return NextResponse.json({ status: 500, msg }, { status: 500 });
   }
 }

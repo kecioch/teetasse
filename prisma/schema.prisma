@@ -12,7 +12,7 @@ datasource db {
 
 model Category {
   id            Int           @id @default(autoincrement())
-  title         String
+  title         String        @unique
   subcategories Subcategory[]
 }
 
@@ -21,4 +21,6 @@ model Subcategory {
   title      String
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
+
+  @@unique([title, categoryId])
 }

@@ -5,13 +5,13 @@ import CategoryAccordionItem, { Category } from "./CategoryAccordionItem";
 
 export interface Actions {
   item: {
-    onDelete: (index: number) => void;
-    onEdit: (index: number) => void;
+    onDelete: (id: number) => void;
+    onEdit: (id: number) => void;
   };
   subItem: {
-    onDelete: (itemIndex: number, subItemIndex: number) => void;
-    onAdd: (itemIndex: number) => void;
-    onEdit: (itemIndex: number, subItemIndex: number) => void;
+    onDelete: (itemId: number, subItemId: number) => void;
+    onAdd: (itemId: number) => void;
+    onEdit: (itemId: number, subItemId: number) => void;
   };
 }
 
@@ -28,7 +28,6 @@ const CategoryAccordion = ({ categories, actions }: Props) => {
           <CategoryAccordionItem
             key={index}
             category={item}
-            index={index}
             actions={actions}
           />
         ))}
