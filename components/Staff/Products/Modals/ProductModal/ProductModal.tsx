@@ -2,20 +2,17 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Button,
-  Checkbox,
   FileInput,
-  FloatingLabel,
   Label,
   Modal,
   Select,
-  Table,
-  TableHead,
   TextInput,
   Textarea,
+  ToggleSwitch,
 } from "flowbite-react";
-import React, { ChangeEvent, useEffect, useRef, useState } from "react";
-import KeyValueInputTable, { InputField } from "./KeyValueInputTable";
-import KeyValueInput from "./KeyValueInput";
+import React, { ChangeEvent, useState } from "react";
+import { InputField } from "../../../../UI/Forms/InputTable/InputTable";
+import InputTableManager from "../../../../UI/Forms/InputTable/InputTableManager";
 import { Category } from "@/types/category";
 
 interface Image {
@@ -30,46 +27,37 @@ interface Props {
 
 interface Form {
   name: string;
+  recommended: boolean;
   description: string;
   categoryIndex: number;
   subCategoryIndex: number;
   images: Image[];
-  attributes: InputField[];
-  variants: InputField[];
+  attributes: InputField[][];
+  variants: InputField[][];
 }
 
 const ProductModal = ({ show, categories = [], onClose }: Props) => {
   const [formData, setFormData] = useState<Form>({
     name: "",
+    recommended: false,
     description: "",
     categoryIndex: 0,
     subCategoryIndex: 0,
     images: [],
     attributes: [
-      {
-        key: "Anbau",
-        value: "Bio",
-      },
-      {
-        key: "Geschmack",
-        value: "lieblich",
-      },
-      {
-        key: "Geschmacksrichtung",
-        value: "herb-aromatisch",
-      },
+      [{ value: "Anbau" }, { value: "Bio" }],
+      [{ value: "Geschmack" }, { value: "lieblich" }],
+      [{ value: "Geschmacksrichtung" }, { value: "herb-aromatisch" }],
     ],
     variants: [
-      {
-        key: "100g",
-        value: "7",
-      },
-      {
-        key: "250g",
-        value: "10",
-      },
+      [{ value: "100g" }, { value: "7" }, { value: 0 }],
+      [{ value: "260g" }, { value: "11" }, { value: 155 }],
     ],
   });
+
+  const handleSwitch = () => {
+    setFormData((prev) => ({ ...prev, recommended: !prev.recommended }));
+  };
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -131,11 +119,11 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
     console.log(formData);
   };
 
-  const setAttributes = (attributes: InputField[]) => {
+  const setAttributes = (attributes: InputField[][]) => {
     setFormData((prev) => ({ ...prev, attributes }));
   };
 
-  const setVariants = (variants: InputField[]) => {
+  const setVariants = (variants: InputField[][]) => {
     setFormData((prev) => ({ ...prev, variants }));
   };
 
@@ -147,23 +135,48 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
       <Modal.Body>
         <div className="space-y-6">
           <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
-            <div>
-              <div className="mb-2 block">
-                <Label htmlFor="name" value="Produktname" />
+            <div className="flex justify-between gap-5">
+              <div className="flex-grow">
+                <div className="mb-2 block">
+                  <Label
+                    htmlFor="name"
+                    value="Produktname"
+                    className="text-md"
+                  />
+                </div>
+                <TextInput
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="Produktname"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-              <TextInput
-                id="name"
-                type="text"
-                name="name"
-                placeholder="Produktname"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
+              <div>
+                <div className="mb-2 block">
+                  <Label
+                    htmlFor="recommended"
+                    value="Empfohlen"
+                    className="text-md"
+                  />
+                </div>
+                <ToggleSwitch
+                  id="recommended"
+                  name="recommended"
+                  checked={formData.recommended}
+                  onChange={handleSwitch}
+                />
+              </div>
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="description" value="Beschreibung" />
+                <Label
+                  htmlFor="description"
+                  value="Beschreibung"
+                  className="text-md"
+                />
               </div>
               <Textarea
                 id="description"
@@ -177,7 +190,11 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="categorie" value="Kategorie" />
+                <Label
+                  htmlFor="categorie"
+                  value="Kategorie"
+                  className="text-md"
+                />
               </div>
               <Select
                 id="categorie"
@@ -194,7 +211,11 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
             </div>
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="subcategorie" value="Sub-Kategorie" />
+                <Label
+                  htmlFor="subcategorie"
+                  value="Sub-Kategorie"
+                  className="text-md"
+                />
               </div>
               <Select
                 id="subcategorie"
@@ -209,24 +230,44 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
                 ))}
               </Select>
             </div>
-            <KeyValueInput
+            <InputTableManager
               title="Eigenschaften"
               buttonTitle="Eigenschaft hinzufügen"
-              description={{ key: "Attribut", value: "Wert" }}
+              configCols={[
+                { title: "Titel", type: "text" },
+                { title: "Wert", type: "text" },
+              ]}
               inputFields={formData.attributes}
               setInputFields={setAttributes}
             />
-            <KeyValueInput
+            <InputTableManager
               title="Produktvarianten"
               buttonTitle="Produktvariante hinzufügen"
-              description={{ key: "Titel", value: "Preis (€)" }}
+              configCols={[
+                { title: "Titel", type: "text" },
+                {
+                  title: "Preis (€)",
+                  type: "number",
+                  step: "0.01",
+                  min: 0,
+                },
+                {
+                  title: "Lager",
+                  type: "number",
+                  step: "1",
+                  min: 0,
+                },
+              ]}
               inputFields={formData.variants}
               setInputFields={setVariants}
-              config={{ type: "number", step: "0.01", min: 0 }}
             />
             <div>
               <div className="mb-2 block">
-                <Label htmlFor="dropzone-file" value="Produktbilder" />
+                <Label
+                  htmlFor="dropzone-file"
+                  value="Produktbilder"
+                  className="text-md"
+                />
               </div>
               <Label
                 htmlFor="dropzone-file"

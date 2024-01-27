@@ -2,43 +2,40 @@
 
 import { Button, Label } from "flowbite-react";
 import React from "react";
-import KeyValueInputTable, {
-  Config,
-  Description,
-  InputField,
-} from "./KeyValueInputTable";
+import { Config, InputField } from "./InputTable";
+import InputTable from "./InputTable";
 
 interface Props {
   title: string;
   buttonTitle: string;
-  description: Description;
-  inputFields: InputField[];
-  setInputFields: (attributes: InputField[]) => void;
-  config?: Config;
+  configCols: Config[];
+  inputFields: InputField[][];
+  setInputFields: (attributes: InputField[][]) => void;
 }
 
-const KeyValueInput = ({
+const InputTableManager = ({
   title,
   buttonTitle,
-  description,
+  configCols,
   inputFields,
   setInputFields,
-  config,
 }: Props) => {
   const handleInputAdd = () => {
-    setInputFields([...inputFields, { key: "", value: "" }]);
+    const newRow = configCols.map((item) => ({
+      value: item.type === "number" ? 0 : "",
+    }));
+    setInputFields([...inputFields, newRow]);
   };
 
   return (
     <div>
       <div className="mb-2 block">
-        <Label htmlFor="#" value={title} />
+        <Label value={title} className="text-md" />
       </div>
-      <KeyValueInputTable
-        description={description}
+      <InputTable
         inputFields={inputFields}
+        configCols={configCols}
         setInputFields={setInputFields}
-        config={config}
       />
       <Button className="mt-3" color="light" pill onClick={handleInputAdd}>
         {buttonTitle}
@@ -47,4 +44,4 @@ const KeyValueInput = ({
   );
 };
 
-export default KeyValueInput;
+export default InputTableManager;
