@@ -13,7 +13,6 @@ const Categories = async () => {
     subs: item.subcategories.map((sub) => ({ id: sub.id, title: sub.title })),
   }));
 
-  console.log(data);
   return <CategoryManagement data={data} />;
 };
 

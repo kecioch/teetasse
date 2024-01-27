@@ -1,25 +1,36 @@
+import { Product } from "@/types/product";
 import { Button, TableCell, TableRow } from "flowbite-react";
 import React from "react";
 
-const ProductsTableRow = () => {
+interface Props {
+  product: Product;
+}
+
+const ProductsTableRow = ({ product }: Props) => {
   return (
     <TableRow className="bg-white even:bg-gray-50 hover:bg-gray-200">
-      <TableCell>1</TableCell>
+      <TableCell>{product.id}</TableCell>
       <TableCell className="whitespace-nowrap font-medium text-gray-900 ">
-        Earl Grey
+        {product.title}
       </TableCell>
-      <TableCell>Tee</TableCell>
-      <TableCell>Schwarztee</TableCell>
+      <TableCell>{product.subcategory.category?.title}</TableCell>
+      <TableCell>{product.subcategory.title}</TableCell>
       <TableCell>
         <ul>
-          <li>7€ (100g)</li>
-          <li>10€ (250g)</li>
+          {product.variants.map((item, index) => (
+            <li key={index}>
+              {item.price}€ ({item.title})
+            </li>
+          ))}
         </ul>
       </TableCell>
       <TableCell>
         <ul>
-          <li>100g (523)</li>
-          <li>250g (234)</li>
+          {product.variants.map((item, index) => (
+            <li key={index}>
+              {item.stock} ({item.title})
+            </li>
+          ))}
         </ul>
       </TableCell>
       <TableCell>

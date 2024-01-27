@@ -1,10 +1,13 @@
 import { Table, TableBody, TableHead, TableHeadCell } from "flowbite-react";
 import React from "react";
 import ProductsTableRow from "./ProductsTableRow";
+import { Product } from "@/types/product";
 
-interface Props {}
+interface Props {
+  data: Product[];
+}
 
-const ProductsTable = ({}: Props) => {
+const ProductsTable = ({ data }: Props) => {
   return (
     <div className="overflow-x-auto">
       <Table striped hoverable>
@@ -28,9 +31,9 @@ const ProductsTable = ({}: Props) => {
           </TableHeadCell>
         </TableHead>
         <TableBody className="odd:bg-red-200!">
-          <ProductsTableRow />
-          <ProductsTableRow />
-          <ProductsTableRow />
+          {data.map((item, index) => (
+            <ProductsTableRow key={index} product={item} />
+          ))}
         </TableBody>
       </Table>
     </div>

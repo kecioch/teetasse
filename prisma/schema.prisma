@@ -53,6 +53,7 @@ model Productgroup {
 model Product {
   id             Int          @id @default(autoincrement())
   title          String
+  visible        Boolean      @default(true)
   stock          Int          @default(0)
   price          Decimal      @default(0.00)
   productgroup   Productgroup @relation(fields: [productgroupId], references: [id])

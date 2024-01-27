@@ -6,14 +6,16 @@ import React, { useState } from "react";
 import ProductsTable from "../ProductsTable/ProductsTable";
 import ProductModal from "../Modals/ProductModal/ProductModal";
 import { Category } from "@/types/category";
+import { Product } from "@/types/product";
 
 interface Props {
   categories?: Category[];
+  products?: Product[];
 }
 
-const ProductManagement = ({ categories }: Props) => {
+const ProductManagement = ({ categories, products = [] }: Props) => {
   const [productModal, setProductModal] = useState({ show: false });
-  
+
   const openAddProduct = () => {
     setProductModal({ show: true });
   };
@@ -32,7 +34,7 @@ const ProductManagement = ({ categories }: Props) => {
       </div>
       <hr className="my-5" />
       <div>
-        <ProductsTable />
+        <ProductsTable data={products} />
         <ProductModal
           show={productModal.show}
           categories={categories}
