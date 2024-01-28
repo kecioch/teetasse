@@ -10,50 +10,108 @@ import {
   Textarea,
   ToggleSwitch,
 } from "flowbite-react";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { InputField } from "../../../../UI/Forms/InputTable/InputTable";
 import InputTableManager from "../../../../UI/Forms/InputTable/InputTableManager";
 import { Category } from "@/types/category";
+import { Product, Variant } from "@/types/product";
+import LoadingButton from "@/components/UI/Buttons/LoadingButton";
 
 interface Image {
-  file: File;
+  url?: string;
+  file?: File;
 }
 
-interface Props {
+export interface ProductModalProps {
   show: boolean;
+  title?: string;
+  button?: {
+    title?: string;
+  };
+  product?: Product;
+  dismissible?: boolean;
+  position?: string;
+  error?: string;
+  isLoading?: boolean;
   categories?: Category[];
-  onClose: () => void;
+  onClose?: () => void;
+  onSubmit?: (product: Product) => void;
 }
 
 interface Form {
   name: string;
   recommended: boolean;
   description: string;
-  categoryIndex: number;
-  subCategoryIndex: number;
+  categoryId: number | undefined;
+  subCategoryId: number | undefined;
   images: Image[];
   attributes: InputField[][];
   variants: InputField[][];
 }
 
-const ProductModal = ({ show, categories = [], onClose }: Props) => {
+const ProductModal = ({
+  show,
+  title,
+  button,
+  product,
+  dismissible = false,
+  position = "top-center",
+  categories = [],
+  error,
+  isLoading,
+  onClose,
+  onSubmit,
+}: ProductModalProps) => {
   const [formData, setFormData] = useState<Form>({
     name: "",
     recommended: false,
     description: "",
-    categoryIndex: 0,
-    subCategoryIndex: 0,
+    categoryId: categories[0]?.id || undefined,
+    subCategoryId: categories[0]?.subs[0]?.id || undefined,
     images: [],
-    attributes: [
-      [{ value: "Anbau" }, { value: "Bio" }],
-      [{ value: "Geschmack" }, { value: "lieblich" }],
-      [{ value: "Geschmacksrichtung" }, { value: "herb-aromatisch" }],
-    ],
-    variants: [
-      [{ value: "100g" }, { value: "7" }, { value: 0 }],
-      [{ value: "260g" }, { value: "11" }, { value: 155 }],
-    ],
+    attributes: [],
+    variants: [],
   });
+
+  useEffect(() => {
+    if (product) {
+      console.log("PRODUCT", product);
+      const attributesInit: InputField[][] = [];
+      for (const [outerKey, innerObject] of Object.entries(product.features)) {
+        // console.log(`Outer Key: ${outerKey}`);
+        // Iterate through inner key-value pairs
+        for (const [innerKey, innerValue] of Object.entries(innerObject)) {
+          // console.log(`  Inner Key: ${innerKey}, Inner Value: ${innerValue}`);
+          attributesInit.push([{ value: innerKey }, { value: innerValue }]);
+        }
+      }
+      setFormData((prev) => ({
+        ...prev,
+        name: product.title,
+        recommended: product.recommended,
+        description: product.description,
+        categoryId: product.subcategory?.category?.id,
+        subCategoryId: product.subcategory?.id,
+        images: product.imageUrls.map((item) => ({ url: item })) || [],
+        attributes: attributesInit,
+        // [
+        //   [{ value: "Anbau" }, { value: "Bio" }],
+        //   [{ value: "Geschmack" }, { value: "lieblich" }],
+        //   [{ value: "Geschmacksrichtung" }, { value: "herb-aromatisch" }],
+        // ],
+        variants:
+          product.variants.map((variant) => [
+            { value: variant.title },
+            { value: variant.price },
+            { value: variant.stock },
+          ]) || [],
+      }));
+      // // [
+      // //   [{ value: "100g" }, { value: "7" }, { value: 0 }],
+      // //   [{ value: "260g" }, { value: "11" }, { value: 155 }],
+      // // ],
+    }
+  }, [product]);
 
   const handleSwitch = () => {
     setFormData((prev) => ({ ...prev, recommended: !prev.recommended }));
@@ -68,21 +126,20 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
   };
 
   const handleChangeCategory = (ev: ChangeEvent<HTMLSelectElement>) => {
-    const index = parseInt(ev.currentTarget.value);
-
-    // setSelectedCategoryIndex(index);
+    const id = parseInt(ev.currentTarget.value);
     setFormData((prevData) => ({
       ...prevData,
-      categoryIndex: index,
+      categoryId: id,
+      subCategoryId:
+        categories[categories.findIndex((el) => el.id === id)].subs[0].id,
     }));
   };
 
   const handleChangeSubCategory = (ev: ChangeEvent<HTMLSelectElement>) => {
-    const index = parseInt(ev.currentTarget.value);
-
+    const id = parseInt(ev.currentTarget.value);
     setFormData((prevData) => ({
       ...prevData,
-      subCategoryIndex: index,
+      subCategoryId: id,
     }));
   };
 
@@ -115,8 +172,47 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
 
   const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
-    console.log("SUBMIT");
-    console.log(formData);
+    if (!formData.subCategoryId || !formData.categoryId) return;
+
+    // console.log("SUBMIT");
+    // console.log(formData);
+
+    // Transform attributes(InputField[][]) to Features type
+    const attributes = formData.attributes;
+    let features: any = {};
+    for (let row = 0; row < attributes.length; row++) {
+      features["f" + row] = {
+        [attributes[row][0].value]: attributes[row][1].value,
+      };
+    }
+
+    // Transform variants(InputField[][]) to Variant[] type
+    const variantsData = formData.variants;
+    const variants: Variant[] = [];
+    for (let row = 0; row < variantsData.length; row++) {
+      const variant = variantsData[row];
+      variants.push({
+        title: variant[0].value.toString(),
+        price: Number(variant[1].value),
+        stock: Number(variant[2].value),
+      });
+    }
+
+    // Create Product
+    const product: Product = {
+      title: formData.name,
+      description: formData.description,
+      rating: 0,
+      recommended: formData.recommended,
+      imageUrls: formData.images.map((image) => image.url || "") || [],
+      subcategoryId: formData.subCategoryId,
+      variants,
+      features,
+    };
+
+    // Call handler
+    onSubmit && onSubmit(product);
+    // console.log(product);
   };
 
   const setAttributes = (attributes: InputField[][]) => {
@@ -128,10 +224,13 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
   };
 
   return (
-    <Modal show={show} onClose={onClose} position="top-center">
-      <Modal.Header className="uppercase text-gray-800">
-        Neues Produkt
-      </Modal.Header>
+    <Modal
+      show={show}
+      onClose={onClose}
+      position={position}
+      dismissible={dismissible}
+    >
+      <Modal.Header className="uppercase text-gray-800">{title}</Modal.Header>
       <Modal.Body>
         <div className="space-y-6">
           <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit}>
@@ -191,19 +290,19 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
             <div>
               <div className="mb-2 block">
                 <Label
-                  htmlFor="categorie"
+                  htmlFor="category"
                   value="Kategorie"
                   className="text-md"
                 />
               </div>
               <Select
-                id="categorie"
+                id="category"
                 onChange={handleChangeCategory}
-                value={formData.categoryIndex}
+                value={formData.categoryId}
                 required
               >
                 {categories.map((item, index) => (
-                  <option key={index} value={index}>
+                  <option key={index} value={item.id}>
                     {item.title} / {item.id}
                   </option>
                 ))}
@@ -220,11 +319,13 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
               <Select
                 id="subcategorie"
                 onChange={handleChangeSubCategory}
-                value={formData.subCategoryIndex}
+                value={formData.subCategoryId}
                 required
               >
-                {categories[formData.categoryIndex]?.subs.map((item, index) => (
-                  <option key={index} value={index}>
+                {categories[
+                  categories.findIndex((el) => el.id === formData.categoryId)
+                ]?.subs.map((item, index) => (
+                  <option key={index} value={item.id}>
                     {item.title} / {item.id}
                   </option>
                 ))}
@@ -336,15 +437,21 @@ const ProductModal = ({ show, categories = [], onClose }: Props) => {
                           ></path>
                         </svg>
                       </button>
-                      {image.file.name}
+                      {image.file?.name}
                     </div>
                   ))}
                 </div>
               )}
             </div>
-            <Button color="success" type="submit" className="mt-5">
-              Hinzufügen
-            </Button>
+            {error && <span className="text-red-600">{error}</span>}
+            <LoadingButton
+              color="success"
+              type="submit"
+              className="mt-5"
+              isLoading={isLoading}
+            >
+              {button?.title}
+            </LoadingButton>
           </form>
         </div>
       </Modal.Body>

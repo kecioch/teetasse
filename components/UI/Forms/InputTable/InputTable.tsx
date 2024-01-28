@@ -57,7 +57,7 @@ const InputTable = ({ inputFields, configCols, setInputFields }: Props) => {
         <Table.Body className="divide-y">
           {inputFields.length <= 0 && (
             <Table.Row>
-              <Table.Cell>Keine Einträge vorhanden</Table.Cell>
+              <Table.Cell colSpan={configCols.length+1}>Keine Einträge vorhanden</Table.Cell>
             </Table.Row>
           )}
           {inputFields.map((row, rowIndex) => {

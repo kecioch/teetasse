@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { Button, Spinner } from "flowbite-react";
 import React from "react";
@@ -28,8 +28,10 @@ const LoadingButton = ({
       disabled={isLoading}
       onClick={onClick}
     >
-      {isLoading && <Spinner aria-label="lädt" size="sm" color={color} />}
-      <span className="pl-3">{children}</span>
+      {isLoading && (
+        <Spinner aria-label="lädt" size="sm" color={color} className="pr-3" />
+      )}
+      <span>{children}</span>
     </Button>
   );
 };

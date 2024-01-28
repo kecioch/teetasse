@@ -1,7 +1,7 @@
 import { Subcategory } from "./subcategory";
 
 export interface Variant {
-  id: number;
+  id?: number;
   title: string;
   stock: number;
   price: number;
@@ -14,12 +14,14 @@ export interface Features {
 }
 
 export interface Product {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   rating: number;
+  recommended: boolean;
   features: Features;
-  subcategory: Subcategory;
+  subcategory?: Subcategory;
+  subcategoryId?: number;
   imageUrls: string[];
   variants: Variant[];
 }

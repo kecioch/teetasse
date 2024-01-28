@@ -27,8 +27,16 @@ export async function POST(req: Request) {
       features,
     } = data;
 
-    //   if (!title || title === null || title.length === 0)
-    //     throw new CustomError("Titel darf nicht leer sein");
+    if (!title || title === null || title.length === 0)
+      throw new CustomError("Titel darf nicht leer sein");
+    if (!description || description === null || description.length === 0)
+      throw new CustomError("Beschreibung darf nicht leer sein");
+
+    if (!subcategoryId || description === null)
+      throw new CustomError("SubKategorieId darf nicht leer sein");
+
+    if (!variants || variants === null || variants.length === 0)
+      throw new CustomError("Produkt benötigt mindestens eine Variante");
 
     // Create productgroup
     const product = {
@@ -39,7 +47,11 @@ export async function POST(req: Request) {
       imageUrls,
       features,
     };
-    const newProduct = await prisma.productgroup.create({ data: product });
+
+    const newProduct = await prisma.productgroup.create({
+      data: product,
+      include: { subcategory: { include: { category: true } }, products: true },
+    });
 
     // Create products (variants)
     for (let i = 0; i < variants.length; i++) {
@@ -54,7 +66,17 @@ export async function POST(req: Request) {
       });
     }
 
-    return NextResponse.json(product);
+    // Update ref values of newProduct
+    const updatetNewProduct = await prisma.productgroup.findUnique({
+      where: { id: newProduct.id },
+      include: {
+        subcategory: { include: { category: true } },
+        products: true,
+      },
+    });
+
+    // Send newProduct
+    return NextResponse.json(updatetNewProduct);
   } catch (e: any) {
     console.log(e);
     let msg = "Fehler bei Serveranfrage";

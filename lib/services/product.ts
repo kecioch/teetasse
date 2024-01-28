@@ -9,7 +9,7 @@ export async function getProducts() {
       },
       where: { visible: true },
       orderBy: {
-        title: "asc",
+        id: "asc",
       },
     });
     return products;

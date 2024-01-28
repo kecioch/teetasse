@@ -19,6 +19,7 @@ const Products = async () => {
   const products: Product[] | undefined = loadedProducts?.map((item) => {
     const product: Product = {
       id: item.id,
+      recommended: item.recommended,
       title: item.title,
       description: item.description,
       rating: item.rating.toNumber(),
