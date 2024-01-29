@@ -14,8 +14,10 @@ const ProductsTableRow = ({ product, onEdit, onDelete }: Props) => {
   return (
     <TableRow className="bg-white even:bg-gray-50 hover:bg-gray-200">
       <TableCell>{product.id}</TableCell>
-      <TableCell className="flex justify-center">
-        <Checkbox checked={product.recommended} disabled />
+      <TableCell>
+        <div className="flex justify-center items-center">
+          <Checkbox checked={product.recommended} disabled />
+        </div>
       </TableCell>
       <TableCell className="whitespace-nowrap font-medium text-gray-900 ">
         {product.title}
@@ -40,13 +42,15 @@ const ProductsTableRow = ({ product, onEdit, onDelete }: Props) => {
           ))}
         </ul>
       </TableCell>
-      <TableCell className="flex gap-3 justify-center">
-        <Button color="red" onClick={onDelete}>
-          <FontAwesomeIcon icon={faTrash} />
-        </Button>
-        <Button color="gray" onClick={onEdit}>
-          <FontAwesomeIcon icon={faEdit} />
-        </Button>
+      <TableCell>
+        <div className="flex gap-3 justify-center items-center">
+          <Button color="red" onClick={onDelete}>
+            <FontAwesomeIcon icon={faTrash} />
+          </Button>
+          <Button color="gray" onClick={onEdit}>
+            <FontAwesomeIcon icon={faEdit} />
+          </Button>
+        </div>
       </TableCell>
     </TableRow>
   );

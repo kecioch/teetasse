@@ -19,7 +19,7 @@ interface Props {
 const ProductsTable = ({ data = [], onEdit, onDelete }: Props) => {
   return (
     <div className="overflow-x-auto">
-      <Table striped hoverable>
+      <Table striped hoverable className="bg-transparent">
         <TableHead>
           <TableHeadCell className="bg-zinc-600 text-white">Nr.</TableHeadCell>
           <TableHeadCell className="bg-zinc-600 text-white text-center">
@@ -45,7 +45,7 @@ const ProductsTable = ({ data = [], onEdit, onDelete }: Props) => {
         <TableBody className="odd:bg-red-200!">
           {data.length <= 0 && (
             <TableRow className="bg-white even:bg-gray-50 hover:bg-gray-200">
-              <TableCell colSpan={7}>Keine Produkte vorhanden</TableCell>
+              <TableCell colSpan={8}>Keine Produkte vorhanden</TableCell>
             </TableRow>
           )}
           {data.map((item, index) => (

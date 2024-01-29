@@ -31,7 +31,7 @@ model Review {
   // ADD AUTHOR REF
   rating         Decimal      @db.Decimal(2, 1)
   comment        String
-  Productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
+  productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
   productgroupId Int
 }
 
@@ -58,6 +58,13 @@ model Product {
   price          Decimal      @default(0.00)
   productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
   productgroupId Int
+  orders         Order[]
 
   @@unique([title, productgroupId])
+}
+
+model Order {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
 }

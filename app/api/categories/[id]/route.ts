@@ -43,12 +43,21 @@ export async function DELETE(req: Request, { params }: IdSlug) {
 
     const category = await prisma.category.findUnique({
       where: { id },
-      include: { subcategories: true },
+      include: { subcategories: { include: { productgroups: true } } },
     });
     if (!category) throw new CustomError("Kategorie nicht gefunden");
 
-    if (category?.subcategories && category?.subcategories.length > 0)
+    if (category.subcategories && category?.subcategories.length > 0)
       throw new CustomError("Kategorie enthält noch Subkategorien");
+
+    // Check whether subcategories of category still have products associated
+    for (let i = 0; i < category.subcategories.length; i++) {
+      const subcategory = category.subcategories[i];
+      if (subcategory.productgroups.length > 0)
+        throw new CustomError(
+          `Subkategorie(${subcategory.title}) referenziert noch Produkte`
+        );
+    }
 
     await prisma.subcategory.deleteMany({ where: { categoryId: id } });
 

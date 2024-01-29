@@ -42,8 +42,12 @@ export async function DELETE(req: Request, { params }: IdSlug) {
 
     const subcategory = await prisma.subcategory.findUnique({
       where: { id },
+      include: { productgroups: true },
     });
     if (!subcategory) throw new CustomError("Subkategorie nicht gefunden");
+
+    if (subcategory.productgroups.length > 0)
+      throw new CustomError("Subkategorie referenziert noch Produkte");
 
     const deletedSubcategory = await prisma.subcategory.delete({
       where: { id },

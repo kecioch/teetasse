@@ -1,3 +1,5 @@
+"use client"
+
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -74,14 +76,12 @@ const ProductModal = ({
   });
 
   useEffect(() => {
+    // Set default values of formdata when product is available
     if (product) {
-      console.log("PRODUCT", product);
       const attributesInit: InputField[][] = [];
       for (const [outerKey, innerObject] of Object.entries(product.features)) {
-        // console.log(`Outer Key: ${outerKey}`);
         // Iterate through inner key-value pairs
         for (const [innerKey, innerValue] of Object.entries(innerObject)) {
-          // console.log(`  Inner Key: ${innerKey}, Inner Value: ${innerValue}`);
           attributesInit.push([{ value: innerKey }, { value: innerValue }]);
         }
       }
@@ -94,11 +94,6 @@ const ProductModal = ({
         subCategoryId: product.subcategory?.id,
         images: product.imageUrls.map((item) => ({ url: item })) || [],
         attributes: attributesInit,
-        // [
-        //   [{ value: "Anbau" }, { value: "Bio" }],
-        //   [{ value: "Geschmack" }, { value: "lieblich" }],
-        //   [{ value: "Geschmacksrichtung" }, { value: "herb-aromatisch" }],
-        // ],
         variants:
           product.variants.map((variant) => [
             { value: variant.title },
@@ -106,10 +101,6 @@ const ProductModal = ({
             { value: variant.stock },
           ]) || [],
       }));
-      // // [
-      // //   [{ value: "100g" }, { value: "7" }, { value: 0 }],
-      // //   [{ value: "260g" }, { value: "11" }, { value: 155 }],
-      // // ],
     }
   }, [product]);
 
@@ -174,9 +165,6 @@ const ProductModal = ({
     ev.preventDefault();
     if (!formData.subCategoryId || !formData.categoryId) return;
 
-    // console.log("SUBMIT");
-    // console.log(formData);
-
     // Transform attributes(InputField[][]) to Features type
     const attributes = formData.attributes;
     let features: any = {};
@@ -199,7 +187,8 @@ const ProductModal = ({
     }
 
     // Create Product
-    const product: Product = {
+    const newProduct: Product = {
+      id: product?.id,
       title: formData.name,
       description: formData.description,
       rating: 0,
@@ -211,8 +200,7 @@ const ProductModal = ({
     };
 
     // Call handler
-    onSubmit && onSubmit(product);
-    // console.log(product);
+    onSubmit && onSubmit(newProduct);
   };
 
   const setAttributes = (attributes: InputField[][]) => {

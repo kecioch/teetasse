@@ -55,12 +55,44 @@ const ProductManagement = ({ categories, products = [] }: Props) => {
     });
   };
 
-  const handleEditProduct = () => {
-    console.log("HANDLE EDIT PRODUCT");
+  const handleEditProduct = (product: Product) => {
+    console.log("HANDLE EDIT PRODUCT", product);
+    fetch.put(`/api/products/${product.id}`, { ...product }).then((res) => {
+      if (res.status !== 200) return;
+
+      console.log(res);
+      const data = res.data;
+      const updatetProduct: Product = {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        rating: data.rating,
+        recommended: data.recommended,
+        subcategory: data.subcategory,
+        variants: data.products,
+        features: data.features,
+        imageUrls: data.imageUrls,
+      };
+
+      const index = productsData.findIndex((el) => el.id === product.id);
+      const newProductsData = [...productsData];
+      newProductsData[index] = updatetProduct;
+      setProductsData(newProductsData);
+      setProductModal({ show: false });
+    });
   };
 
   const handleDeleteProduct = (index: number) => {
     console.log("DELETE HANLDE PRODKT", index);
+    const id = productsData[index].id;
+
+    fetch.delete(`/api/products/${id}`).then((res) => {
+      if (res.status !== 200) return;
+
+      const newProductsData = [...productsData];
+      newProductsData.splice(index, 1);
+      setProductsData(newProductsData), setDeleteModal({ show: false });
+    });
   };
 
   const openAddProduct = () => {

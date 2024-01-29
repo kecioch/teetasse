@@ -29,7 +29,7 @@ const LoadingButton = ({
       onClick={onClick}
     >
       {isLoading && (
-        <Spinner aria-label="lädt" size="sm" color={color} className="pr-3" />
+        <Spinner aria-label="lädt" size="sm" color={"gray"} className="mr-3" />
       )}
       <span>{children}</span>
     </Button>
