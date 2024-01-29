@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
+import { hasDuplicateProductTitle } from "@/lib/services/product";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
-import { Product } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request, { params }: IdSlug) {
@@ -36,11 +36,58 @@ export async function PUT(req: Request, { params }: IdSlug) {
     if (!variants || variants === null || variants.length === 0)
       throw new CustomError("Produkt benötigt mindestens eine Variante");
 
+    if (hasDuplicateProductTitle(variants))
+      throw new CustomError(
+        "Die Namen von Produktvarianten müssen eindeutig sein"
+      );
+
     const oldProductgroup = await prisma.productgroup.findUnique({
       where: { id },
-      include: { products: true },
+      include: { products: { include: { orders: true } } },
     });
     if (!oldProductgroup) throw new CustomError("Produkt wurde nicht gefunden");
+
+    // Check changes of imageUrls
+    for (let i = 0; i < oldProductgroup.imageUrls.length; i++) {
+      const imgUrl = oldProductgroup.imageUrls[i];
+      if (!imageUrls.includes(imgUrl)) {
+        console.log("DELETE IMG FROM CLOUD", imgUrl);
+        // DELETE IMG FROM CLOUDSTORAGE
+      }
+    }
+
+    // Check changes of products (variants)
+    // Check first updatet / deletet variants
+    for (let i = 0; i < oldProductgroup.products.length; i++) {
+      const product = oldProductgroup.products[i];
+      if (variants.findIndex((el: any) => el.id === product.id) === -1) {
+        // VARIANT NOT FOUND
+        if (product.orders.length > 0)
+          // VARIANT VISIBLE TO FALSE
+          await prisma.product.update({
+            where: { id: product.id },
+            data: { visible: false },
+          });
+        // VARIANT DELETE
+        else await prisma.product.delete({ where: { id: product.id } });
+      } else {
+        // VARIANTE FOUND
+        // VARIANTE UPDATE
+        await prisma.product.update({
+          where: { id: product.id },
+          data: { ...variants[i] },
+        });
+      }
+    }
+    // Check new variants
+    for (let i = 0; i < variants.length; i++) {
+      const variant = variants[i];
+      variant.productgroupId = id;
+      // Create new variant
+      if (variant && !variant.id) {
+        await prisma.product.create({ data: variant });
+      }
+    }
 
     // Create productgroup
     const productgroup = {
@@ -48,40 +95,18 @@ export async function PUT(req: Request, { params }: IdSlug) {
       description,
       subcategoryId,
       recommended,
-      //   imageUrls: oldProduct.imageUrls,
-      //   features: oldProduct.features,
-      //   products: oldProduct.products
+      features,
+      imageUrls,
     };
 
     const updatetProductgroup = await prisma.productgroup.update({
       where: { id },
       data: productgroup,
-      include: { subcategory: { include: { category: true } }, products: true },
+      include: {
+        subcategory: { include: { category: true } },
+        products: { where: { visible: true } },
+      },
     });
-
-    // // Create products (variants)
-    // for (let i = 0; i < variants.length; i++) {
-    //   const { title, stock, price } = variants[i];
-    //   const newProductVariant = await prisma.product.create({
-    //     data: {
-    //       title,
-    //       stock,
-    //       price,
-    //       productgroupId: newProduct.id,
-    //     },
-    //   });
-    // }
-
-    // // Update ref values of newProduct
-    // const newProduct: Product = {};
-    // const updatetProduct = await prisma.productgroup.update({
-    //   data: newProduct,
-    //   where: { id: newProduct.id },
-    //   include: {
-    //     subcategory: { include: { category: true } },
-    //     products: true,
-    //   },
-    // });
 
     // Send newProduct
     return NextResponse.json(updatetProductgroup);
@@ -105,19 +130,36 @@ export async function DELETE(req: Request, { params }: IdSlug) {
 
     const productgroup = await prisma.productgroup.findUnique({
       where: { id, visible: true },
-      include: { products: { where: { visible: true } } },
+      include: {
+        products: { where: { visible: true }, include: { orders: true } },
+      },
     });
     if (!productgroup) throw new CustomError("Produkt nicht gefunden");
 
-    // let visible = true;
-    // for (let i = 0; i < productgroup.products.length; i++) {
-    //     if(productgroup.products[i].)
-    //     // ADD CHECK ORDERS
-    // }
+    let visible = true;
+    let deletedProductgroup;
+    for (let i = 0; i < productgroup.products.length; i++) {
+      const product = productgroup.products[i];
+      if (product.orders.length > 0) {
+        visible = false;
+        await prisma.product.update({
+          where: { id: product.id },
+          data: { visible: false },
+        });
+      } else {
+        await prisma.product.delete({ where: { id: product.id } });
+      }
+    }
 
-    const deletedProductgroup = await prisma.productgroup.delete({
-      where: { id },
-    });
+    if (visible)
+      deletedProductgroup = await prisma.productgroup.delete({
+        where: { id },
+      });
+    else
+      deletedProductgroup = await prisma.productgroup.update({
+        where: { id },
+        data: { visible: false },
+      });
 
     return NextResponse.json(deletedProductgroup);
   } catch (e: any) {

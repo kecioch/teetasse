@@ -20,10 +20,18 @@ export interface Config {
 interface Props {
   inputFields: InputField[][];
   configCols: Config[];
+  idList?: number[];
   setInputFields: (attributes: InputField[][]) => void;
+  setIdList?: (idList: number[]) => void;
 }
 
-const InputTable = ({ inputFields, configCols, setInputFields }: Props) => {
+const InputTable = ({
+  inputFields,
+  configCols,
+  idList,
+  setInputFields,
+  setIdList,
+}: Props) => {
   const handleInputChange = (
     rowIndex: number,
     cellIndex: number,
@@ -41,6 +49,11 @@ const InputTable = ({ inputFields, configCols, setInputFields }: Props) => {
     let data = [...inputFields];
     data.splice(rowIndex, 1);
     setInputFields(data);
+
+    if (!idList || !setIdList) return;
+    const newIdList = [...idList];
+    newIdList.splice(rowIndex, 1);
+    setIdList(newIdList);
   };
 
   return (
@@ -57,7 +70,9 @@ const InputTable = ({ inputFields, configCols, setInputFields }: Props) => {
         <Table.Body className="divide-y">
           {inputFields.length <= 0 && (
             <Table.Row>
-              <Table.Cell colSpan={configCols.length+1}>Keine Einträge vorhanden</Table.Cell>
+              <Table.Cell colSpan={configCols.length + 1}>
+                Keine Einträge vorhanden
+              </Table.Cell>
             </Table.Row>
           )}
           {inputFields.map((row, rowIndex) => {

@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { getProducts } from "@/lib/services/product";
+import { getProducts, hasDuplicateProductTitle } from "@/lib/services/product";
 import { CustomError } from "@/utils/errors/CustomError";
 import { NextResponse } from "next/server";
 
@@ -37,6 +37,11 @@ export async function POST(req: Request) {
 
     if (!variants || variants === null || variants.length === 0)
       throw new CustomError("Produkt benötigt mindestens eine Variante");
+
+    if (hasDuplicateProductTitle(variants))
+      throw new CustomError(
+        "Die Namen von Produktvarianten müssen eindeutig sein"
+      );
 
     // Create productgroup
     const product = {

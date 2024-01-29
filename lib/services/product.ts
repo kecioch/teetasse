@@ -17,3 +17,19 @@ export async function getProducts() {
     return undefined;
   }
 }
+
+export function hasDuplicateProductTitle(objectsArray: any[]) {
+  const titleSet = new Set();
+
+  for (const obj of objectsArray) {
+    if (titleSet.has(obj.title)) {
+      // Duplicate title found
+      return true;
+    } else {
+      titleSet.add(obj.title);
+    }
+  }
+
+  // No duplicate titles found
+  return false;
+}

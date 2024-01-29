@@ -10,7 +10,9 @@ interface Props {
   buttonTitle: string;
   configCols: Config[];
   inputFields: InputField[][];
+  idList?: number[];
   setInputFields: (attributes: InputField[][]) => void;
+  setIdList?: (idList: number[]) => void;
 }
 
 const InputTableManager = ({
@@ -18,7 +20,9 @@ const InputTableManager = ({
   buttonTitle,
   configCols,
   inputFields,
+  idList,
   setInputFields,
+  setIdList,
 }: Props) => {
   const handleInputAdd = () => {
     const newRow = configCols.map((item) => ({
@@ -35,7 +39,9 @@ const InputTableManager = ({
       <InputTable
         inputFields={inputFields}
         configCols={configCols}
+        idList={idList}
         setInputFields={setInputFields}
+        setIdList={setIdList}
       />
       <Button className="mt-3" color="light" pill onClick={handleInputAdd}>
         {buttonTitle}

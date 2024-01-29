@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -49,6 +49,7 @@ interface Form {
   images: Image[];
   attributes: InputField[][];
   variants: InputField[][];
+  variantIds: number[];
 }
 
 const ProductModal = ({
@@ -73,6 +74,7 @@ const ProductModal = ({
     images: [],
     attributes: [],
     variants: [],
+    variantIds: [],
   });
 
   useEffect(() => {
@@ -100,6 +102,7 @@ const ProductModal = ({
             { value: variant.price },
             { value: variant.stock },
           ]) || [],
+        variantIds: product.variants.map((variant) => variant.id || -1),
       }));
     }
   }, [product]);
@@ -122,7 +125,7 @@ const ProductModal = ({
       ...prevData,
       categoryId: id,
       subCategoryId:
-        categories[categories.findIndex((el) => el.id === id)].subs[0].id,
+        categories[categories.findIndex((el) => el.id === id)].subs[0]?.id,
     }));
   };
 
@@ -180,6 +183,7 @@ const ProductModal = ({
     for (let row = 0; row < variantsData.length; row++) {
       const variant = variantsData[row];
       variants.push({
+        id: formData.variantIds[row],
         title: variant[0].value.toString(),
         price: Number(variant[1].value),
         stock: Number(variant[2].value),
@@ -209,6 +213,10 @@ const ProductModal = ({
 
   const setVariants = (variants: InputField[][]) => {
     setFormData((prev) => ({ ...prev, variants }));
+  };
+
+  const setVariantIdList = (idList: number[]) => {
+    setFormData((prev) => ({ ...prev, variantIds: idList }));
   };
 
   return (
@@ -291,7 +299,7 @@ const ProductModal = ({
               >
                 {categories.map((item, index) => (
                   <option key={index} value={item.id}>
-                    {item.title} / {item.id}
+                    {item.title}
                   </option>
                 ))}
               </Select>
@@ -314,7 +322,7 @@ const ProductModal = ({
                   categories.findIndex((el) => el.id === formData.categoryId)
                 ]?.subs.map((item, index) => (
                   <option key={index} value={item.id}>
-                    {item.title} / {item.id}
+                    {item.title}
                   </option>
                 ))}
               </Select>
@@ -348,7 +356,9 @@ const ProductModal = ({
                 },
               ]}
               inputFields={formData.variants}
+              idList={formData.variantIds}
               setInputFields={setVariants}
+              setIdList={setVariantIdList}
             />
             <div>
               <div className="mb-2 block">

@@ -37,13 +37,14 @@ model Review {
 
 model Productgroup {
   id            Int         @id @default(autoincrement())
-  title         String      @unique
+  title         String      
   visible       Boolean     @default(true)
   recommended   Boolean     @default(false)
   description   String      @db.Text
   features      Json?
   imageUrls     String[]
   rating        Decimal     @default(0.0) @db.Decimal(2, 1)
+  ratingCnt     Int         @default(0)
   reviews       Review[]
   products      Product[]
   subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
@@ -59,8 +60,6 @@ model Product {
   productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
   productgroupId Int
   orders         Order[]
-
-  @@unique([title, productgroupId])
 }
 
 model Order {
