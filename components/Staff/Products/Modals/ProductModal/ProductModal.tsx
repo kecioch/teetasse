@@ -1,8 +1,6 @@
 "use client";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import {
-  Button,
   FileInput,
   Label,
   Modal,
@@ -17,11 +15,11 @@ import InputTableManager from "../../../../UI/Forms/InputTable/InputTableManager
 import { Category } from "@/types/category";
 import { Product, Variant } from "@/types/product";
 import LoadingButton from "@/components/UI/Buttons/LoadingButton";
-import Image from "next/image";
+import CoverImage from "./CoverImage";
 
-interface Image {
-  url?: string;
-  file?: File;
+interface NewImage {
+  url: string;
+  file: File;
 }
 
 export interface ProductModalProps {
@@ -46,7 +44,8 @@ interface Form {
   description: string;
   categoryId: number | undefined;
   subCategoryId: number | undefined;
-  images: Image[];
+  imageIds: string[];
+  newImages: NewImage[];
   attributes: InputField[][];
   variants: InputField[][];
   variantIds: number[];
@@ -71,7 +70,8 @@ const ProductModal = ({
     description: "",
     categoryId: categories[0]?.id || undefined,
     subCategoryId: categories[0]?.subs[0]?.id || undefined,
-    images: [],
+    imageIds: [],
+    newImages: [],
     attributes: [],
     variants: [],
     variantIds: [],
@@ -94,7 +94,8 @@ const ProductModal = ({
         description: product.description,
         categoryId: product.subcategory?.category?.id,
         subCategoryId: product.subcategory?.id,
-        images: product.imageUrls.map((item) => ({ url: item })) || [],
+        imageIds: product.imageIds || [],
+        newImages: [],
         attributes: attributesInit,
         variants:
           product.variants.map((variant) => [
@@ -139,105 +140,78 @@ const ProductModal = ({
 
   const handleFileDropzone = (ev: React.ChangeEvent<HTMLInputElement>) => {
     const files = ev.target.files;
-    console.log(files);
     if (!files || files?.length <= 0) return;
 
-    const newImages: Image[] = [];
+    const newImages: NewImage[] = [];
 
     Array.from(files).forEach((file) => {
       if (file.type.includes("image")) {
         newImages.push({
+          url: URL.createObjectURL(file),
           file,
         });
       }
     });
-
     setFormData((prev) => ({
       ...prev,
-      images: [...prev.images, ...newImages],
+      newImages: [...prev.newImages, ...newImages],
     }));
   };
 
   const handleDeleteImage = (index: number) => {
-    const newImages = [...formData.images];
+    const imageIds = [...formData.imageIds];
+    imageIds.splice(index, 1);
+    setFormData((prev) => ({ ...prev, imageIds: [...imageIds] }));
+  };
+
+  const handleDeleteNewImage = (index: number) => {
+    const newImages = [...formData.newImages];
     newImages.splice(index, 1);
-    setFormData((prev) => ({ ...prev, images: [...newImages] }));
+    setFormData((prev) => ({ ...prev, newImages: [...newImages] }));
   };
 
   const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     if (!formData.subCategoryId || !formData.categoryId) return;
 
-    if (formData.images.length <= 0 || !formData.images[0].file) return;
-
-    console.log("SUBMIT");
-    console.log(formData.images);
-
-    const data = new FormData();
-    data.append("file", formData.images[0].file);
-    data.append("upload_preset", "teetasse");
-
-    try {
-      const response = await fetch("/api/upload/image", {
-        method: "POST",
-        body: data,
-      });
-      // const response = await fetch(
-      //   "https://api.cloudinary.com/v1_1/dmha29xqb/image/upload",
-      //   {
-      //     method: "POST",
-      //     body: data,
-      //   }
-      // );
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log(result);
-        console.log("Image uploaded successfully. Cloudinary URL:", result.url);
-      } else {
-        console.error("Image upload failed:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error during image upload:", error);
+    // Transform attributes(InputField[][]) to Features type
+    const attributes = formData.attributes;
+    let features: any = {};
+    for (let row = 0; row < attributes.length; row++) {
+      features["f" + row] = {
+        [attributes[row][0].value]: attributes[row][1].value,
+      };
     }
 
-    // // Transform attributes(InputField[][]) to Features type
-    // const attributes = formData.attributes;
-    // let features: any = {};
-    // for (let row = 0; row < attributes.length; row++) {
-    //   features["f" + row] = {
-    //     [attributes[row][0].value]: attributes[row][1].value,
-    //   };
-    // }
+    // Transform variants(InputField[][]) to Variant[] type
+    const variantsData = formData.variants;
+    const variants: Variant[] = [];
+    for (let row = 0; row < variantsData.length; row++) {
+      const variant = variantsData[row];
+      variants.push({
+        id: formData.variantIds[row],
+        title: variant[0].value.toString(),
+        price: Number(variant[1].value),
+        stock: Number(variant[2].value),
+      });
+    }
 
-    // // Transform variants(InputField[][]) to Variant[] type
-    // const variantsData = formData.variants;
-    // const variants: Variant[] = [];
-    // for (let row = 0; row < variantsData.length; row++) {
-    //   const variant = variantsData[row];
-    //   variants.push({
-    //     id: formData.variantIds[row],
-    //     title: variant[0].value.toString(),
-    //     price: Number(variant[1].value),
-    //     stock: Number(variant[2].value),
-    //   });
-    // }
+    // Create Product
+    const newProduct: Product = {
+      id: product?.id,
+      title: formData.name,
+      description: formData.description,
+      rating: 0,
+      recommended: formData.recommended,
+      imageIds: formData.imageIds,
+      newImages: formData.newImages.map((image) => image.file) || [],
+      subcategoryId: formData.subCategoryId,
+      variants,
+      features,
+    };
 
-    // // Create Product
-    // const newProduct: Product = {
-    //   id: product?.id,
-    //   title: formData.name,
-    //   description: formData.description,
-    //   rating: 0,
-    //   recommended: formData.recommended,
-    //   imageUrls: formData.images.map((image) => image.url || "") || [],
-    //   subcategoryId: formData.subCategoryId,
-    //   variants,
-    //   features,
-    // };
-
-    // // Call handler
-    // onSubmit && onSubmit(newProduct);
+    // Call handler
+    onSubmit && onSubmit(newProduct);
   };
 
   const setAttributes = (attributes: InputField[][]) => {
@@ -255,7 +229,9 @@ const ProductModal = ({
   return (
     <Modal
       show={show}
-      onClose={onClose}
+      onClose={() => {
+        if (!isLoading && onClose) onClose();
+      }}
       position={position}
       dismissible={dismissible}
     >
@@ -279,6 +255,7 @@ const ProductModal = ({
                   placeholder="Produktname"
                   value={formData.name}
                   onChange={handleInputChange}
+                  disabled={isLoading}
                   required
                 />
               </div>
@@ -295,6 +272,7 @@ const ProductModal = ({
                   name="recommended"
                   checked={formData.recommended}
                   onChange={handleSwitch}
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -313,6 +291,7 @@ const ProductModal = ({
                 placeholder="Beschreibung"
                 value={formData.description}
                 onChange={handleInputChange}
+                disabled={isLoading}
                 required
               />
             </div>
@@ -328,6 +307,7 @@ const ProductModal = ({
                 id="category"
                 onChange={handleChangeCategory}
                 value={formData.categoryId}
+                disabled={isLoading}
                 required
               >
                 {categories.map((item, index) => (
@@ -349,6 +329,7 @@ const ProductModal = ({
                 id="subcategorie"
                 onChange={handleChangeSubCategory}
                 value={formData.subCategoryId}
+                disabled={isLoading}
                 required
               >
                 {categories[
@@ -369,6 +350,7 @@ const ProductModal = ({
               ]}
               inputFields={formData.attributes}
               setInputFields={setAttributes}
+              disabled={isLoading}
             />
             <InputTableManager
               title="Produktvarianten"
@@ -392,6 +374,7 @@ const ProductModal = ({
               idList={formData.variantIds}
               setInputFields={setVariants}
               setIdList={setVariantIdList}
+              disabled={isLoading}
             />
             <div>
               <div className="mb-2 block">
@@ -434,50 +417,31 @@ const ProductModal = ({
                   className="hidden"
                   accept=".png,.jpg,.jpeg"
                   onChange={handleFileDropzone}
+                  disabled={isLoading}
                   multiple
                 />
               </Label>
-              {formData.images.length > 0 && (
+              {(formData.imageIds.length > 0 ||
+                formData.newImages.length > 0) && (
                 <div className="mt-5 flex flex-wrap gap-3">
-                  {formData.images.map((image, index) => (
-                    <div
+                  {formData.imageIds.map((url, index) => (
+                    <CoverImage
                       key={index}
-                      className="bg-gray-200 w-20 h-20 flex flex-col justify-start rounded-md"
-                    >
-                      <Image
-                        src={image.file ? URL.createObjectURL(image.file) : ""}
-                        width={100}
-                        height={100}
-                        alt="img"
-                      />
-
-                      <button
-                        aria-label="Close"
-                        className="ml-auto inline-flex items-center bg-transparent p-0.5 text-sm text-gray-400  hover:text-gray-900 "
-                        type="button"
-                        onClick={() => handleDeleteImage(index)}
-                      >
-                        <svg
-                          stroke="currentColor"
-                          fill="none"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                          className="h-5 w-5"
-                          height="1em"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 18L18 6M6 6l12 12"
-                          ></path>
-                        </svg>
-                      </button>
-                      {image.file?.name}
-                    </div>
+                      imageSrc={`${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${url}`}
+                      onDelete={() => handleDeleteImage(index)}
+                      disabled={isLoading}
+                    />
                   ))}
+                  {formData.newImages
+                    .map((image) => image.url)
+                    .map((url, index) => (
+                      <CoverImage
+                        key={index}
+                        imageSrc={url}
+                        onDelete={() => handleDeleteNewImage(index)}
+                        disabled={isLoading}
+                      />
+                    ))}
                 </div>
               )}
             </div>

@@ -23,7 +23,7 @@ const Products = async () => {
       title: item.title,
       description: item.description,
       rating: item.rating.toNumber(),
-      imageUrls: item.imageUrls,
+      imageIds: item.imageIds,
       features: item.features as Features,
       subcategory: {
         id: item.subcategory.id,

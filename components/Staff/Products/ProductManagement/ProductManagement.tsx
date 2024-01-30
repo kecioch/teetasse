@@ -33,57 +33,137 @@ const ProductManagement = ({ categories, products = [] }: Props) => {
   const [productsData, setProductsData] = useState<Product[]>(products);
 
   const handleAddProduct = (product: Product) => {
-    console.log("HANDLE ADD PRODUCT", product);
-    fetch.post("/api/products", { ...product }).then((res) => {
-      if (res.status !== 200) return;
+    setProductModal((prev) => ({
+      ...prev,
+      button: { title: "Erstelle Produkt..." },
+    }));
 
-      console.log(res);
-      const data = res.data;
-      const newProduct: Product = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        rating: data.rating,
-        recommended: data.recommended,
-        subcategory: data.subcategory,
-        variants: data.products,
-        features: data.features,
-        imageUrls: data.imageUrls,
-      };
-      setProductsData((prev) => [...prev, newProduct]);
-      setProductModal({ show: false });
-    });
+    let newProduct: Product;
+    fetch
+      .post("/api/products", { ...product })
+      .then((res) => {
+        if (res.status !== 200) return;
+
+        const data = res.data;
+        newProduct = {
+          id: data.id,
+          title: data.title,
+          description: data.description,
+          rating: data.rating,
+          recommended: data.recommended,
+          subcategory: data.subcategory,
+          variants: data.products,
+          features: data.features,
+          imageIds: data.imageIds,
+        };
+
+        if (!product.newImages || product.newImages.length <= 0) return;
+
+        const imagesFormData = new FormData();
+        product.newImages.forEach((image, index) => {
+          imagesFormData.append(`image${index + 1}`, image);
+        });
+
+        // POST UPLOAD IMAGES
+        setProductModal((prev) => ({
+          ...prev,
+          button: { title: "Lade Bilder hoch..." },
+        }));
+        return fetch.post(
+          `/api/products/${data.id}/images`,
+          imagesFormData,
+          false
+        );
+      })
+      .then((res) => {
+        if (!res) return;
+        if (res?.status !== 200) return console.error("Error Image Upload");
+
+        const data = res.data;
+        newProduct.imageIds = data.imageIds;
+      })
+      .then(() => {
+        setProductsData((prev) => [...prev, newProduct]);
+        setProductModal({ show: false });
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        setProductModal((prev) => ({
+          ...prev,
+          button: { title: "Hinzufügen" },
+        }));
+      });
   };
 
   const handleEditProduct = (product: Product) => {
-    console.log("HANDLE EDIT PRODUCT", product);
-    fetch.put(`/api/products/${product.id}`, { ...product }).then((res) => {
-      if (res.status !== 200) return;
+    setProductModal((prev) => ({
+      ...prev,
+      button: { title: "Aktualisiere Produktdaten..." },
+    }));
 
-      console.log(res);
-      const data = res.data;
-      const updatetProduct: Product = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        rating: data.rating,
-        recommended: data.recommended,
-        subcategory: data.subcategory,
-        variants: data.products,
-        features: data.features,
-        imageUrls: data.imageUrls,
-      };
+    let updatetProduct: Product;
+    fetch
+      .put(`/api/products/${product.id}`, { ...product })
+      .then((res) => {
+        if (res.status !== 200) return;
 
-      const index = productsData.findIndex((el) => el.id === product.id);
-      const newProductsData = [...productsData];
-      newProductsData[index] = updatetProduct;
-      setProductsData(newProductsData);
-      setProductModal({ show: false });
-    });
+        const data = res.data;
+        updatetProduct = {
+          id: data.id,
+          title: data.title,
+          description: data.description,
+          rating: data.rating,
+          recommended: data.recommended,
+          subcategory: data.subcategory,
+          variants: data.products,
+          features: data.features,
+          imageIds: data.imageIds,
+        };
+
+        if (!product.newImages || product.newImages.length <= 0) return;
+
+        const imagesFormData = new FormData();
+        product.newImages.forEach((image, index) => {
+          imagesFormData.append(`image${index + 1}`, image);
+        });
+
+        // POST UPLOAD IMAGES
+        setProductModal((prev) => ({
+          ...prev,
+          button: { title: "Lade Bilder hoch..." },
+        }));
+        return fetch.post(
+          `/api/products/${data.id}/images`,
+          imagesFormData,
+          false
+        );
+      })
+      .then((res) => {
+        if (!res) return;
+        if (res?.status !== 200) return console.error("Error Image Upload");
+
+        const data = res.data;
+        updatetProduct.imageIds = data.imageIds;
+      })
+      .then(() => {
+        const index = productsData.findIndex((el) => el.id === product.id);
+        const newProductsData = [...productsData];
+        newProductsData[index] = updatetProduct;
+        setProductsData(newProductsData);
+        setProductModal({ show: false });
+      })
+      .catch((e) => {})
+      .finally(() => {
+        setProductModal((prev) => ({
+          ...prev,
+          button: { title: "Änderungen speichern" },
+        }));
+      });
   };
 
   const handleDeleteProduct = (index: number) => {
-    console.log("DELETE HANLDE PRODKT", index);
     const id = productsData[index].id;
 
     fetch.delete(`/api/products/${id}`).then((res) => {

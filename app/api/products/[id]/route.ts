@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { hasDuplicateProductTitle } from "@/lib/services/product";
+import { deleteFile } from "@/services/cloudinary/delete";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
 import { NextResponse } from "next/server";
@@ -12,7 +13,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
     if (!id || id === null)
       throw new CustomError("ProduktId darf nicht leer sein");
 
-    console.log("PUT PRODUCTS ", id);
+    console.log("PUT PRODUCT ", id);
     console.log(data);
 
     const {
@@ -20,7 +21,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
       description,
       subcategoryId,
       recommended,
-      imageUrls,
+      imageIds,
       variants,
       features,
     } = data;
@@ -47,12 +48,13 @@ export async function PUT(req: Request, { params }: IdSlug) {
     });
     if (!oldProductgroup) throw new CustomError("Produkt wurde nicht gefunden");
 
-    // Check changes of imageUrls
-    for (let i = 0; i < oldProductgroup.imageUrls.length; i++) {
-      const imgUrl = oldProductgroup.imageUrls[i];
-      if (!imageUrls.includes(imgUrl)) {
-        console.log("DELETE IMG FROM CLOUD", imgUrl);
-        // DELETE IMG FROM CLOUDSTORAGE
+    // Check changes of imageIds
+    for (let i = 0; i < oldProductgroup.imageIds.length; i++) {
+      const imgId = oldProductgroup.imageIds[i];
+      if (!imageIds.includes(imgId)) {
+        console.log("DELETE IMG FROM CLOUD", imgId);
+        // DELETE IMG FROM  CLOUDINARY CLOUDSTORAGE
+        await deleteFile(imgId);
       }
     }
 
@@ -96,7 +98,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
       subcategoryId,
       recommended,
       features,
-      imageUrls,
+      imageIds,
     };
 
     const updatetProductgroup = await prisma.productgroup.update({
@@ -128,6 +130,8 @@ export async function DELETE(req: Request, { params }: IdSlug) {
     if (!id || id === null)
       throw new CustomError("ProduktId darf nicht leer sein");
 
+    console.log("DELETE PRODUCT ", id);
+
     const productgroup = await prisma.productgroup.findUnique({
       where: { id, visible: true },
       include: {
@@ -135,6 +139,11 @@ export async function DELETE(req: Request, { params }: IdSlug) {
       },
     });
     if (!productgroup) throw new CustomError("Produkt nicht gefunden");
+
+    // DELETE IMAGES FROM CLOUDINARY
+    for (const imageId of productgroup.imageIds) {
+      await deleteFile(imageId);
+    }
 
     let visible = true;
     let deletedProductgroup;
@@ -158,7 +167,7 @@ export async function DELETE(req: Request, { params }: IdSlug) {
     else
       deletedProductgroup = await prisma.productgroup.update({
         where: { id },
-        data: { visible: false },
+        data: { visible: false, imageIds: [] },
       });
 
     return NextResponse.json(deletedProductgroup);

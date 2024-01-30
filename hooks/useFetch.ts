@@ -28,6 +28,7 @@ const useFetch = () => {
       // }
       rtn = { status: res.status, data };
     } catch (err) {
+      console.log(err);
       rtn = {
         status: res?.status || 400,
         msg: res?.status !== 200 && "Fehler bei der Serveranfrage",
@@ -46,30 +47,42 @@ const useFetch = () => {
     return res;
   };
 
-  const post = async (url: string, body: any) => {
-    const res = await request(url, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    return res;
+  const post = async (url: string, body: any, sendAsJson: boolean = true) => {
+    if (sendAsJson)
+      return await request(url, {
+        method: "POST",
+        credentials: "include",
+        headers: sendAsJson && {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    else
+      return await request(url, {
+        method: "POST",
+        credentials: "include",
+        body,
+      });
   };
 
-  const put = async (url: string, body: any) => {
-    const res = await request(url, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-    return res;
+  const put = async (url: string, body: any, sendAsJson: boolean = true) => {
+    if (sendAsJson)
+      return await request(url, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    else
+      return await request(url, {
+        method: "PUT",
+        credentials: "include",
+        body,
+      });
   };
 
   const patch = async (url: string, body: any) => {

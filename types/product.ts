@@ -22,6 +22,7 @@ export interface Product {
   features: Features;
   subcategory?: Subcategory;
   subcategoryId?: number;
-  imageUrls: string[];
+  imageIds: string[];
+  newImages?: File[];
   variants: Variant[];
 }

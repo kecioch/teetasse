@@ -42,7 +42,7 @@ model Productgroup {
   recommended   Boolean     @default(false)
   description   String      @db.Text
   features      Json?
-  imageUrls     String[]
+  imageIds     String[]
   rating        Decimal     @default(0.0) @db.Decimal(2, 1)
   ratingCnt     Int         @default(0)
   reviews       Review[]

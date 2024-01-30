@@ -11,6 +11,7 @@ interface Props {
   configCols: Config[];
   inputFields: InputField[][];
   idList?: number[];
+  disabled?: boolean;
   setInputFields: (attributes: InputField[][]) => void;
   setIdList?: (idList: number[]) => void;
 }
@@ -21,6 +22,7 @@ const InputTableManager = ({
   configCols,
   inputFields,
   idList,
+  disabled,
   setInputFields,
   setIdList,
 }: Props) => {
@@ -42,8 +44,15 @@ const InputTableManager = ({
         idList={idList}
         setInputFields={setInputFields}
         setIdList={setIdList}
+        disabled={disabled}
       />
-      <Button className="mt-3" color="light" pill onClick={handleInputAdd}>
+      <Button
+        className="mt-3"
+        color="light"
+        pill
+        onClick={handleInputAdd}
+        disabled={disabled}
+      >
         {buttonTitle}
       </Button>
     </div>

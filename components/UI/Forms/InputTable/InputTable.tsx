@@ -20,6 +20,7 @@ export interface Config {
 interface Props {
   inputFields: InputField[][];
   configCols: Config[];
+  disabled?: boolean;
   idList?: number[];
   setInputFields: (attributes: InputField[][]) => void;
   setIdList?: (idList: number[]) => void;
@@ -29,6 +30,7 @@ const InputTable = ({
   inputFields,
   configCols,
   idList,
+  disabled,
   setInputFields,
   setIdList,
 }: Props) => {
@@ -91,6 +93,7 @@ const InputTable = ({
                       onChange={(event) =>
                         handleInputChange(rowIndex, cellIndex, event)
                       }
+                      disabled={disabled}
                       required
                     />
                   </Table.Cell>
@@ -99,6 +102,7 @@ const InputTable = ({
                   <button
                     type="button"
                     onClick={() => handleInputDelete(rowIndex)}
+                    disabled={disabled}
                   >
                     <FontAwesomeIcon
                       icon={faTrash}

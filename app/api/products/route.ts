@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { getProducts, hasDuplicateProductTitle } from "@/lib/services/product";
+import { upload } from "@/services/cloudinary/upload";
 import { CustomError } from "@/utils/errors/CustomError";
 import { NextResponse } from "next/server";
 
@@ -16,13 +17,14 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    console.log(data);
+
+    console.log("POST PRODUCT", data);
+
     const {
       title,
       description,
       subcategoryId,
       recommended,
-      imageUrls,
       variants,
       features,
     } = data;
@@ -49,7 +51,6 @@ export async function POST(req: Request) {
       description,
       subcategoryId,
       recommended,
-      imageUrls,
       features,
     };
 
