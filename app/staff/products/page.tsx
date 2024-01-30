@@ -8,7 +8,7 @@ import React from "react";
 const Products = async () => {
   const loadedCategories = await getCategories();
   const loadedProducts = await getProducts();
-  console.log(loadedProducts);
+  // console.log(loadedProducts);
 
   const categories: Category[] | undefined = loadedCategories?.map((item) => ({
     id: item.id,
@@ -44,7 +44,7 @@ const Products = async () => {
     return product;
   });
 
-  console.log(products);
+  // console.log(products);
 
   return <ProductManagement categories={categories} products={products} />;
 };

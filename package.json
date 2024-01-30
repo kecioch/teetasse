@@ -16,6 +16,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@prisma/client": "^5.8.1",
     "@reduxjs/toolkit": "^2.0.1",
+    "cloudinary": "^2.0.0",
     "flowbite": "^2.2.1",
     "flowbite-react": "^0.7.2",
     "next": "14.0.4",

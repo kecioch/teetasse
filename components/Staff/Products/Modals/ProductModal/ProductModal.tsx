@@ -1,5 +1,4 @@
 "use client";
-
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -18,6 +17,7 @@ import InputTableManager from "../../../../UI/Forms/InputTable/InputTableManager
 import { Category } from "@/types/category";
 import { Product, Variant } from "@/types/product";
 import LoadingButton from "@/components/UI/Buttons/LoadingButton";
+import Image from "next/image";
 
 interface Image {
   url?: string;
@@ -164,47 +164,80 @@ const ProductModal = ({
     setFormData((prev) => ({ ...prev, images: [...newImages] }));
   };
 
-  const handleSubmit = (ev: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (ev: React.FormEvent<HTMLFormElement>) => {
     ev.preventDefault();
     if (!formData.subCategoryId || !formData.categoryId) return;
 
-    // Transform attributes(InputField[][]) to Features type
-    const attributes = formData.attributes;
-    let features: any = {};
-    for (let row = 0; row < attributes.length; row++) {
-      features["f" + row] = {
-        [attributes[row][0].value]: attributes[row][1].value,
-      };
-    }
+    if (formData.images.length <= 0 || !formData.images[0].file) return;
 
-    // Transform variants(InputField[][]) to Variant[] type
-    const variantsData = formData.variants;
-    const variants: Variant[] = [];
-    for (let row = 0; row < variantsData.length; row++) {
-      const variant = variantsData[row];
-      variants.push({
-        id: formData.variantIds[row],
-        title: variant[0].value.toString(),
-        price: Number(variant[1].value),
-        stock: Number(variant[2].value),
+    console.log("SUBMIT");
+    console.log(formData.images);
+
+    const data = new FormData();
+    data.append("file", formData.images[0].file);
+    data.append("upload_preset", "teetasse");
+
+    try {
+      const response = await fetch("/api/upload/image", {
+        method: "POST",
+        body: data,
       });
+      // const response = await fetch(
+      //   "https://api.cloudinary.com/v1_1/dmha29xqb/image/upload",
+      //   {
+      //     method: "POST",
+      //     body: data,
+      //   }
+      // );
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log(result);
+        console.log("Image uploaded successfully. Cloudinary URL:", result.url);
+      } else {
+        console.error("Image upload failed:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error during image upload:", error);
     }
 
-    // Create Product
-    const newProduct: Product = {
-      id: product?.id,
-      title: formData.name,
-      description: formData.description,
-      rating: 0,
-      recommended: formData.recommended,
-      imageUrls: formData.images.map((image) => image.url || "") || [],
-      subcategoryId: formData.subCategoryId,
-      variants,
-      features,
-    };
+    // // Transform attributes(InputField[][]) to Features type
+    // const attributes = formData.attributes;
+    // let features: any = {};
+    // for (let row = 0; row < attributes.length; row++) {
+    //   features["f" + row] = {
+    //     [attributes[row][0].value]: attributes[row][1].value,
+    //   };
+    // }
 
-    // Call handler
-    onSubmit && onSubmit(newProduct);
+    // // Transform variants(InputField[][]) to Variant[] type
+    // const variantsData = formData.variants;
+    // const variants: Variant[] = [];
+    // for (let row = 0; row < variantsData.length; row++) {
+    //   const variant = variantsData[row];
+    //   variants.push({
+    //     id: formData.variantIds[row],
+    //     title: variant[0].value.toString(),
+    //     price: Number(variant[1].value),
+    //     stock: Number(variant[2].value),
+    //   });
+    // }
+
+    // // Create Product
+    // const newProduct: Product = {
+    //   id: product?.id,
+    //   title: formData.name,
+    //   description: formData.description,
+    //   rating: 0,
+    //   recommended: formData.recommended,
+    //   imageUrls: formData.images.map((image) => image.url || "") || [],
+    //   subcategoryId: formData.subCategoryId,
+    //   variants,
+    //   features,
+    // };
+
+    // // Call handler
+    // onSubmit && onSubmit(newProduct);
   };
 
   const setAttributes = (attributes: InputField[][]) => {
@@ -411,6 +444,13 @@ const ProductModal = ({
                       key={index}
                       className="bg-gray-200 w-20 h-20 flex flex-col justify-start rounded-md"
                     >
+                      <Image
+                        src={image.file ? URL.createObjectURL(image.file) : ""}
+                        width={100}
+                        height={100}
+                        alt="img"
+                      />
+
                       <button
                         aria-label="Close"
                         className="ml-auto inline-flex items-center bg-transparent p-0.5 text-sm text-gray-400  hover:text-gray-900 "
