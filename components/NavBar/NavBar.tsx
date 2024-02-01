@@ -22,7 +22,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="fixed bg-green-950 text-white p-4 z-20 top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
+    <nav className="fixed bg-green-950 text-white p-4 z-50 top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
       <ContentContainer>
         <div className="flex flex-row justify-between">
           <Link href="/">
