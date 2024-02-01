@@ -1,7 +1,6 @@
 "use client";
 
 import { Variant } from "@/types/product";
-import { Label, Radio } from "flowbite-react";
 import React from "react";
 
 interface Props {

@@ -11,13 +11,20 @@ interface Props {
 const ProductRating = ({ rating, ratingCnt, href, maxRating = 5 }: Props) => {
   const stars = [];
   for (let i = 0; i < maxRating; i++) {
-    stars.push(<RatingStar key={i} filled={Math.floor(rating) > i} />);
+    const isFull = Math.floor(rating) > i;
+    stars.push(
+      <RatingStar
+        key={i}
+        className={isFull ? "text-green-800" : ""}
+        filled={isFull}
+      />
+    );
   }
 
   const content = (
-    <Rating>
+    <Rating className="inline-flex flex-row">
       {stars}
-      {ratingCnt && (
+      {ratingCnt !== undefined && (
         <p className="ml-2 text-sm text-gray-500 font-light">({ratingCnt})</p>
       )}
     </Rating>

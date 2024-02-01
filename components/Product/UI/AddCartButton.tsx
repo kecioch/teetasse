@@ -1,7 +1,6 @@
 "use client";
 
 import React, { ChangeEvent, useState } from "react";
-import { Button } from "flowbite-react";
 import styles from "./AddCartButton.module.css";
 
 interface Props {

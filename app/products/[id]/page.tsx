@@ -1,27 +1,20 @@
 import ImageCarousel from "@/components/Product/ImageCarousel/ImageCarousel";
 import ProductToCart from "@/components/Product/ProductToCart";
 import ProductRating from "@/components/Product/Rating/ProductRating";
-import AddCartButton from "@/components/Product/UI/AddCartButton";
-import SelectProduct from "@/components/Product/UI/SelectProduct";
+import ReviewSection from "@/components/Product/Reviews/ReviewSection";
 import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { getProduct } from "@/lib/services/product";
-import { Features, Product } from "@/types/product";
+import { Product } from "@/types/product";
+import { Review } from "@/types/review";
 import { IdSlug } from "@/types/slugs/Id";
-import { Subcategory } from "@/types/subcategory";
 import {
   Breadcrumb,
-  Button,
-  Dropdown,
-  DropdownItem,
-  Rating,
-  Select,
   Table,
   TableBody,
   TableCell,
   TableRow,
 } from "flowbite-react";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -86,10 +79,12 @@ const Products = async ({ params }: IdSlug) => {
                     key={index}
                     className="odd:bg-stone-50 even:bg-white"
                   >
-                    <TableCell className="font-bold text-lg">
+                    <TableCell className="font-bold text-md md:text-lg">
                       {item.key}
                     </TableCell>
-                    <TableCell className="text-lg">{item.value}</TableCell>
+                    <TableCell className="text-md md:text-lg">
+                      {item.value}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -99,6 +94,7 @@ const Products = async ({ params }: IdSlug) => {
       )}
       <section className="mt-10">
         <SubHeader>Bewertungen</SubHeader>
+        <ReviewSection data={product.reviews} />
       </section>
     </ContentContainer>
   );
