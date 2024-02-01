@@ -51,9 +51,9 @@ const Products = async ({ params }: IdSlug) => {
             <h2 className="text-center text-md font-light">Nr. {product.id}</h2>
             <h1 className="text-center text-3xl mb-3">{product.title}</h1>
             <ProductRating
-              rating={product.rating + 3}
-              ratingCnt={144}
-              href="#ratings"
+              rating={product.rating}
+              ratingCnt={product.ratingCnt}
+              href="#reviews"
             />
             <p className="text-center font-light mt-3">
               Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -93,7 +93,7 @@ const Products = async ({ params }: IdSlug) => {
         </section>
       )}
       <section className="mt-10">
-        <SubHeader>Bewertungen</SubHeader>
+        <SubHeader id="reviews">Bewertungen</SubHeader>
         <ReviewSection data={product.reviews} />
       </section>
     </ContentContainer>
