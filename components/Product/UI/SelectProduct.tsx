@@ -27,7 +27,7 @@ const SelectProduct = ({ className, products }: Props) => {
             type="radio"
             value={item.id}
             defaultChecked={index === 0}
-            className="w-4 h-4 text-green-600 border-gray-300"
+            className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
             onChange={handleChange}
           />
           <label

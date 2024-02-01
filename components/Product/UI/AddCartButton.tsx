@@ -22,11 +22,11 @@ const AddCartButton = ({ className }: Props) => {
       <div className="relative flex items-center max-w-[8rem]">
         <button
           type="button"
-          className="bg-transparent p-3 focus:outline-none"
+          className="bg-transparent p-3 focus:outline-none active:text-gray-400 text-gray-900"
           onClick={() => setQty((prev) => (prev > 0 ? prev - 1 : 0))}
         >
           <svg
-            className="w-3 h-3 text-gray-900"
+            className="w-3 h-3"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -55,11 +55,11 @@ const AddCartButton = ({ className }: Props) => {
         />
         <button
           type="button"
-          className="bg-transparent p-3 focus:outline-none"
+          className="bg-transparent p-3 focus:outline-none active:text-gray-400 text-gray-900"
           onClick={() => setQty((prev) => prev + 1)}
         >
           <svg
-            className="w-3 h-3 text-gray-900 dark:text-white"
+            className="w-3 h-3"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
