@@ -26,7 +26,7 @@ export async function getProduct(id: number) {
       include: {
         products: { where: { visible: true }, orderBy: { title: "asc" } },
         subcategory: { include: { category: true } },
-        reviews: true,
+        reviews: { include: { author: true } },
       },
     });
 
@@ -59,6 +59,11 @@ export async function getProduct(id: number) {
           id: review.id,
           comment: review.comment,
           rating: review.rating,
+          authorId: review.authorId,
+          authorName: `${
+            review.author.firstName
+          } ${review.author.lastName.substring(0, 1)}.`,
+          created: review.created,
         })) || [],
     };
 

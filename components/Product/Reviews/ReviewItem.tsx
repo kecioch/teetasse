@@ -10,7 +10,7 @@ interface Props {
 const ReviewItem = ({ data, className }: Props) => {
   return (
     <div className={className}>
-      <p className="font-extralight">{data.date.toLocaleDateString()}</p>
+      <p className="font-extralight">{data.created.toLocaleDateString()}</p>
       <ProductRating rating={data.rating} />
       <p className="mt-1 mb-2">{data.authorName}</p>
       <p className="font-light">{data.comment}</p>

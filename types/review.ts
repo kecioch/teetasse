@@ -4,5 +4,5 @@ export interface Review {
   authorName: string;
   rating: number;
   comment: string;
-  date: Date;
+  created: Date;
 }

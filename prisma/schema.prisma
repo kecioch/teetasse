@@ -11,59 +11,144 @@ datasource db {
 }
 
 model Category {
-  id            Int           @id @default(autoincrement())
-  title         String        @unique
+  id    Int    @id @default(autoincrement())
+  title String @unique
+
+  // RELATIONS
   subcategories Subcategory[]
 }
 
 model Subcategory {
-  id            Int            @id @default(autoincrement())
-  title         String
-  category      Category       @relation(fields: [categoryId], references: [id])
+  id    Int    @id @default(autoincrement())
+  title String
+
+  // RELATIONS
   categoryId    Int
+  category      Category       @relation(fields: [categoryId], references: [id])
   productgroups Productgroup[]
 
   @@unique([title, categoryId])
 }
 
-model Review {
-  id             Int          @id @default(autoincrement())
-  // ADD AUTHOR REF
-  rating         Int
-  comment        String
-  productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
-  productgroupId Int
-}
-
 model Productgroup {
-  id            Int         @id @default(autoincrement())
-  title         String
-  visible       Boolean     @default(true)
-  recommended   Boolean     @default(false)
-  description   String      @db.Text
-  features      Json?
-  imageIds      String[]
-  rating        Decimal     @default(0.0) @db.Decimal(2, 1)
-  ratingCnt     Int         @default(0)
+  id          Int      @id @default(autoincrement())
+  title       String
+  visible     Boolean  @default(true)
+  recommended Boolean  @default(false)
+  description String   @db.Text
+  created     DateTime @default(now())
+  features    Json?
+  imageIds    String[]
+  rating      Decimal  @default(0.0) @db.Decimal(2, 1)
+  ratingCnt   Int      @default(0)
+
+  // RELATIONS
   reviews       Review[]
   products      Product[]
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
   subcategoryId Int
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
 }
 
 model Product {
-  id             Int          @id @default(autoincrement())
-  title          String
-  visible        Boolean      @default(true)
-  stock          Int          @default(0)
-  price          Decimal      @default(0.00)
-  productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
+  id      Int     @id @default(autoincrement())
+  title   String
+  visible Boolean @default(true)
+  stock   Int     @default(0)
+  price   Decimal @default(0.00)
+
+  // RELATIONS
+  orders         ProductOrder[]
   productgroupId Int
-  orders         Order[]
+  productgroup   Productgroup   @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+  id      Int      @id @default(autoincrement())
+  rating  Int
+  comment String
+  created DateTime @default(now())
+
+  // RELATIONS
+  authorId       Int
+  author         User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  productgroupId Int
+  productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id        Int    @id @default(autoincrement())
+  lastName  String
+  firstName String
+  username  String @unique
+  email     String @unique
+
+  // RELATIONS 
+  reviews Review[]
+  orders  Order[]
+  address UserAddress?
+}
+
+model UserAddress {
+  id      Int    @id @default(autoincrement())
+  street  String
+  nr      String
+  zip     String
+  city    String
+  country String
+
+  // RELATIONS
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CustomerInformation {
+  id        Int    @id @default(autoincrement())
+  lastName  String
+  firstName String
+  email     String
+
+  // RELATIONS
+  orderId Int   @unique
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Order {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
+  id Int @id @default(autoincrement())
+
+  // RELATIONS
+  userId       Int?
+  user         User?                @relation(fields: [userId], references: [id])
+  customerInfo CustomerInformation?
+  products     ProductOrder[]
+  delivery     DeliveryOrder?
+}
+
+model ProductOrder {
+  id       Int @id @default(autoincrement())
+  quantity Int
+
+  // RELATIONS
+  orderId   Int
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@unique([orderId, productId])
+}
+
+model DeliveryOrder {
+  id Int @id @default(autoincrement())
+
+  // DELIVERY INFORMATION
+  firstName String
+  lastName  String
+  street    String
+  nr        String
+  zip       String
+  city      String
+  country   String
+
+  // RELATIONS
+  orderId Int   @unique
+  order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }

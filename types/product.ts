@@ -22,10 +22,10 @@ export interface Product {
   ratingCnt: number;
   recommended: boolean;
   features: Features;
+  imageIds: string[];
+  variants: Variant[];
   subcategory?: Subcategory;
   subcategoryId?: number;
   reviews?: Review[];
-  imageIds: string[];
   newImages?: File[];
-  variants: Variant[];
 }

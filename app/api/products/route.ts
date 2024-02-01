@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { getProducts, hasDuplicateProductTitle } from "@/lib/services/product";
-import { upload } from "@/services/cloudinary/upload";
 import { CustomError } from "@/utils/errors/CustomError";
 import { NextResponse } from "next/server";
 

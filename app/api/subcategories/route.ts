@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { CustomError } from "@/utils/errors/CustomError";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   try {
@@ -9,8 +9,8 @@ export async function GET(req: Request) {
         category: true,
       },
       orderBy: {
-        id: "asc"
-      }
+        id: "asc",
+      },
     });
     return NextResponse.json(subcategories);
   } catch (e) {
