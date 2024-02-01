@@ -29,7 +29,7 @@ model Subcategory {
 model Review {
   id             Int          @id @default(autoincrement())
   // ADD AUTHOR REF
-  rating         Decimal      @db.Decimal(2, 1)
+  rating         Int
   comment        String
   productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
   productgroupId Int
@@ -37,12 +37,12 @@ model Review {
 
 model Productgroup {
   id            Int         @id @default(autoincrement())
-  title         String      
+  title         String
   visible       Boolean     @default(true)
   recommended   Boolean     @default(false)
   description   String      @db.Text
   features      Json?
-  imageIds     String[]
+  imageIds      String[]
   rating        Decimal     @default(0.0) @db.Decimal(2, 1)
   ratingCnt     Int         @default(0)
   reviews       Review[]

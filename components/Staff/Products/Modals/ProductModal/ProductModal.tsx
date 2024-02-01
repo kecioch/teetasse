@@ -202,6 +202,7 @@ const ProductModal = ({
       title: formData.name,
       description: formData.description,
       rating: 0,
+      ratingCnt: 0,
       recommended: formData.recommended,
       imageIds: formData.imageIds,
       newImages: formData.newImages.map((image) => image.file) || [],

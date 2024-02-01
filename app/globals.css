@@ -28,7 +28,7 @@ body {
 
 ::-webkit-scrollbar {
   max-width: 10px;
-  max-height: 12px;
+  max-height: 8px;
 }
 
 /* Set the style for the scrollbar track */

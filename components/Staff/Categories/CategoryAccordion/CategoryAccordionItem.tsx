@@ -99,7 +99,7 @@ const CategoryAccordionItem = ({ category, actions }: Props) => {
               }}
             />
           ))}
-        {category.subs.length <= 0 && (
+        {category.subs && category.subs.length <= 0 && (
           <p className="mb-2 text-gray-400">Keine Subkategorien vorhanden</p>
         )}
       </Accordion.Content>

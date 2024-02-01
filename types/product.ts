@@ -1,3 +1,4 @@
+import { Review } from "./review";
 import { Subcategory } from "./subcategory";
 
 export interface Variant {
@@ -18,10 +19,12 @@ export interface Product {
   title: string;
   description: string;
   rating: number;
+  ratingCnt: number;
   recommended: boolean;
   features: Features;
   subcategory?: Subcategory;
   subcategoryId?: number;
+  reviews?: Review[];
   imageIds: string[];
   newImages?: File[];
   variants: Variant[];

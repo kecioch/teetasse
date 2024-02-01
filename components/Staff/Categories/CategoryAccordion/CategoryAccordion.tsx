@@ -1,7 +1,8 @@
 import ButtonFaIcon from "@/components/UI/Buttons/ButtonFaIcon";
 import { Accordion } from "flowbite-react";
 import React from "react";
-import CategoryAccordionItem, { Category } from "./CategoryAccordionItem";
+import CategoryAccordionItem from "./CategoryAccordionItem";
+import { Category } from "@/types/category";
 
 export interface Actions {
   item: {
