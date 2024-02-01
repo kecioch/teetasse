@@ -70,7 +70,7 @@ const ImageCarousel = ({ imageUrls, className }: Props) => {
           </div>
         ))}
       </Carousel>
-      <div className="gap-2 mt-5 md:mt-10 overflow-x-scroll w-full pb-2">
+      <div className="gap-2 mt-5 md:mt-10 overflow-x-auto w-full pb-2">
         <div className="flex flex-nowrap">
           {imageUrls.map((url, index) => (
             <div
