@@ -84,7 +84,7 @@ const Products = async ({ params }: IdSlug) => {
                 {features.map((item, index) => (
                   <TableRow
                     key={index}
-                    className="odd:bg-gray-50 even:bg-white"
+                    className="odd:bg-stone-50 even:bg-white"
                   >
                     <TableCell className="font-bold text-lg">
                       {item.key}
