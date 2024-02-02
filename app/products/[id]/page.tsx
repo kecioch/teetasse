@@ -6,7 +6,6 @@ import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { getProduct } from "@/lib/services/product";
 import { Product } from "@/types/product";
-import { Review } from "@/types/review";
 import { IdSlug } from "@/types/slugs/Id";
 import {
   Breadcrumb,
@@ -18,7 +17,7 @@ import {
 import { redirect } from "next/navigation";
 import React from "react";
 
-const Products = async ({ params }: IdSlug) => {
+const ProductPage = async ({ params }: IdSlug) => {
   const product: Product | undefined = await getProduct(parseInt(params.id));
   if (!product) redirect("/");
   console.log(product.variants);
@@ -55,12 +54,7 @@ const Products = async ({ params }: IdSlug) => {
               ratingCnt={product.ratingCnt}
               href="#reviews"
             />
-            <p className="text-center font-light mt-3">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Asperiores facere pariatur minus tempora repellat est nihil
-              aliquam nobis sapiente obcaecati officia maxime nam itaque quo,
-              rem nulla repudiandae laudantium voluptatibus.
-            </p>
+            <p className="text-center font-light mt-3">{product.description}</p>
             <ProductToCart className="max-w-[25em] mt-10" product={product} />
           </section>
         </section>
@@ -97,4 +91,4 @@ const Products = async ({ params }: IdSlug) => {
   );
 };
 
-export default Products;
+export default ProductPage;
