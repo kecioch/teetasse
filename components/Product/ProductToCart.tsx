@@ -1,21 +1,49 @@
 "use client";
 
-import React from "react";
-import SelectProduct from "./UI/SelectProduct";
+import React, { useState } from "react";
 import AddCartButton from "./UI/AddCartButton";
-import { Variant } from "@/types/product";
+import { Product, Variant } from "@/types/product";
+import SelectVariant from "./UI/SelectVariant";
 
 interface Props {
-  variants: Variant[];
+  product: Product;
   className?: string;
 }
 
-const ProductToCart = ({ variants, className }: Props) => {
+const ProductToCart = ({ product, className }: Props) => {
+  const [selectedVariantIndex, setSelectedVariantIndex] = useState<number>(
+    product.variants.findIndex((item) => item.stock > 0)
+  );
+
+  const handleSelectVariant = (index: number) => {
+    setSelectedVariantIndex(index);
+  };
+
+  const handleAddToCart = (qty: number) => {
+    console.log(
+      `ADD TO CART: ${product.title} / ${product.variants[selectedVariantIndex].title} (${qty})`
+    );
+  };
 
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
-      <SelectProduct products={variants} className="inline-block w-[80%]" />
-      <AddCartButton className="mt-5 w-full" />
+      <SelectVariant
+        variants={product.variants}
+        className="inline-block w-[80%]"
+        value={selectedVariantIndex}
+        onChange={handleSelectVariant}
+      />
+      {selectedVariantIndex >= 0 ? (
+        <AddCartButton
+          className="mt-5 w-full"
+          variant={product.variants[selectedVariantIndex]}
+          onClick={handleAddToCart}
+        />
+      ) : (
+        <p className="mt-2 text-red-500 font-light">
+          Der Artikel ist nicht mehr vorrätig
+        </p>
+      )}
     </div>
   );
 };

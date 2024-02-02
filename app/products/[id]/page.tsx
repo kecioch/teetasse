@@ -61,10 +61,7 @@ const Products = async ({ params }: IdSlug) => {
               aliquam nobis sapiente obcaecati officia maxime nam itaque quo,
               rem nulla repudiandae laudantium voluptatibus.
             </p>
-            <ProductToCart
-              className="max-w-[25em] mt-10"
-              variants={product.variants}
-            />
+            <ProductToCart className="max-w-[25em] mt-10" product={product} />
           </section>
         </section>
       </header>
