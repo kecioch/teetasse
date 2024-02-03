@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import AddCartButton from "./UI/AddCartButton";
-import { Product, Variant } from "@/types/product";
+import { Product } from "@/types/product";
 import SelectVariant from "./UI/SelectVariant";
 
 interface Props {

@@ -6,9 +6,16 @@ interface Props {
   ratingCnt?: number;
   maxRating?: number;
   href?: string;
+  size?: string;
 }
 
-const ProductRating = ({ rating, ratingCnt, href, maxRating = 5 }: Props) => {
+const ProductRating = ({
+  rating,
+  ratingCnt,
+  href,
+  size = "sm",
+  maxRating = 5,
+}: Props) => {
   const stars = [];
   for (let i = 0; i < maxRating; i++) {
     const isFull = Math.floor(rating) > i;
@@ -22,7 +29,7 @@ const ProductRating = ({ rating, ratingCnt, href, maxRating = 5 }: Props) => {
   }
 
   const content = (
-    <Rating className="inline-flex flex-row">
+    <Rating className="inline-flex flex-row" size={size}>
       {stars}
       {ratingCnt !== undefined && (
         <p className="ml-2 text-sm text-gray-500 font-light">({ratingCnt})</p>

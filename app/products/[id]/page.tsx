@@ -20,7 +20,6 @@ import React from "react";
 const ProductPage = async ({ params }: IdSlug) => {
   const product: Product | undefined = await getProduct(parseInt(params.id));
   if (!product) redirect("/");
-  console.log(product.variants);
 
   const features: { key: string; value: string }[] = [];
   Object.values(product.features).forEach((feature) => {

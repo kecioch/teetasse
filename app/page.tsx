@@ -16,7 +16,7 @@ const Home = () => {
               Erlesene Auswahl, unvergleichlicher Genuss!
             </p>
             {/* Entdecke alle Teesorten */}
-            <Link href="/shop" className="mt-12">
+            <Link href="/products" className="mt-12">
               <ButtonOutline className="uppercase">
                 Entdecke alle Teesorten
               </ButtonOutline>
