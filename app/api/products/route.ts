@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     const sortBy = req.nextUrl.searchParams.get("sortBy");
     const page = req.nextUrl.searchParams.get("page");
     const pageSize = req.nextUrl.searchParams.get("pageSize");
+    const search = req.nextUrl.searchParams.get("search");
 
     const options: FilterOptions = {
       categoryId: categoryId ? parseInt(categoryId) : undefined,
@@ -18,9 +19,9 @@ export async function GET(req: NextRequest) {
       sortBy: sortBy ? (parseInt(sortBy) as SortBy) : undefined,
       page: page ? parseInt(page) : undefined,
       pageSize: pageSize ? parseInt(pageSize) : undefined,
+      search: search || undefined,
     };
 
-    console.log("PARAMS:", categoryId, subcategoryId, sortBy, page, pageSize);
     const products = await getProducts(options);
     if (!products)
       return NextResponse.json(

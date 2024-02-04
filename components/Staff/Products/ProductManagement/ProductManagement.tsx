@@ -13,14 +13,67 @@ import useFetch from "@/hooks/useFetch";
 import ConfirmDeleteModal, {
   ConfirmDeleteModalProps,
 } from "@/components/UI/Modals/ConfirmDeleteModal";
+import { FilterOptions, SortBy } from "@/types/filterOptions";
+import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
   categories?: Category[];
-  products?: Product[];
+  initFilter?: FilterOptions;
+  initProducts?: Product[];
 }
 
-const ProductManagement = ({ categories, products = [] }: Props) => {
+const ProductManagement = ({
+  categories,
+  initProducts = [],
+  initFilter,
+}: Props) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const { fetch, errorMsg, isFetching, clearErrorMsg } = useFetch();
+
+  const [filter, setFilter] = useState<FilterOptions>({
+    sortBy: initFilter?.sortBy || SortBy.NEW_DESC,
+    page: initFilter?.page,
+    pageSize: initFilter?.pageSize,
+    totalPages: initFilter?.totalPages,
+    search: initFilter?.search,
+  });
+
+  const handleChangeFilter = (options: FilterOptions) => {
+    console.log("HANDLECHANGEFILTER");
+    const newFilter = { ...filter, ...options };
+    setFilter((prev) => ({ ...prev, ...options }));
+
+    const params = new URLSearchParams();
+    if (newFilter.sortBy !== undefined)
+      params.set("sortBy", newFilter.sortBy.toString());
+    if (newFilter.page) params.set("page", newFilter.page.toString());
+    if (newFilter.pageSize)
+      params.set("pageSize", newFilter.pageSize.toString());
+    if (newFilter.search) params.set("search", newFilter.search.toString());
+
+    router.push(pathname + "?" + params.toString());
+
+    console.log(newFilter);
+    fetch
+      .get(
+        `/api/products?${
+          newFilter.search && `search=${newFilter.search}&`
+        }sortBy=${newFilter.sortBy}&page=${newFilter.page}&pageSize=${
+          newFilter.pageSize
+        }`
+      )
+      .then((res) => {
+        console.log(res);
+        if (res.status !== 200) return;
+        const newProducts = res.data.products;
+        const page = res.data.page;
+        const pageSize = res.data.pageSize;
+        const totalPages = res.data.totalPages;
+        setFilter((prev) => ({ ...prev, page, pageSize, totalPages }));
+        setProductsData(newProducts);
+      });
+  };
 
   const [productModal, setProductModal] = useState<ProductModalProps>({
     show: false,
@@ -30,7 +83,7 @@ const ProductManagement = ({ categories, products = [] }: Props) => {
     show: false,
   });
 
-  const [productsData, setProductsData] = useState<Product[]>(products);
+  const [productsData, setProductsData] = useState<Product[]>(initProducts);
 
   const handleAddProduct = (product: Product) => {
     setProductModal((prev) => ({
@@ -226,6 +279,9 @@ const ProductManagement = ({ categories, products = [] }: Props) => {
           data={productsData}
           onDelete={openDeleteProduct}
           onEdit={openEditProduct}
+          filter={filter}
+          isLoading={isFetching}
+          onChangeFilter={handleChangeFilter}
         />
         {productModal.show && (
           <ProductModal

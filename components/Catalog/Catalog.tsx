@@ -7,7 +7,7 @@ import ProductList from "./ProductList";
 import CatalogFilter from "./CatalogFilter";
 import useFetch from "@/hooks/useFetch";
 import { FilterOptions, SortBy } from "@/types/filterOptions";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Pagination } from "flowbite-react";
 
@@ -19,7 +19,6 @@ interface Props {
 
 const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
   const { fetch, isFetching } = useFetch();
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -47,6 +46,7 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
     page: initFilter?.page,
     pageSize: initFilter?.pageSize,
     totalPages: initFilter?.totalPages,
+    search: initFilter?.search,
   });
 
   const [products, setProducts] = useState<Product[]>(initProducts);
@@ -94,6 +94,7 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
 
   return (
     <div className="flex flex-col items-center">
+      {filter.search && <p>Suchergebnisse für: {filter.search}</p>}
       <CatalogFilter
         categories={categories}
         isLoading={isFetching}
@@ -112,7 +113,6 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
           totalPages={filter.totalPages || 1}
           onPageChange={handleChangePage}
           className="mt-10"
-          color="dark"
         />
       )}
     </div>

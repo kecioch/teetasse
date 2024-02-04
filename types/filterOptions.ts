@@ -13,4 +13,5 @@ export interface FilterOptions {
   page?: number;
   pageSize?: number;
   totalPages?: number;
+  search?: string;
 }

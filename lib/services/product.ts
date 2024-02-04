@@ -41,6 +41,12 @@ export async function getProducts(options?: FilterOptions): Promise<{
     const whereCondition: any = {
       visible: true,
     };
+
+    if (options?.search && options?.search.length > 0) {
+      console.log("TITLE SEARCH", options?.search);
+      whereCondition.title = { contains: options.search, mode: "insensitive" };
+    }
+
     if (options?.subcategoryId)
       whereCondition.subcategory = { id: options?.subcategoryId };
     else if (options?.categoryId) return { products: [] };
@@ -52,6 +58,7 @@ export async function getProducts(options?: FilterOptions): Promise<{
         subcategory: { include: { category: true } },
       },
       where: whereCondition,
+      // where: { title: { contains: "" } },
       orderBy: getOrderConfig(options?.sortBy),
       skip: skip,
       take: pageSize,

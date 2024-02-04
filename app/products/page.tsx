@@ -7,7 +7,7 @@ import { SearchParams } from "@/types/params/searchParams";
 import React from "react";
 
 const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
-  console.log(searchParams);
+  // GET SEARCH PARAMS
   const categoryId =
     searchParams.categoryId && typeof searchParams.categoryId === "string"
       ? parseInt(searchParams.categoryId)
@@ -28,15 +28,20 @@ const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
     searchParams.pageSize && typeof searchParams.pageSize === "string"
       ? parseInt(searchParams.pageSize)
       : undefined;
+  const search =
+    typeof searchParams.search === "string" ? searchParams.search : undefined;
 
+  // CREATE FILTER
   const filter: FilterOptions = {
     categoryId,
     subcategoryId,
     sortBy,
     page: pageParam,
     pageSize: pageSizeParam,
+    search
   };
 
+  // FETCH DATA
   const { products, page, totalPages, pageSize } = await getProducts(filter);
   filter.page = page || 0;
   filter.pageSize = pageSize || 0;
