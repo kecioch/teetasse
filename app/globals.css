@@ -25,6 +25,11 @@ body {
   scrollbar-color: #5a5a5a #212529;
 }
 
+option {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 ::-webkit-scrollbar {
   max-width: 10px;
   max-height: 8px;

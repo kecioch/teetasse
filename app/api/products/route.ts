@@ -1,16 +1,39 @@
 import prisma from "@/lib/prisma";
 import { getProducts, hasDuplicateProductTitle } from "@/lib/services/product";
+import { FilterOptions, SortBy } from "@/types/filterOptions";
 import { CustomError } from "@/utils/errors/CustomError";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  const products = await getProducts();
-  if (!products)
-    return NextResponse.json(
-      { status: 500, msg: "Fehler bei Serveranfrage" },
-      { status: 500 }
-    );
-  return NextResponse.json(products);
+export async function GET(req: NextRequest) {
+  try {
+    const categoryId = req.nextUrl.searchParams.get("categoryId");
+    const subcategoryId = req.nextUrl.searchParams.get("subcategoryId");
+    const sortBy = req.nextUrl.searchParams.get("sortBy");
+    const page = req.nextUrl.searchParams.get("page");
+    const pageSize = req.nextUrl.searchParams.get("pageSize");
+
+    const options: FilterOptions = {
+      categoryId: categoryId ? parseInt(categoryId) : undefined,
+      subcategoryId: subcategoryId ? parseInt(subcategoryId) : undefined,
+      sortBy: sortBy ? (parseInt(sortBy) as SortBy) : undefined,
+      page: page ? parseInt(page) : undefined,
+      pageSize: pageSize ? parseInt(pageSize) : undefined,
+    };
+
+    console.log("PARAMS:", categoryId, subcategoryId, sortBy, page, pageSize);
+    const products = await getProducts(options);
+    if (!products)
+      return NextResponse.json(
+        { status: 500, msg: "Fehler bei Serveranfrage" },
+        { status: 500 }
+      );
+    return NextResponse.json(products);
+  } catch (e) {
+    console.log(e);
+    let msg = "Fehler bei Serveranfrage";
+
+    return NextResponse.json({ status: 500, msg }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {

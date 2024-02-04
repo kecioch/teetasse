@@ -1,49 +1,102 @@
 import { Features, Product } from "@/types/product";
 import prisma from "../prisma";
+import { Prisma } from "@prisma/client";
+import { FilterOptions, SortBy } from "@/types/filterOptions";
 
-export async function getProducts() {
+const getOrderConfig = (
+  sortBy?: SortBy
+): Prisma.ProductgroupOrderByWithRelationInput => {
+  switch (sortBy) {
+    case SortBy.NEW_ASC:
+      return { created: "asc" };
+    case SortBy.NEW_DESC:
+      return { created: "desc" };
+    case SortBy.BEST_RATING_ASC:
+      return { rating: "asc" };
+    case SortBy.BEST_RATING_DESC:
+      return { rating: "desc" };
+    default: {
+      return { created: "desc" };
+    }
+  }
+};
+
+const PAGE_SIZE_DEFAULT = 1;
+
+export async function getProducts(options?: FilterOptions): Promise<{
+  products?: Product[];
+  totalPages?: number;
+  page?: number;
+  pageSize?: number;
+}> {
   try {
+    // Pagination selection
+    const pageSize = options?.pageSize || PAGE_SIZE_DEFAULT;
+    const page = options?.page || 1;
+    const skip = (page - 1) * pageSize;
+
+    // console.log(page, pageSize, skip);
+
+    // Construct where condition
+    const whereCondition: any = {
+      visible: true,
+    };
+    if (options?.subcategoryId)
+      whereCondition.subcategory = { id: options?.subcategoryId };
+    else if (options?.categoryId) return { products: [] };
+
+    // Fetch products
     const data = await prisma.productgroup.findMany({
       include: {
         products: { where: { visible: true }, orderBy: { title: "asc" } },
         subcategory: { include: { category: true } },
       },
-      where: { visible: true },
-      orderBy: {
-        id: "asc",
-      },
+      where: whereCondition,
+      orderBy: getOrderConfig(options?.sortBy),
+      skip: skip,
+      take: pageSize,
     });
-    
-    return data.map((item) => {
-      const product: Product = {
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        features: item.features as Features,
-        rating: item.rating.toNumber(),
-        ratingCnt: item.ratingCnt,
-        imageIds: item.imageIds,
-        recommended: item.recommended,
-        subcategory: {
-          id: item.subcategory.id,
-          title: item.subcategory.title,
-          category: {
-            id: item.subcategory.category.id,
-            title: item.subcategory.category.title,
-            subs: [],
+
+    const products =
+      data.map((item) => {
+        const product: Product = {
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          features: item.features as Features,
+          rating: item.rating.toNumber(),
+          ratingCnt: item.ratingCnt,
+          imageIds: item.imageIds,
+          recommended: item.recommended,
+          subcategory: {
+            id: item.subcategory.id,
+            title: item.subcategory.title,
+            category: {
+              id: item.subcategory.category.id,
+              title: item.subcategory.category.title,
+              subs: [],
+            },
           },
-        },
-        variants: item.products.map((product) => ({
-          id: product.id,
-          price: product.price.toNumber(),
-          stock: product.stock,
-          title: product.title,
-        })),
-      };
-      return product;
+          variants: item.products.map((product) => ({
+            id: product.id,
+            price: product.price.toNumber(),
+            stock: product.stock,
+            title: product.title,
+          })),
+        };
+        return product;
+      }) || [];
+
+    // Calculate the total number of pages
+    const totalProducts = await prisma.productgroup.count({
+      where: whereCondition,
     });
+    const totalPages = Math.ceil(totalProducts / pageSize);
+
+    return { products, totalPages, page, pageSize };
   } catch (err) {
-    return undefined;
+    console.log(err);
+    return { products: undefined };
   }
 }
 

@@ -20,7 +20,6 @@ const ProductList = ({
         (isLoading || products.length <= 0) && "items-center"
       } ${className}`}
     >
-      {/* <div className="flex flex-row gap-3 flex-wrap bg-blue-200 sm:bg-yellow-200 md:bg-orange-500 lg:bg-red-700 xl:bg-red-950"> */}
       {isLoading && (
         <div className="w-full flex justify-center">
           <Spinner size="xl" className="fill-green-600" />
