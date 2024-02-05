@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export enum ModalStates {
   CLOSED,
   CART_DRAWER,
+  SEARCH_PRODUCT,
 }
 
 export interface ModalState {

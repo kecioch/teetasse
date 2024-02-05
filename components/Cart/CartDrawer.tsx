@@ -46,7 +46,6 @@ const CartDrawer = () => {
         </svg>
         <span className="sr-only">Warenkorb schließen</span>
       </button>
-      {/* <div className="bg-red-100 w-full h-screen"></div> */}
     </div>
   );
 };

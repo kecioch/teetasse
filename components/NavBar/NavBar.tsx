@@ -12,7 +12,7 @@ import ContentContainer from "../UI/Container/ContentContainer";
 import { Dropdown } from "flowbite-react";
 import DropDownItemLink from "./DropDownItemLink";
 import { useAppDispatch } from "@/redux/hooks";
-import { ModalStates, closeModal, setModal } from "@/redux/features/modalSlice";
+import { ModalStates, setModal } from "@/redux/features/modalSlice";
 
 const NavBar = () => {
   const dispatch = useAppDispatch();
@@ -21,15 +21,19 @@ const NavBar = () => {
     dispatch(setModal(ModalStates.CART_DRAWER));
   };
 
+  const handleOpenSearch = () => {
+    dispatch(setModal(ModalStates.SEARCH_PRODUCT));
+  };
+
   return (
-    <nav className="fixed bg-green-950 text-white p-4 z-50 top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
+    <nav className="fixed bg-green-950 text-white p-4 z-40 top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
       <ContentContainer>
         <div className="flex flex-row justify-between">
           <Link href="/">
             <span className="font-light">TEETASSE</span>
           </Link>
           <section className="flex flex-row gap-4">
-            <button type="button">
+            <button type="button" onClick={handleOpenSearch}>
               <FontAwesomeIcon icon={faSearch} style={{ height: "20px" }} />
             </button>
             <Dropdown
@@ -76,7 +80,6 @@ const NavBar = () => {
           </section>
         </div>
       </ContentContainer>
-      {/* <CartDrawer show={showCartDrawer} onClose={handleCloseCartDrawer} /> */}
     </nav>
   );
 };

@@ -18,6 +18,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Teetasse",
   description: "Der online Tee-Shop",
+  authors: { name: "Kevin Cioch" },
 };
 
 export default function RootLayout({
