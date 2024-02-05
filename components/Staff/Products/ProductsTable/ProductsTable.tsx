@@ -39,7 +39,7 @@ const ProductsTable = ({
     onChangeFilter({ page });
   };
 
-  const [search, setSearch] = useState(filter.search);
+  const [search, setSearch] = useState(filter.search || "");
 
   const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.currentTarget.value;

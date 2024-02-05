@@ -24,7 +24,6 @@ const ProductPage = async ({ params }: IdSlug) => {
   const features: { key: string; value: string }[] = [];
   Object.values(product.features).forEach((feature) => {
     Object.entries(feature).forEach(([subKey, value]) => {
-      console.log(`${subKey}: ${value}`);
       features.push({ key: subKey, value });
     });
   });
