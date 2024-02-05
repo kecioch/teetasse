@@ -94,25 +94,43 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
   };
 
   const handleChangePage = (page: number) => {
-    if (isFetching) return;
+    if (isFetching || page === filter.page) return;
     handleChangeFilter({ page });
   };
 
   useEffect(() => {
+    // GET PARAMS
     const refresh = searchParams.get("refresh");
-    const search = searchParams.get("search");
+    const search = searchParams.get("search") || undefined;
+    const categoryId = searchParams.get("categoryId") || undefined;
+    const subcategoryId = searchParams.get("subcategoryId") || undefined;
+    const page = searchParams.get("page") || undefined;
+    const sortBy = searchParams.get("sortBy") || undefined;
 
     if (!searchRefresh.current) {
       searchRefresh.current = true;
       return;
     }
-    if (!refresh || refresh !== "true" || !search) return;
+    if (!refresh || refresh !== "true") return;
 
+    // REMOVE REFFRESH
     const current = new URLSearchParams(Array.from(searchParams.entries()));
     current.delete("refresh");
     router.replace(pathname + "?" + current.toString());
 
-    handleChangeFilter({ search });
+    // HANDLECHANGEFILTER
+    const categoryIdNumber = categoryId ? parseInt(categoryId) : undefined;
+    const categoryIndex = categoryId
+      ? categories.findIndex((el) => el.id === categoryIdNumber)
+      : undefined;
+    handleChangeFilter({
+      search,
+      categoryId: categoryIdNumber,
+      categoryIndex,
+      subcategoryId: subcategoryId ? parseInt(subcategoryId) : undefined,
+      page: page ? parseInt(page) : undefined,
+      sortBy: sortBy ? parseInt(sortBy) : 1,
+    });
   }, [searchParams]);
 
   return (

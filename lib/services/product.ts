@@ -54,7 +54,6 @@ export async function getProducts(options?: FilterOptions): Promise<{
         subcategory: { include: { category: true } },
       },
       where: whereCondition,
-      // where: { title: { contains: "" } },
       orderBy: getOrderConfig(options?.sortBy),
       skip: skip,
       take: pageSize,

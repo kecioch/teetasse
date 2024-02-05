@@ -51,8 +51,8 @@ const CatalogFilter = ({
 
   return (
     <div className={`flex justify-between flex-wrap gap-5 ${className}`}>
-      <div className="flex gap-5 items-end">
-        <div>
+      <div className="flex gap-5 items-end w-full md:w-auto">
+        <div className="flex-1">
           <div className="mb-2 block">
             <Label
               htmlFor="category"
@@ -61,14 +61,16 @@ const CatalogFilter = ({
             />
           </div>
           <Select
-            className="min-w-40"
+            className="md:min-w-52"
             name="category"
             id="category"
             onChange={handleChangeCategory}
             disabled={isLoading}
-            value={filter.categoryId}
+            value={filter.categoryId || "DEFAULT_OPTION"}
           >
-            {!filter.categoryId && <option>Wähle eine Kategorie</option>}
+            {!filter.categoryId && (
+              <option value="DEFAULT_OPTION">Wähle eine Kategorie</option>
+            )}
             {categories.map((item, index) => (
               <option key={index} value={item.id}>
                 {item.title}
@@ -76,38 +78,39 @@ const CatalogFilter = ({
             ))}
           </Select>
         </div>
-        <div>
+        <div className="flex-1">
           <Select
-            className="min-w-40"
+            className="md:min-w-52"
             name="subcategory"
             id="subcategory"
             onChange={handleChangeSubcategory}
             disabled={isLoading}
             value={filter.subcategoryId}
           >
-            {filter.categoryIndex !== undefined &&
-              categories[filter.categoryIndex].subs.map((item, index) => (
-                <option key={index} value={item.id}>
-                  {item.title}
-                </option>
-              ))}
+            {filter.categoryIndex !== undefined && filter.categoryIndex >= 0
+              ? categories[filter.categoryIndex]?.subs.map((item, index) => (
+                  <option key={index} value={item.id}>
+                    {item.title}
+                  </option>
+                ))
+              : null}
           </Select>
         </div>
       </div>
 
-      <div className="flex gap-5">
-        <div>
-          <div className="mb-2 block">
+      <div className="flex gap-5 w-full md:w-auto">
+        <div className="flex-1 flex flex-col">
+          <div className="mb-2 block flex-1">
             <Label
               htmlFor="sort"
               value="Sortieren nach"
               className="font-light uppercase"
             />
           </div>
-          <div className="flex gap-3 items-center">
+          <div className="flex gap-3 items-center flex-1">
             <FontAwesomeIcon icon={faSort} className="text-gray-600" />
             <Select
-              className="min-w-40"
+              className="min-w-40 flex-1"
               name="sort"
               id="sort"
               onChange={handleChangeSortBy}
