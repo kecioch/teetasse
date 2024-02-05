@@ -7,15 +7,22 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ContentContainer from "../UI/Container/ContentContainer";
 import { Dropdown } from "flowbite-react";
 import DropDownItemLink from "./DropDownItemLink";
 import { useAppDispatch } from "@/redux/hooks";
 import { ModalStates, setModal } from "@/redux/features/modalSlice";
+import { usePathname } from "next/navigation";
 
 const NavBar = () => {
+  const pathname = usePathname();
   const dispatch = useAppDispatch();
+
+  const [isScrolled, setIsScrolled] = useState<boolean | null>(null);
+  const pageLoaded = useRef(false);
+
+  const isHome = pathname === "/";
 
   const handleOpenCartDrawer = () => {
     dispatch(setModal(ModalStates.CART_DRAWER));
@@ -25,8 +32,32 @@ const NavBar = () => {
     dispatch(setModal(ModalStates.SEARCH_PRODUCT));
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if the scroll position is greater than a specific point
+      const isScrolledToSpecificPoint = window.scrollY > 200;
+      // Update the state based on the scroll position
+      setIsScrolled(isScrolledToSpecificPoint);
+    };
+
+    // Add the scroll event listener when the component mounts
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className="fixed bg-green-950 text-white p-4 z-40 top-0 w-full bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80">
+    <nav
+      className={`fixed ${
+        isHome && (isScrolled === null || isScrolled === false)
+          ? "bg-opacity-0 text-black"
+          : "text-white bg-clip-padding backdrop-filter backdrop-blur-md bg-opacity-80"
+      } p-4 z-40 top-0 w-full transition-all ease-in-out duration-300 bg-green-950`}
+    >
       <ContentContainer>
         <div className="flex flex-row justify-between">
           <Link href="/">
