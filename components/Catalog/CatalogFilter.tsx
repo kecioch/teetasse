@@ -94,18 +94,16 @@ const CatalogFilter = ({
           </Select>
         </div>
       </div>
-      {/* <p>
-        CID:{filter.categoryId}, SCID:{filter.subcategoryId}, SORT:
-        {filter.sortBy}
-      </p> */}
+
       <div className="flex gap-5">
-        {/* <div className="flex items-end">
-          <div className="flex gap-3 items-center">
-            <FontAwesomeIcon icon={faFilter} className="text-gray-600" />
-            <Dropdown label="Filter" disabled={isLoading}></Dropdown>
+        <div>
+          <div className="mb-2 block">
+            <Label
+              htmlFor="sort"
+              value="Sortieren nach"
+              className="font-light uppercase"
+            />
           </div>
-        </div> */}
-        <div className="flex items-end">
           <div className="flex gap-3 items-center">
             <FontAwesomeIcon icon={faSort} className="text-gray-600" />
             <Select

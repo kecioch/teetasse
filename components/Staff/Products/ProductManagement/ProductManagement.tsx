@@ -40,7 +40,6 @@ const ProductManagement = ({
   });
 
   const handleChangeFilter = (options: FilterOptions) => {
-    console.log("HANDLECHANGEFILTER");
     const newFilter = { ...filter, ...options };
     setFilter((prev) => ({ ...prev, ...options }));
 
@@ -54,7 +53,6 @@ const ProductManagement = ({
 
     router.push(pathname + "?" + params.toString());
 
-    console.log(newFilter);
     fetch
       .get(
         `/api/products?${
@@ -64,7 +62,6 @@ const ProductManagement = ({
         }`
       )
       .then((res) => {
-        console.log(res);
         if (res.status !== 200) return;
         const newProducts = res.data.products;
         const page = res.data.page;

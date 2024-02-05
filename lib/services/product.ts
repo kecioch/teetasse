@@ -35,17 +35,13 @@ export async function getProducts(options?: FilterOptions): Promise<{
     const page = options?.page || 1;
     const skip = (page - 1) * pageSize;
 
-    // console.log(page, pageSize, skip);
-
     // Construct where condition
     const whereCondition: any = {
       visible: true,
     };
 
-    if (options?.search && options?.search.length > 0) {
-      console.log("TITLE SEARCH", options?.search);
+    if (options?.search && options?.search.length > 0)
       whereCondition.title = { contains: options.search, mode: "insensitive" };
-    }
 
     if (options?.subcategoryId)
       whereCondition.subcategory = { id: options?.subcategoryId };

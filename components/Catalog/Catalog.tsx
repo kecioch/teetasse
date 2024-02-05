@@ -2,12 +2,12 @@
 
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ProductList from "./ProductList";
 import CatalogFilter from "./CatalogFilter";
 import useFetch from "@/hooks/useFetch";
 import { FilterOptions, SortBy } from "@/types/filterOptions";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Pagination } from "flowbite-react";
 
@@ -20,7 +20,10 @@ interface Props {
 const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
   const { fetch, isFetching } = useFetch();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
+
+  const searchRefresh = useRef<boolean>(false);
 
   const initCategoryId: number | undefined = initFilter?.categoryId;
 
@@ -52,7 +55,6 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
   const [products, setProducts] = useState<Product[]>(initProducts);
 
   const handleChangeFilter = (options: FilterOptions) => {
-    console.log("HANDLECHANGEFILTER");
     const newFilter = { ...filter, ...options };
     setFilter((prev) => ({ ...prev, ...options }));
 
@@ -66,16 +68,21 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
     if (newFilter.page) params.set("page", newFilter.page.toString());
     if (newFilter.pageSize)
       params.set("pageSize", newFilter.pageSize.toString());
+    if (newFilter.search) params.set("search", newFilter.search);
 
     router.push(pathname + "?" + params.toString());
 
-    console.log(newFilter);
     fetch
       .get(
-        `/api/products?categoryId=${newFilter.categoryId}&subcategoryId=${newFilter.subcategoryId}&sortBy=${newFilter.sortBy}&page=${newFilter.page}&pageSize=${newFilter.pageSize}`
+        `/api/products?${
+          newFilter.search ? "search=" + newFilter.search : ""
+        }&categoryId=${newFilter.categoryId}&subcategoryId=${
+          newFilter.subcategoryId
+        }&sortBy=${newFilter.sortBy}&page=${newFilter.page}&pageSize=${
+          newFilter.pageSize
+        }`
       )
       .then((res) => {
-        console.log(res);
         if (res.status !== 200) return;
         const newProducts = res.data.products;
         const page = res.data.page;
@@ -88,13 +95,33 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
 
   const handleChangePage = (page: number) => {
     if (isFetching) return;
-    console.log("NEW PAGE", page);
     handleChangeFilter({ page });
   };
 
+  useEffect(() => {
+    const refresh = searchParams.get("refresh");
+    const search = searchParams.get("search");
+
+    if (!searchRefresh.current) {
+      searchRefresh.current = true;
+      return;
+    }
+    if (!refresh || refresh !== "true" || !search) return;
+
+    const current = new URLSearchParams(Array.from(searchParams.entries()));
+    current.delete("refresh");
+    router.replace(pathname + "?" + current.toString());
+
+    handleChangeFilter({ search });
+  }, [searchParams]);
+
   return (
     <div className="flex flex-col items-center">
-      {filter.search && <p>Suchergebnisse für: {filter.search}</p>}
+      {filter.search && (
+        <p className="text-2xl mb-10 w-full font-extralight">
+          <span className="uppercase">Suchergebnisse für:</span> {filter.search}
+        </p>
+      )}
       <CatalogFilter
         categories={categories}
         isLoading={isFetching}
@@ -107,14 +134,14 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
         className="mt-10 min-h-[25em] w-full"
         isLoading={isFetching}
       />
-      {filter.totalPages && filter.totalPages > 1 && (
+      {filter.totalPages && filter.totalPages > 1 ? (
         <Pagination
           currentPage={filter.page || 1}
           totalPages={filter.totalPages || 1}
           onPageChange={handleChangePage}
           className="mt-10"
         />
-      )}
+      ) : null}
     </div>
   );
 };

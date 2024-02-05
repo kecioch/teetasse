@@ -38,7 +38,7 @@ const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
     sortBy,
     page: pageParam,
     pageSize: pageSizeParam,
-    search
+    search,
   };
 
   // FETCH DATA
@@ -50,9 +50,6 @@ const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
 
   return (
     <ContentContainer className="mt-12 mb-5 p-4 pt-10">
-      {/* <p>page: {page}</p>
-      <p>total: {totalPages}</p>
-      <p>pageSize: {pageSize}</p> */}
       <Catalog
         initProducts={products}
         initFilter={filter}
