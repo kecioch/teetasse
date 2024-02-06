@@ -1,13 +1,6 @@
+import { LinkSectionData } from "@/types/linkSection";
 import Link from "next/link";
 import React from "react";
-
-export interface LinkSectionData {
-  title: string;
-  items: {
-    title: string;
-    href: string;
-  }[];
-}
 
 interface Props {
   data: LinkSectionData;

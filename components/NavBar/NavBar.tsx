@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  faBars,
   faCartShopping,
+  faHamburger,
   faSearch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -20,12 +22,15 @@ const NavBar = () => {
   const dispatch = useAppDispatch();
 
   const [isScrolled, setIsScrolled] = useState<boolean | null>(null);
-  const pageLoaded = useRef(false);
 
   const isHome = pathname === "/";
 
   const handleOpenCartDrawer = () => {
     dispatch(setModal(ModalStates.CART_DRAWER));
+  };
+
+  const handleOpenMenu = () => {
+    dispatch(setModal(ModalStates.MENU));
   };
 
   const handleOpenSearch = () => {
@@ -107,6 +112,9 @@ const NavBar = () => {
                 icon={faCartShopping}
                 style={{ height: "20px" }}
               />
+            </button>
+            <button type="button" onClick={handleOpenMenu} className="ml-2">
+              <FontAwesomeIcon icon={faBars} style={{ height: "20px" }} />
             </button>
           </section>
         </div>

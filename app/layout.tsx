@@ -11,6 +11,7 @@ import Modals from "@/components/UI/Modals/Modals";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 // Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
+import { getCategories } from "@/lib/services/category";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 const inter = Inter({ subsets: ["latin"] });
@@ -18,14 +19,19 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Teetasse",
   description: "Der online Tee-Shop",
-  authors: { name: "Kevin Cioch" },
+  authors: { name: "Kevin Cioch", url: "https://www.kevincioch.com" },
 };
 
-export default function RootLayout({
+export const revalidate = 20;
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  console.log("LOAD CATEGOIRES IN LAYOUT");
+  const categories = await getCategories();
+
   return (
     <html lang="de">
       <body className={inter.className}>
@@ -33,9 +39,9 @@ export default function RootLayout({
           <div className="flex flex-col h-screen">
             <NavBar />
             <div className="grow">{children}</div>
-            <Footer />
+            <Footer categories={categories} />
           </div>
-          <Modals />
+          <Modals data={{ categories }} />
         </Providers>
       </body>
     </html>

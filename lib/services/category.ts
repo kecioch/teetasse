@@ -1,12 +1,13 @@
 import { Category } from "@/types/category";
 import prisma from "../prisma";
+import { cache } from "react";
 
-export async function getCategories() {
+export const getCategories = cache(async () => {
   try {
     const data = await prisma.category.findMany({
       include: { subcategories: { orderBy: { id: "asc" } } },
       orderBy: {
-        id: "asc",
+        title: "asc",
       },
     });
 
@@ -18,9 +19,8 @@ export async function getCategories() {
       };
       return category;
     });
-
     return categories;
   } catch (err) {
     return undefined;
   }
-}
+});
