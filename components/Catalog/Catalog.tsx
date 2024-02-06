@@ -9,7 +9,7 @@ import useFetch from "@/hooks/useFetch";
 import { FilterOptions, SortBy } from "@/types/filterOptions";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { Pagination } from "flowbite-react";
+import Pagination from "../UI/Pagination/Pagination";
 
 interface Props {
   initProducts?: Product[];
@@ -36,16 +36,10 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
     : undefined;
 
   const initSubcategoryId: number | undefined = initFilter?.subcategoryId;
-  // const initSubcategory = initCategory
-  //   ? (initFilter?.subcategoryId &&
-  //       initCategory.subs.find((el) => el.id === initFilter.subcategoryId)) ||
-  //     (initCategory.subs.length > 0 ? initCategory.subs[0] : undefined)
-  //   : undefined;
 
   const [filter, setFilter] = useState<FilterOptions>({
     categoryId: initCategory ? initCategoryId : undefined,
     categoryIndex: initCategoryIndex,
-    // subcategoryId: initSubcategory ? initSubcategory.id : undefined,
     subcategoryId: initSubcategoryId,
     sortBy: initFilter?.sortBy || SortBy.NEW_DESC,
     page: initFilter?.page,

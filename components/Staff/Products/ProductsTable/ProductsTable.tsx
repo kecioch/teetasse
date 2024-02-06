@@ -1,6 +1,5 @@
 import {
   Button,
-  Pagination,
   Spinner,
   Table,
   TableBody,
@@ -16,6 +15,7 @@ import { Product } from "@/types/product";
 import { FilterOptions } from "@/types/filterOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import Pagination from "@/components/UI/Pagination/Pagination";
 
 interface Props {
   data: Product[];
@@ -61,7 +61,12 @@ const ProductsTable = ({
             className="w-80"
             addon={<FontAwesomeIcon icon={faSearch} />}
           />
-          <Button type="submit" disabled={isLoading} color="light" className="w-32">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            color="light"
+            className="w-32"
+          >
             Suchen
           </Button>
         </form>
@@ -97,7 +102,9 @@ const ProductsTable = ({
           <TableBody className="odd:bg-red-200!">
             {!isLoading && data.length <= 0 && (
               <TableRow className="bg-white even:bg-gray-50 hover:bg-gray-200">
-                <TableCell colSpan={8} className="text-center">Keine Produkte vorhanden</TableCell>
+                <TableCell colSpan={8} className="text-center">
+                  Keine Produkte vorhanden
+                </TableCell>
               </TableRow>
             )}
             {!isLoading &&
