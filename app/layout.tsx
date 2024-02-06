@@ -35,7 +35,7 @@ export default async function RootLayout({
         <Providers>
           <div className="flex flex-col min-h-screen">
             <NavBar />
-            <div className="flex-1 min-h-[50em]">{children}</div>
+            <div className="flex-1 min-h-[50em] pb-8">{children}</div>
             <Footer categories={categories} />
           </div>
           <Modals data={{ categories }} />
