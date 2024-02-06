@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { CustomError } from "@/utils/errors/CustomError";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -42,6 +43,8 @@ export async function POST(req: Request) {
     const newSubcategory = await prisma.subcategory.create({
       data: subcategory,
     });
+
+    revalidatePath("/", "layout");
     return NextResponse.json(newSubcategory);
   } catch (e: any) {
     let msg = "Fehler bei Serveranfrage";

@@ -22,14 +22,11 @@ export const metadata: Metadata = {
   authors: { name: "Kevin Cioch", url: "https://www.kevincioch.com" },
 };
 
-export const revalidate = 20;
-
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  console.log("LOAD CATEGOIRES IN LAYOUT");
   const categories = await getCategories();
 
   return (

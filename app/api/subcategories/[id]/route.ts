@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request, { params }: IdSlug) {
@@ -20,6 +21,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
       data: subcategory,
     });
 
+    revalidatePath("/", "layout");
     return NextResponse.json(updatetSubcategory);
   } catch (e: any) {
     let msg = "Fehler bei Serveranfrage";
@@ -53,6 +55,7 @@ export async function DELETE(req: Request, { params }: IdSlug) {
       where: { id },
     });
 
+    revalidatePath("/", "layout");
     return NextResponse.json(deletedSubcategory);
   } catch (e: any) {
     let msg = "Fehler bei Serveranfrage";

@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import { getCategories } from "@/lib/services/category";
 import { CustomError } from "@/utils/errors/CustomError";
-import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
   const categories = await getCategories();
@@ -23,6 +24,7 @@ export async function POST(req: Request) {
 
     const category = { title };
     const newCategory = await prisma.category.create({ data: category });
+    revalidatePath("/", "layout");
 
     return NextResponse.json(newCategory);
   } catch (e: any) {
