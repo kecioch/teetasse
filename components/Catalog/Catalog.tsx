@@ -35,16 +35,18 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
     ? categories.findIndex((el) => el.id === initCategory.id)
     : undefined;
 
-  const initSubcategory = initCategory
-    ? (initFilter?.subcategoryId &&
-        initCategory.subs.find((el) => el.id === initFilter.subcategoryId)) ||
-      (initCategory.subs.length > 0 ? initCategory.subs[0] : undefined)
-    : undefined;
+  const initSubcategoryId: number | undefined = initFilter?.subcategoryId;
+  // const initSubcategory = initCategory
+  //   ? (initFilter?.subcategoryId &&
+  //       initCategory.subs.find((el) => el.id === initFilter.subcategoryId)) ||
+  //     (initCategory.subs.length > 0 ? initCategory.subs[0] : undefined)
+  //   : undefined;
 
   const [filter, setFilter] = useState<FilterOptions>({
     categoryId: initCategory ? initCategoryId : undefined,
     categoryIndex: initCategoryIndex,
-    subcategoryId: initSubcategory ? initSubcategory.id : undefined,
+    // subcategoryId: initSubcategory ? initSubcategory.id : undefined,
+    subcategoryId: initSubcategoryId,
     sortBy: initFilter?.sortBy || SortBy.NEW_DESC,
     page: initFilter?.page,
     pageSize: initFilter?.pageSize,

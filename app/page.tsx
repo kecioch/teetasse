@@ -18,7 +18,7 @@ const Home = () => {
             {/* Entdecke alle Teesorten */}
             <Link href="/products" className="mt-12">
               <ButtonOutline className="uppercase">
-                Entdecke alle Teesorten
+                Entdecke alle Produkte
               </ButtonOutline>
             </Link>
           </div>
@@ -81,7 +81,9 @@ const Home = () => {
             <div className="bg-gray-400 min-w-56 h-56 rounded-full"></div>
           </section>
           <div className="flex justify-center">
-            <ButtonOutline className="mt-8 mx-4">Alle Teesorten</ButtonOutline>
+            <Link href="/products?categoryId=45" className="mt-8 mx-4">
+              <ButtonOutline>Alle Teesorten</ButtonOutline>
+            </Link>
           </div>
         </ContentContainer>
       </section>
@@ -109,9 +111,9 @@ const Home = () => {
             <div className="bg-gray-400 min-w-56 h-56 rounded-full"></div>
           </section>
           <div className="flex justify-center">
-            <ButtonOutline className="mt-8 mx-4">
-              Alle Zubehör Kategorien
-            </ButtonOutline>
+            <Link href="/products?categoryId=49" className="mt-8 mx-4">
+              <ButtonOutline>Alle Zubehör Kategorien</ButtonOutline>
+            </Link>
           </div>
         </ContentContainer>
       </section>

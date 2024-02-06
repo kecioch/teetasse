@@ -85,8 +85,11 @@ const CatalogFilter = ({
             id="subcategory"
             onChange={handleChangeSubcategory}
             disabled={isLoading}
-            value={filter.subcategoryId}
+            value={filter.subcategoryId || "DEFAULT_OPTION"}
           >
+            {!filter.subcategoryId && (
+              <option value="DEFAULT_OPTION">Wähle eine Subkategorie</option>
+            )}
             {filter.categoryIndex !== undefined && filter.categoryIndex >= 0
               ? categories[filter.categoryIndex]?.subs.map((item, index) => (
                   <option key={index} value={item.id}>

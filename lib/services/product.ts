@@ -44,8 +44,9 @@ export async function getProducts(options?: FilterOptions): Promise<{
       whereCondition.title = { contains: options.search, mode: "insensitive" };
 
     if (options?.subcategoryId)
-      whereCondition.subcategory = { id: options?.subcategoryId };
-    else if (options?.categoryId) return { products: [] };
+      whereCondition.subcategoryId = options?.subcategoryId;
+
+    if (options?.categoryId) whereCondition.subcategory= { categoryId: options.categoryId };
 
     // Fetch products
     const data = await prisma.productgroup.findMany({
@@ -54,6 +55,7 @@ export async function getProducts(options?: FilterOptions): Promise<{
         subcategory: { include: { category: true } },
       },
       where: whereCondition,
+      // where: {subcategory: {categoryId: {}}}
       orderBy: getOrderConfig(options?.sortBy),
       skip: skip,
       take: pageSize,

@@ -47,6 +47,7 @@ const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
   filter.pageSize = pageSize || 0;
   filter.totalPages = totalPages || 0;
   const categories = await getCategories();
+  console.log(products)
 
   return (
     <ContentContainer className="mt-12 mb-5 p-4 pt-10">
