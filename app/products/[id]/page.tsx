@@ -14,6 +14,7 @@ import {
   TableCell,
   TableRow,
 } from "flowbite-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -33,9 +34,24 @@ const ProductPage = async ({ params }: IdSlug) => {
       <header className="mt-3">
         <Breadcrumb>
           <Breadcrumb.Item>
-            {product.subcategory?.category?.title}
+            <Link
+              href={"/products?categoryId=" + product.subcategory?.category?.id}
+            >
+              {product.subcategory?.category?.title}
+            </Link>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>{product.subcategory?.title}</Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link
+              href={
+                "/products?categoryId=" +
+                product.subcategory?.category?.id +
+                "&subcategoryId=" +
+                product.subcategory?.id
+              }
+            >
+              {product.subcategory?.title}
+            </Link>
+          </Breadcrumb.Item>
         </Breadcrumb>
         <section className="flex pt-5 gap-10 flex-wrap flex-col-reverse md:flex-nowrap md:flex-row">
           <ImageCarousel
