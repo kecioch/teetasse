@@ -15,7 +15,6 @@ const Home = () => {
             <p className="text-center text-xl font-light">
               Erlesene Auswahl, unvergleichlicher Genuss!
             </p>
-            {/* Entdecke alle Teesorten */}
             <Link href="/products" className="mt-12">
               <ButtonOutline className="uppercase">
                 Entdecke alle Produkte

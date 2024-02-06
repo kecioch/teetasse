@@ -61,7 +61,7 @@ const CatalogFilter = ({
             />
           </div>
           <Select
-            className="md:min-w-52"
+            className="md:min-w-56"
             name="category"
             id="category"
             onChange={handleChangeCategory}
@@ -80,7 +80,7 @@ const CatalogFilter = ({
         </div>
         <div className="flex-1">
           <Select
-            className="md:min-w-52"
+            className="md:min-w-56"
             name="subcategory"
             id="subcategory"
             onChange={handleChangeSubcategory}
