@@ -26,13 +26,15 @@ const ProductItem = ({ data, className }: Props) => {
           </div>
         )}
         <div className="w-full h-40 relative overflow-hidden">
-          <Image
-            alt={`Produktcover ${data.title}`}
-            src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${data.imageIds[0]}`}
-            fill
-            style={{ objectFit: "cover", objectPosition: "center" }}
-            draggable={false}
-          />
+          {data.imageIds.length > 0 && (
+            <Image
+              alt={`Produktcover ${data.title}`}
+              src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${data.imageIds[0]}`}
+              fill
+              style={{ objectFit: "cover", objectPosition: "center" }}
+              draggable={false}
+            />
+          )}
         </div>
         <div className="mt-2 flex justify-center items-center">
           <ProductRating rating={data.rating} ratingCnt={data.ratingCnt} />
