@@ -21,7 +21,7 @@ const getOrderConfig = (
   }
 };
 
-const PAGE_SIZE_DEFAULT = 20;
+const PAGE_SIZE_DEFAULT = 15;
 
 export async function getProducts(options?: FilterOptions): Promise<{
   products?: Product[];

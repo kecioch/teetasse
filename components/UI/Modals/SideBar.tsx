@@ -21,7 +21,7 @@ const SideBar = ({ show, title, name, className, children }: Props) => {
 
   return (
     <div
-      className={`flex flex-col fixed top-0 right-0 z-50 h-screen py-4 overflow-y-auto transition-transform bg-white w-full sm:max-w-96 ${className} ${
+      className={`flex flex-col  fixed top-0 right-0 z-50 h-[100dvh] pt-4 overflow-y-auto transition-transform bg-white w-full sm:max-w-96 ${className} ${
         !show && "translate-x-full"
       }`}
       tabIndex={-1}

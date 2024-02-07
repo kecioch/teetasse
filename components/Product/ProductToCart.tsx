@@ -34,6 +34,7 @@ const ProductToCart = ({ product, className }: Props) => {
 
     const cartProduct: CartProduct = {
       id: variant.id,
+      productGroupId: product.id,
       title: product.title,
       subtitle: variant.title,
       stock: variant.stock,
@@ -41,7 +42,6 @@ const ProductToCart = ({ product, className }: Props) => {
       coverImgUrl: coverUrl,
       qty,
     };
-    console.log("ADD TO CART", cartProduct);
     dispatch(addProduct(cartProduct));
   };
 
