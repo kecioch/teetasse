@@ -63,7 +63,7 @@ const ProductPage = async ({ params }: IdSlug) => {
               )}
             />
           ) : (
-            <ImageSkeleton />
+            <ImageSkeleton className="min-h-80" />
           )}
           <section className="w-full flex flex-col items-center md:max-w-[35%]">
             <h2 className="text-center text-md font-light">Nr. {product.id}</h2>

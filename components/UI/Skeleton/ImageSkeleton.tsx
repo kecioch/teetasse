@@ -2,15 +2,16 @@ import React from "react";
 
 interface Props {
   isLoading?: boolean;
+  className?: string;
 }
 
-const ImageSkeleton = ({ isLoading = false }: Props) => {
+const ImageSkeleton = ({ isLoading = false, className }: Props) => {
   return (
     <div
       role="status"
       className={`space-y-8 ${
         isLoading && "animate-pulse"
-      } md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center flex-1 flex flex-nowrap flex-col`}
+      } md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex items-center justify-center bg-blue-100 flex-1 flex flex-nowrap flex-col ${className}`}
     >
       <div className="flex-1 flex items-center justify-center w-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
         <svg
