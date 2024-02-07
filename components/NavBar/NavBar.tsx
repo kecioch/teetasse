@@ -11,15 +11,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
 import ContentContainer from "../UI/Container/ContentContainer";
-import { Dropdown } from "flowbite-react";
+import { Badge, Dropdown } from "flowbite-react";
 import DropDownItemLink from "./DropDownItemLink";
-import { useAppDispatch } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ModalStates, setModal } from "@/redux/features/modalSlice";
 import { usePathname } from "next/navigation";
 
 const NavBar = () => {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
+  const cartCnt = useAppSelector((state) => state.cart.cartCounter);
 
   const [isScrolled, setIsScrolled] = useState<boolean | null>(null);
 
@@ -107,11 +108,24 @@ const NavBar = () => {
               <Dropdown.Divider />
               <DropDownItemLink href="/auth/logout">Logout</DropDownItemLink>
             </Dropdown>
-            <button type="button" onClick={handleOpenCartDrawer}>
+
+            <button
+              type="button"
+              className="relative "
+              onClick={handleOpenCartDrawer}
+            >
               <FontAwesomeIcon
                 icon={faCartShopping}
                 style={{ height: "20px" }}
               />
+              {cartCnt > 0 && (
+                <>
+                  <span className="sr-only">Artikel im Warenkorb</span>
+                  <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full -top-3 -end-3">
+                    {cartCnt}
+                  </div>
+                </>
+              )}
             </button>
             <button type="button" onClick={handleOpenMenu} className="ml-2">
               <FontAwesomeIcon icon={faBars} style={{ height: "20px" }} />

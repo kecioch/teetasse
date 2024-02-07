@@ -2,8 +2,8 @@
 
 import React, { ChangeEvent, useEffect, useState } from "react";
 import styles from "./AddCartButton.module.css";
-import { Product, Variant } from "@/types/product";
-import { isNumberObject } from "util/types";
+import { Variant } from "@/types/product";
+import { useAppSelector } from "@/redux/hooks";
 
 interface Props {
   className?: string;
@@ -14,15 +14,23 @@ interface Props {
 const AddCartButton = ({ className, variant, onClick }: Props) => {
   const [qty, setQty] = useState<number>(1);
 
+  const cartQty =
+    useAppSelector(
+      (state) => state.cart.products.find((el) => el.id === variant.id)?.qty
+    ) || 0;
+  const maxQty = variant.stock - cartQty;
+  const disabled = maxQty <= 0;
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
-    if (isNaN(value) || value <= 0 || value > variant.stock) return setQty(1);
+    if (isNaN(value) || value <= 0 || value > maxQty) return setQty(1);
 
     setQty(value);
   };
 
   const handleClick = () => {
     onClick(qty);
+    setQty(1);
   };
 
   useEffect(() => {
@@ -63,25 +71,24 @@ const AddCartButton = ({ className, variant, onClick }: Props) => {
           id="quantity-input"
           data-input-counter
           aria-describedby="helper-text-explanation"
-          className={`bg-white border-0  text-center text-gray-900 text-sm block w-full py-2.5 ${styles.input}`}
+          className={`bg-white border-0  text-center text-sm block w-full py-2.5 ${disabled ? "text-gray-300 " : "text-gray-900 "} ${styles.input}`}
           placeholder="1"
           min={1}
-          max={variant.stock}
+          max={maxQty}
           value={qty}
           onChange={handleInputChange}
+          disabled={disabled}
           required
         />
         <button
           type="button"
           className={`bg-transparent p-3 focus:outline-none ${
-            qty < variant.stock
+            qty < maxQty
               ? "text-gray-900 active:text-gray-400"
               : "text-gray-300"
           }`}
-          onClick={() =>
-            setQty((prev) => (prev < variant.stock ? prev + 1 : prev))
-          }
-          disabled={qty >= variant.stock}
+          onClick={() => setQty((prev) => (prev < maxQty ? prev + 1 : prev))}
+          disabled={qty >= maxQty}
         >
           <svg
             className="w-3 h-3"
@@ -102,8 +109,13 @@ const AddCartButton = ({ className, variant, onClick }: Props) => {
       </div>
       <button
         type="button"
-        className="focus:outline-none text-white text-lg bg-green-950 hover:bg-green-800 active:bg-green-600 font-medium rounded-none px-5 py-2.5"
+        className={`focus:outline-none text-lg font-medium rounded-none px-5 py-2.5 ${
+          disabled
+            ? "bg-gray-600 text-gray-500"
+            : "bg-green-950 text-white hover:bg-green-800 active:bg-green-600"
+        }`}
         onClick={handleClick}
+        disabled={disabled}
       >
         In den Warenkorb
       </button>

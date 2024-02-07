@@ -8,10 +8,11 @@ interface Props {
   show: boolean;
   name?: string;
   title?: string;
+  className?: string;
   children?: React.ReactNode;
 }
 
-const SideBar = ({ show, title, name, children }: Props) => {
+const SideBar = ({ show, title, name, className, children }: Props) => {
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
@@ -20,7 +21,7 @@ const SideBar = ({ show, title, name, children }: Props) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 z-50 h-screen py-4 overflow-y-auto transition-transform bg-white w-full sm:w-96 dark:bg-gray-800 ${
+      className={`flex flex-col fixed top-0 right-0 z-50 h-screen py-4 overflow-y-auto transition-transform bg-white w-full sm:max-w-96 ${className} ${
         !show && "translate-x-full"
       }`}
       tabIndex={-1}
@@ -52,7 +53,7 @@ const SideBar = ({ show, title, name, children }: Props) => {
           {name ? name + " schließen" : "schließen"}
         </span>
       </button>
-      <div>{children}</div>
+      {children}
     </div>
   );
 };
