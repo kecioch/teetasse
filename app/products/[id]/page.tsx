@@ -4,6 +4,7 @@ import ProductRating from "@/components/Product/Rating/ProductRating";
 import ReviewSection from "@/components/Product/Reviews/ReviewSection";
 import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
+import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
 import { getProduct } from "@/lib/services/product";
 import { Product } from "@/types/product";
 import { IdSlug } from "@/types/slugs/Id";
@@ -54,12 +55,16 @@ const ProductPage = async ({ params }: IdSlug) => {
           </Breadcrumb.Item>
         </Breadcrumb>
         <section className="flex pt-5 gap-10 flex-wrap flex-col-reverse md:flex-nowrap md:flex-row">
-          <ImageCarousel
-            className="w-full md:max-w-[60%]"
-            imageUrls={product.imageIds.map(
-              (id) => `${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${id}`
-            )}
-          />
+          {product.imageIds.length >= 1 ? (
+            <ImageCarousel
+              className="w-full md:max-w-[60%]"
+              imageUrls={product.imageIds.map(
+                (id) => `${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${id}`
+              )}
+            />
+          ) : (
+            <ImageSkeleton />
+          )}
           <section className="w-full flex flex-col items-center md:max-w-[35%]">
             <h2 className="text-center text-md font-light">Nr. {product.id}</h2>
             <h1 className="text-center text-3xl mb-3">{product.title}</h1>

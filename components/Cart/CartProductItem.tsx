@@ -10,6 +10,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { changeQty, deleteProduct } from "@/redux/features/cartSlice";
 import NumberInput from "../UI/Forms/NumberInput/NumberInput";
+import ImageSkeleton from "../UI/Skeleton/ImageSkeleton";
 
 interface Props {
   data: CartProduct;
@@ -32,9 +33,9 @@ const CartProductItem = ({ data, className }: Props) => {
   };
 
   return (
-    <div className={`bg-gray- flex gap-3 ${className}`}>
-      <div className="w-24 bg-blue-100 relative border-r-4 border-gray-500">
-        {data.coverImgUrl && (
+    <div className={`flex gap-3 ${className}`}>
+      <div className="w-24 bg-gray-200 relative border-r-4 border-gray-500 flex">
+        {data.coverImgUrl ? (
           <Image
             alt={"Coverbild Produkt " + data.title}
             src={data.coverImgUrl}
@@ -42,6 +43,10 @@ const CartProductItem = ({ data, className }: Props) => {
             style={{ objectFit: "cover" }}
             draggable={false}
           />
+        ) : (
+          <div className=" flex-1 overflow-hidden flex justify-center">
+            <ImageSkeleton />
+          </div>
         )}
       </div>
       <div className="flex-1 flex flex-col justify-center overflow-hidden">

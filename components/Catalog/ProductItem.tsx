@@ -1,8 +1,11 @@
+"use client";
+
 import { Product } from "@/types/product";
-import React from "react";
+import React, { useState } from "react";
 import ProductRating from "../Product/Rating/ProductRating";
 import Image from "next/image";
 import Link from "next/link";
+import ImageSkeleton from "../UI/Skeleton/ImageSkeleton";
 
 interface Props {
   data: Product;
@@ -10,6 +13,7 @@ interface Props {
 }
 
 const ProductItem = ({ data, className }: Props) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const isSoldOut = data.variants.findIndex((item) => item.stock > 0) === -1;
 
   return (
@@ -25,8 +29,8 @@ const ProductItem = ({ data, className }: Props) => {
             </span>
           </div>
         )}
-        <div className="w-full h-40 relative overflow-hidden">
-          {data.imageIds.length > 0 && (
+        <div className="w-full h-40 relative overflow-hidden flex justify-center flex-col flex-nowrap">
+          {data.imageIds.length > 0 ? (
             <Image
               alt={`Produktcover ${data.title}`}
               src={`${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${data.imageIds[0]}`}
@@ -34,6 +38,8 @@ const ProductItem = ({ data, className }: Props) => {
               style={{ objectFit: "cover", objectPosition: "center" }}
               draggable={false}
             />
+          ) : (
+            <ImageSkeleton />
           )}
         </div>
         <div className="mt-2 flex justify-center items-center">
