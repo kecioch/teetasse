@@ -130,7 +130,7 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
   }, [searchParams]);
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-start">
       {filter.search && (
         <p className="text-2xl mb-10 w-full font-extralight">
           <span className="uppercase">Suchergebnisse für:</span> {filter.search}

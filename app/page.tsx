@@ -5,7 +5,7 @@ import React from "react";
 
 const Home = () => {
   return (
-    <div className="mb-16">
+    <div className="mb-16 w-full">
       <section className="bg-green-100">
         <ContentContainer>
           <div className="flex flex-col justify-center items-center py-24 ">
