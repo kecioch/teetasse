@@ -1,6 +1,6 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Role } from "@prisma/client";
 import { getServerSession } from "next-auth";
+import { authOptions } from "./authOptions";
 
 export const authenticateServer = async (roles?: Role[]) => {
   const session = await getServerSession(authOptions);
