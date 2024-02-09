@@ -11,11 +11,11 @@ const ImageSkeleton = ({ isLoading = false, className }: Props) => {
       role="status"
       className={`space-y-8 ${
         isLoading && "animate-pulse"
-      } md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex items-center justify-center bg-blue-100 flex-1 flex flex-nowrap flex-col ${className}`}
+      } md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex items-center justify-center flex-1 flex flex-nowrap flex-col ${className}`}
     >
-      <div className="flex-1 flex items-center justify-center w-full bg-gray-300 rounded sm:w-96 dark:bg-gray-700">
+      <div className="flex-1 flex items-center justify-center w-full bg-gray-300 rounded sm:w-96">
         <svg
-          className="w-10 h-10 text-gray-200 dark:text-gray-600"
+          className="w-10 h-10 text-gray-200"
           aria-hidden="true"
           xmlns="http://www.w3.org/2000/svg"
           fill="currentColor"

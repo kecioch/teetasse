@@ -8,6 +8,7 @@ import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
 import { getProduct } from "@/lib/services/product";
 import { Product } from "@/types/product";
 import { IdSlug } from "@/types/slugs/Id";
+import { Sleep } from "@/utils/Sleep";
 import {
   Breadcrumb,
   Table,
@@ -22,7 +23,7 @@ import React from "react";
 const ProductPage = async ({ params }: IdSlug) => {
   const product: Product | undefined = await getProduct(parseInt(params.id));
   if (!product) redirect("/");
-
+  
   const features: { key: string; value: string }[] = [];
   Object.values(product.features).forEach((feature) => {
     Object.entries(feature).forEach(([subKey, value]) => {
