@@ -135,6 +135,7 @@ const RegisterForm = () => {
             type="password"
             color={errors.passwordRepeat ? "error" : "success"}
             {...register("passwordRepeat", {
+              required: "Passwort wird benötigt",
               validate: (value) =>
                 value === password.current ||
                 "Passwörter stimmen nicht überein",

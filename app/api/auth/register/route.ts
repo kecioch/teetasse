@@ -35,7 +35,10 @@ export async function POST(req: Request) {
       data: { email, password: hashedPassword, firstName, lastName },
     });
 
-    return NextResponse.json({ status: 200, msg: "User successfully created" });
+    return NextResponse.json({
+      status: 200,
+      msg: "Nutzer erfolgreich angelegt",
+    });
   } catch (e) {
     console.log(e);
     let msg = "Fehler bei Serveranfrage";

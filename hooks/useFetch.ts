@@ -1,8 +1,12 @@
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const useFetch = () => {
+  const router = useRouter();
   const [isFetching, setIsFetching] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+
   // const { createMessage } = useFlash();
   // const { removeUser } = useUser();
 
@@ -18,14 +22,14 @@ const useFetch = () => {
       res = await fetch(url, options);
       const data = await res.json();
       if (res.status !== 200) setErrorMsg(data.msg);
-      // if (res.status === 401 && data?.tokenExpired) {
-      //   removeUser();
-      //   createMessage({
-      //     header: "Sitzung abgelaufen",
-      //     text: "Bitte erneut einloggen",
-      //     variant: "danger",
-      //   });
-      // }
+      if (res.status === 401) {
+        router.push("/login");
+        // createMessage({
+        //   header: "Sitzung abgelaufen",
+        //   text: "Bitte erneut einloggen",
+        //   variant: "danger",
+        // });
+      }
       rtn = { status: res.status, data };
     } catch (err) {
       console.log(err);
