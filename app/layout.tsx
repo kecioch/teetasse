@@ -12,6 +12,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 // Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { getCategories } from "@/lib/services/category";
+import AuthProvider from "@/components/Auth/Provider/AuthProvider";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 const inter = Inter({ subsets: ["latin"] });
@@ -33,14 +34,16 @@ export default async function RootLayout({
     <html lang="de">
       <body className={inter.className}>
         <Providers>
-          <div className="flex flex-col min-h-screen">
-            <NavBar />
-            <div className="flex-1 min-h-[40em] pb-8 flex flex-col justify-start">
-              {children}
+          <AuthProvider>
+            <div className="flex flex-col min-h-screen">
+              <NavBar />
+              <div className="flex-1 min-h-[40em] pb-8 flex flex-col justify-start">
+                {children}
+              </div>
+              <Footer categories={categories} />
             </div>
-            <Footer categories={categories} />
-          </div>
-          <Modals data={{ categories }} />
+            <Modals data={{ categories }} />
+          </AuthProvider>
         </Providers>
       </body>
     </html>

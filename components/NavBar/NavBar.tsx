@@ -3,28 +3,37 @@
 import {
   faBars,
   faCartShopping,
-  faHamburger,
   faSearch,
+  faSignIn,
+  faSignOut,
   faUser,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContentContainer from "../UI/Container/ContentContainer";
-import { Badge, Dropdown } from "flowbite-react";
+import { Dropdown } from "flowbite-react";
 import DropDownItemLink from "./DropDownItemLink";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ModalStates, setModal } from "@/redux/features/modalSlice";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { Role } from "@prisma/client";
 
 const NavBar = () => {
   const pathname = usePathname();
+  const session = useSession();
   const dispatch = useAppDispatch();
   const cartCnt = useAppSelector((state) => state.cart.cartCounter);
 
   const [isScrolled, setIsScrolled] = useState<boolean | null>(null);
 
   const isHome = pathname === "/";
+  const isLoggedIn = session.status === "authenticated";
+  const role = session.data?.user.role;
+  const isStaff = role === Role.STAFF;
+  const isAdmin = role === Role.ADMIN;
 
   const handleOpenCartDrawer = () => {
     dispatch(setModal(ModalStates.CART_DRAWER));
@@ -82,6 +91,13 @@ const NavBar = () => {
                 </button>
               )}
             >
+              {isLoggedIn && (
+                <Dropdown.Header>
+                  <span className="font-light">
+                    Hallo, {session.data.user.firstName}!
+                  </span>
+                </Dropdown.Header>
+              )}
               <Dropdown.Header>
                 <span className="font-semibold text">Profil</span>
               </Dropdown.Header>
@@ -90,23 +106,50 @@ const NavBar = () => {
                 Bestellungen
               </DropDownItemLink>
               <Dropdown.Divider />
-              <Dropdown.Header>
-                <span className="font-semibold text">Staff</span>
-              </Dropdown.Header>
-              <DropDownItemLink href="/staff/orders">
-                Bestellungen
-              </DropDownItemLink>
-              <DropDownItemLink href="/staff/products">
-                Produktverwaltung
-              </DropDownItemLink>
-              <DropDownItemLink href="/staff/categories">
-                Kategorienverwaltung
-              </DropDownItemLink>
-              <DropDownItemLink href="/staff/accounts">
-                Mitarbeiterverwaltung
-              </DropDownItemLink>
+              {(isAdmin || isStaff) && (
+                <>
+                  <Dropdown.Header>
+                    <span className="font-semibold text">Mitarbeiter</span>
+                  </Dropdown.Header>
+                  <DropDownItemLink href="/staff/orders">
+                    Bestellungen
+                  </DropDownItemLink>
+                  <DropDownItemLink href="/staff/products">
+                    Produktverwaltung
+                  </DropDownItemLink>
+                  <DropDownItemLink href="/staff/categories">
+                    Kategorienverwaltung
+                  </DropDownItemLink>
+                </>
+              )}
+              {isAdmin && (
+                <DropDownItemLink href="/staff/accounts">
+                  Mitarbeiterverwaltung
+                </DropDownItemLink>
+              )}
               <Dropdown.Divider />
-              <DropDownItemLink href="/auth/logout">Logout</DropDownItemLink>
+              {isLoggedIn && (
+                <Dropdown.Item
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSignOut} className="mr-2" />
+                  Logout
+                </Dropdown.Item>
+              )}
+              {!isLoggedIn && (
+                <>
+                  <DropDownItemLink href="/login">
+                    <FontAwesomeIcon icon={faSignIn} className="mr-2" />
+                    Login
+                  </DropDownItemLink>
+                  <DropDownItemLink href="/register">
+                    <FontAwesomeIcon icon={faUserPlus} className="mr-2" />
+                    Registrieren
+                  </DropDownItemLink>
+                </>
+              )}
             </Dropdown>
 
             <button

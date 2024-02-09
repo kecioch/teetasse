@@ -1,9 +1,13 @@
-import React from 'react'
+import { authenticateServer } from "@/services/auth/authentication";
+import { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
+import React from "react";
 
-const page = () => {
-  return (
-    <div>Staff Acc</div>
-  )
-}
+const StaffAccountsPage = async () => {
+  const auth = await authenticateServer([Role.ADMIN]);
+  if (!auth) redirect("/login");
 
-export default page
+  return <div>Staff Acc</div>;
+};
+
+export default StaffAccountsPage;

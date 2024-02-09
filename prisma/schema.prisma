@@ -75,12 +75,19 @@ model Review {
   productgroup   Productgroup @relation(fields: [productgroupId], references: [id], onDelete: Cascade)
 }
 
+enum Role {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
 model User {
   id        Int    @id @default(autoincrement())
   lastName  String
   firstName String
-  username  String @unique
   email     String @unique
+  password  String
+  role      Role   @default(CUSTOMER)
 
   // RELATIONS 
   reviews Review[]

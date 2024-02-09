@@ -1,9 +1,14 @@
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { TabItemData } from "@/components/UI/Tabs/TabItem";
 import Tabs from "@/components/UI/Tabs/Tabs";
+import { authenticateServer } from "@/services/auth/authentication";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
+  const auth = await authenticateServer();
+  if (!auth) redirect("/login");
+
   const tabItems: TabItemData[] = [
     {
       title: "Account",

@@ -9,6 +9,7 @@ interface Props {
   color?: string;
   isLoading?: boolean;
   type?: "button" | "submit" | "reset" | undefined;
+  pill?: boolean;
   onClick?: () => void;
 }
 
@@ -18,6 +19,7 @@ const LoadingButton = ({
   color,
   type = "button",
   isLoading = false,
+  pill = false,
   onClick,
 }: Props) => {
   return (
@@ -27,6 +29,7 @@ const LoadingButton = ({
       type={type}
       disabled={isLoading}
       onClick={onClick}
+      pill={pill}
     >
       {isLoading && (
         <Spinner aria-label="lädt" size="sm" color={"gray"} className="mr-3" />

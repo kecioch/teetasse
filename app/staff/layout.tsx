@@ -1,9 +1,15 @@
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { TabItemData } from "@/components/UI/Tabs/TabItem";
 import Tabs from "@/components/UI/Tabs/Tabs";
+import { authenticateServer } from "@/services/auth/authentication";
+import { Role } from "@prisma/client";
+import { redirect } from "next/navigation";
 import React from "react";
 
-const layout = ({ children }: { children: React.ReactNode }) => {
+const layout = async ({ children }: { children: React.ReactNode }) => {
+  const auth = await authenticateServer([Role.STAFF, Role.ADMIN]);
+  if (!auth) redirect("/login");
+
   const tabItems: TabItemData[] = [
     {
       title: "Bestellungen",
@@ -17,12 +23,12 @@ const layout = ({ children }: { children: React.ReactNode }) => {
       title: "Kategorien",
       href: "/staff/categories",
     },
-    {
+  ];
+  if (auth.role === Role.ADMIN)
+    tabItems.push({
       title: "Mitarbeiter",
       href: "/staff/accounts",
-      disabled: true,
-    },
-  ];
+    });
 
   return (
     <ContentContainer className="mt-12 mb-5 p-4">
