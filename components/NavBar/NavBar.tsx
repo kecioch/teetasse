@@ -105,9 +105,9 @@ const NavBar = () => {
               <DropDownItemLink href="/profile/orders">
                 Bestellungen
               </DropDownItemLink>
-              <Dropdown.Divider />
               {(isAdmin || isStaff) && (
                 <>
+                  <Dropdown.Divider />
                   <Dropdown.Header>
                     <span className="font-semibold text">Mitarbeiter</span>
                   </Dropdown.Header>
