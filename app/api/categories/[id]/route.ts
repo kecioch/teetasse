@@ -1,11 +1,21 @@
 import prisma from "@/lib/prisma";
+import { authenticateServer } from "@/services/auth/authentication";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
+import { Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request, { params }: IdSlug) {
   try {
+    // AUTHENTICATION
+    const user = await authenticateServer([Role.STAFF, Role.ADMIN]);
+    if (!user)
+      return NextResponse.json(
+        { status: 401, msg: "Nutzer ist nicht berechtigt" },
+        { status: 401 }
+      );
+
     const data = await req.json();
 
     const id = parseInt(params.id);
@@ -39,6 +49,14 @@ export async function PUT(req: Request, { params }: IdSlug) {
 
 export async function DELETE(req: Request, { params }: IdSlug) {
   try {
+    // VALIDATION
+    const user = await authenticateServer([Role.STAFF, Role.ADMIN]);
+    if (!user)
+      return NextResponse.json(
+        { status: 401, msg: "Nutzer ist nicht berechtigt" },
+        { status: 401 }
+      );
+
     const id = parseInt(params.id);
     if (!id || id === null)
       throw new CustomError("KategorieId darf nicht leer sein");

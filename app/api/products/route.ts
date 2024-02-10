@@ -1,7 +1,9 @@
 import prisma from "@/lib/prisma";
 import { getProducts, hasDuplicateProductTitle } from "@/lib/services/product";
+import { authenticateServer } from "@/services/auth/authentication";
 import { FilterOptions, SortBy } from "@/types/filterOptions";
 import { CustomError } from "@/utils/errors/CustomError";
+import { Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -39,8 +41,15 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json();
+    // AUTHENTICATION
+    const user = await authenticateServer([Role.STAFF, Role.ADMIN]);
+    if (!user)
+      return NextResponse.json(
+        { status: 401, msg: "Nutzer ist nicht berechtigt" },
+        { status: 401 }
+      );
 
+    const data = await req.json();
     console.log("POST PRODUCT", data);
 
     const {

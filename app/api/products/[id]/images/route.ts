@@ -3,9 +3,19 @@ import { upload } from "@/services/cloudinary/upload";
 import { CustomError } from "@/utils/errors/CustomError";
 import prisma from "@/lib/prisma";
 import { IdSlug } from "@/types/slugs/Id";
+import { authenticateServer } from "@/services/auth/authentication";
+import { Role } from "@prisma/client";
 
 export async function POST(req: Request, { params }: IdSlug) {
   try {
+    // AUTHENTICATION
+    const user = await authenticateServer([Role.STAFF, Role.ADMIN]);
+    if (!user)
+      return NextResponse.json(
+        { status: 401, msg: "Nutzer ist nicht berechtigt" },
+        { status: 401 }
+      );
+
     const formData = await req.formData();
     const id = parseInt(params.id);
 

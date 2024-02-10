@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { getCategories } from "@/lib/services/category";
+import { authenticateServer } from "@/services/auth/authentication";
 import { CustomError } from "@/utils/errors/CustomError";
+import { Role } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
@@ -16,6 +18,14 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    // AUTHENTICATION
+    const user = await authenticateServer([Role.STAFF, Role.ADMIN]);
+    if (!user)
+      return NextResponse.json(
+        { status: 401, msg: "Nutzer ist nicht berechtigt" },
+        { status: 401 }
+      );
+
     const data = await req.json();
 
     const { title } = data;
