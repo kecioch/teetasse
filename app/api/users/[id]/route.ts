@@ -75,8 +75,24 @@ export async function DELETE(req: Request, { params }: IdSlug) {
       );
 
     // FIND USER
-    const foundUser = await prisma.user.findUnique({ where: { id } });
+    const foundUser = await prisma.user.findUnique({
+      where: { id },
+      include: { reviews: true },
+    });
     if (!foundUser) throw new CustomError("Nutzer nicht gefunden");
+
+    // CHECK REVIEWS AND UPDATE RATINGS
+    if (foundUser.reviews.length > 0) {
+      foundUser.reviews.forEach(async (review) => {
+        await prisma.productgroup.update({
+          where: { id: review.productgroupId },
+          data: {
+            rating: { decrement: review.rating },
+            ratingCnt: { decrement: 1 },
+          },
+        });
+      });
+    }
 
     // DELETE USER
     const deletedUser = await prisma.user.delete({ where: { id } });

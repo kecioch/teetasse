@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { authenticateServer } from "@/services/auth/authentication";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
+import { Role } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { NextResponse } from "next/server";
 
@@ -14,14 +15,16 @@ export async function PUT(req: Request, { params }: IdSlug) {
 
     // VALIDATION
     const id = parseInt(params.id);
+    const isAdminAction = user && user.id != id && user.role === Role.ADMIN;
+
     if (!id || id === null)
       throw new CustomError("UserId darf nicht leer sein");
-    if (!user || user.id !== id)
+    if (!user || (user.id !== id && user.role !== Role.ADMIN))
       return NextResponse.json(
         { status: 401, msg: "Nutzer ist nicht berechtigt" },
         { status: 401 }
       );
-    if (!oldPassword)
+    if (!oldPassword && !isAdminAction)
       throw new CustomError("Aktuelles Passwort nicht vorhanden");
     if (!password) throw new CustomError("Neues Passwort nicht vorhanden");
     if (password && password.length < 8)
@@ -29,7 +32,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
 
     // FIND USER
     const foundUser = await prisma.user.findUnique({
-      where: { id: user.id },
+      where: { id },
     });
     if (!foundUser) throw new CustomError("Nutzer nicht gefunden");
 
@@ -38,7 +41,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
       oldPassword || "",
       foundUser.password
     );
-    if (!passwordCorrect)
+    if (!passwordCorrect && !isAdminAction)
       return NextResponse.json(
         {
           status: 500,
@@ -51,7 +54,7 @@ export async function PUT(req: Request, { params }: IdSlug) {
     // UPDATE USER
     const hashedPassword = await hash(password, 10);
     const updatetUser = await prisma.user.update({
-      where: { id: user.id },
+      where: { id },
       data: { password: hashedPassword },
     });
 

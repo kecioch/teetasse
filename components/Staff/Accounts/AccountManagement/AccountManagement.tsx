@@ -9,7 +9,6 @@ import ConfirmDeleteModal, {
   ConfirmDeleteModalProps,
 } from "@/components/UI/Modals/ConfirmDeleteModal";
 import useFetch from "@/hooks/useFetch";
-import { Role } from "@prisma/client";
 import AddStaffModal from "../Modals/AddStaffModal";
 import EditStaffModal from "../Modals/EditStaffModal";
 

@@ -1,11 +1,11 @@
 "use client";
 
 import LoadingButton from "@/components/UI/Buttons/LoadingButton";
-import { Button, FloatingLabel } from "flowbite-react";
+import { FloatingLabel } from "flowbite-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface LoginFormType {
@@ -16,16 +16,20 @@ interface LoginFormType {
 const LoginForm = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormType>();
 
   const onSubmit = async (data: LoginFormType) => {
     setIsLoading(true);
+    setErrorMsg("");
+    clearErrors();
     const res = await signIn("credentials", {
       email: data.email,
       password: data.password,
@@ -33,9 +37,11 @@ const LoginForm = () => {
     });
     setIsLoading(false);
     if (!res?.ok && res?.error) {
-      if (res?.error === "CredentialsSignin")
-        setError("Email oder Passwort stimmen nicht überein");
-      else setError("Fehlerhafter Loginversuch");
+      if (res?.error === "CredentialsSignin") {
+        setErrorMsg("Email oder Passwort stimmen nicht überein");
+        setError("email", {});
+        setError("password", {});
+      } else setErrorMsg("Fehlerhafter Loginversuch");
     } else {
       router.push("/profile");
       router.refresh();
@@ -89,7 +95,7 @@ const LoginForm = () => {
           )}
         </div>
 
-        {error && <p className="text-red-700 font-light">{error}</p>}
+        {errorMsg && <p className="text-red-700 font-light">{errorMsg}</p>}
         <LoadingButton
           type="submit"
           className="mt-3 p-1"

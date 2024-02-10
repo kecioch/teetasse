@@ -41,6 +41,14 @@ const PasswordStaffForm = ({
   const handleUpdatePassword = async (data: PasswordFormData) => {
     console.log(data);
     beforeSubmit();
+
+    const res = await fetch.put("/api/users/" + user.id + "/password", {
+      password: data.password,
+    });
+    if (res.status === 200) {
+      console.log("UPDATET Passwort");
+    }
+    afterSubmit();
   };
 
   return (

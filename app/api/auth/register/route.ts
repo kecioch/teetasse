@@ -7,9 +7,7 @@ import { authenticateServer } from "@/services/auth/authentication";
 
 export async function POST(req: Request) {
   try {
-    console.log("REGISTER POST");
     const { email, password, firstName, lastName, role } = await req.json();
-    console.log(email, password, firstName, lastName, role);
 
     // VALIDATION
     if (!email) throw new CustomError("Email nicht vorhanden");

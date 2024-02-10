@@ -2,10 +2,10 @@
 
 import LoadingButton from "@/components/UI/Buttons/LoadingButton";
 import useFetch from "@/hooks/useFetch";
-import { Button, FloatingLabel } from "flowbite-react";
+import { FloatingLabel } from "flowbite-react";
 import { signIn } from "next-auth/react";
-import React, { ChangeEvent, FormEvent, useRef, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import React, { useRef } from "react";
+import { useForm } from "react-hook-form";
 
 interface RegisterFormType {
   email: string;
