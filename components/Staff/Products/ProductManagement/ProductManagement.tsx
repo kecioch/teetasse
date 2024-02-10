@@ -223,7 +223,8 @@ const ProductManagement = ({
 
       const newProductsData = [...productsData];
       newProductsData.splice(index, 1);
-      setProductsData(newProductsData), setDeleteModal({ show: false });
+      setProductsData(newProductsData);
+      setDeleteModal({ show: false });
     });
   };
 

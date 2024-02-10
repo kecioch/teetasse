@@ -46,7 +46,8 @@ export async function getProducts(options?: FilterOptions): Promise<{
     if (options?.subcategoryId)
       whereCondition.subcategoryId = options?.subcategoryId;
 
-    if (options?.categoryId) whereCondition.subcategory= { categoryId: options.categoryId };
+    if (options?.categoryId)
+      whereCondition.subcategory = { categoryId: options.categoryId };
 
     // Fetch products
     const data = await prisma.productgroup.findMany({

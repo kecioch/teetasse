@@ -13,6 +13,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { getCategories } from "@/lib/services/category";
 import AuthProvider from "@/components/Auth/Provider/AuthProvider";
+import { Category } from "@/types/category";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,6 +30,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const categories = await getCategories();
+  // const categories: Category[] = [];
 
   return (
     <html lang="de">

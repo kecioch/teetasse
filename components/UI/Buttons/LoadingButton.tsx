@@ -11,6 +11,7 @@ interface Props {
   type?: "button" | "submit" | "reset" | undefined;
   pill?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const LoadingButton = ({
@@ -20,6 +21,7 @@ const LoadingButton = ({
   type = "button",
   isLoading = false,
   pill = false,
+  disabled = false,
   onClick,
 }: Props) => {
   return (
@@ -27,7 +29,7 @@ const LoadingButton = ({
       className={className}
       color={color}
       type={type}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
       onClick={onClick}
       pill={pill}
     >
