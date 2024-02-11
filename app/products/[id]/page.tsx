@@ -6,6 +6,7 @@ import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
 import { getProduct } from "@/lib/services/product";
+import { ReduxProvider } from "@/redux/ReduxProvider";
 import { Product } from "@/types/product";
 import { IdSlug } from "@/types/slugs/Id";
 import {
@@ -74,7 +75,9 @@ const ProductPage = async ({ params }: IdSlug) => {
               href="#reviews"
             />
             <p className="text-center font-light mt-3">{product.description}</p>
-            <ProductToCart className="max-w-[25em] mt-10" product={product} />
+            <ReduxProvider>
+              <ProductToCart className="max-w-[25em] mt-10" product={product} />
+            </ReduxProvider>
           </section>
         </section>
       </header>

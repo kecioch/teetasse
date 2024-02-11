@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/NavBar/NavBar";
 import Footer from "@/components/Footer/Footer";
-import { Providers } from "@/redux/provider";
 import Modals from "@/components/UI/Modals/Modals";
 
 // The following import prevents a Font Awesome icon server-side rendering bug,
@@ -13,7 +12,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { getCategories } from "@/lib/services/category";
 import AuthProvider from "@/components/Auth/Provider/AuthProvider";
-import { Category } from "@/types/category";
+import { ReduxProvider } from "@/redux/ReduxProvider";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 const inter = Inter({ subsets: ["latin"] });
@@ -30,23 +29,22 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const categories = await getCategories();
-  // const categories: Category[] = [];
 
   return (
     <html lang="de">
       <body className={inter.className}>
-        <Providers>
-          <AuthProvider>
-            <div className="flex flex-col min-h-screen">
-              <NavBar />
-              <div className="flex-1 min-h-[40em] pb-8 flex flex-col justify-start">
-                {children}
-              </div>
-              <Footer categories={categories} />
+        <AuthProvider>
+          <div className="flex flex-col min-h-screen">
+            <NavBar />
+            <div className="flex-1 min-h-[40em] pb-8 flex flex-col justify-start">
+              {children}
             </div>
+            <Footer categories={categories} />
+          </div>
+          <ReduxProvider>
             <Modals data={{ categories }} />
-          </AuthProvider>
-        </Providers>
+          </ReduxProvider>
+        </AuthProvider>
       </body>
     </html>
   );
