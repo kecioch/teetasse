@@ -3,6 +3,6 @@ export interface Review {
   authorId: number;
   authorName: string;
   rating: number;
-  comment: string;
+  comment?: string | null | undefined;
   created: Date;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Rating, RatingStar } from "flowbite-react";
 import React from "react";
 
@@ -7,6 +9,8 @@ interface Props {
   maxRating?: number;
   href?: string;
   size?: string;
+  disabled?: boolean;
+  onClick?: (rating: number) => void;
 }
 
 const ProductRating = ({
@@ -15,6 +19,8 @@ const ProductRating = ({
   href,
   size = "sm",
   maxRating = 5,
+  disabled = false,
+  onClick,
 }: Props) => {
   const stars = [];
   for (let i = 0; i < maxRating; i++) {
@@ -22,8 +28,13 @@ const ProductRating = ({
     stars.push(
       <RatingStar
         key={i}
-        className={isFull ? "text-green-800" : ""}
+        className={
+          isFull ? (disabled ? "text-gray-400" : "text-green-800") : ""
+        }
         filled={isFull}
+        onClick={() => {
+          if (onClick && !disabled) onClick(i + 1);
+        }}
       />
     );
   }

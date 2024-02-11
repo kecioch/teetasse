@@ -6,10 +6,8 @@ import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
 import { getProduct } from "@/lib/services/product";
-import { Providers } from "@/redux/provider";
 import { Product } from "@/types/product";
 import { IdSlug } from "@/types/slugs/Id";
-import { Sleep } from "@/utils/Sleep";
 import {
   Breadcrumb,
   Table,
@@ -20,7 +18,6 @@ import {
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
-import { Provider } from "react-redux";
 
 const ProductPage = async ({ params }: IdSlug) => {
   const product: Product | undefined = await getProduct(parseInt(params.id));
@@ -107,7 +104,7 @@ const ProductPage = async ({ params }: IdSlug) => {
       )}
       <section className="mt-10">
         <SubHeader id="reviews">Bewertungen</SubHeader>
-        <ReviewSection data={product.reviews} />
+        <ReviewSection data={product.reviews} productId={product.id} />
       </section>
     </ContentContainer>
   );

@@ -11,7 +11,7 @@ interface Props {
 
 const AccountSettings = ({ user }: Props) => {
   return (
-    <div>
+    <div className="px-10">
       <h1 className="text-3xl uppercase text-gray-800">
         Account Informationen
       </h1>

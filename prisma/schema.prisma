@@ -65,7 +65,7 @@ model Product {
 model Review {
   id      Int      @id @default(autoincrement())
   rating  Int
-  comment String
+  comment String?
   created DateTime @default(now())
 
   // RELATIONS
@@ -123,11 +123,11 @@ model Order {
   id Int @id @default(autoincrement())
 
   // RELATIONS
-  userId       Int?
-  user         User?                @relation(fields: [userId], references: [id])
-  customerInfo CustomerInformation?
-  products     ProductOrder[]
-  delivery     DeliveryOrder?
+  userId          Int?
+  user            User?                @relation(fields: [userId], references: [id])
+  customerInfo    CustomerInformation?
+  products        ProductOrder[]
+  deliveryAddress DeliveryAddress?
 }
 
 model ProductOrder {
@@ -143,7 +143,7 @@ model ProductOrder {
   @@unique([orderId, productId])
 }
 
-model DeliveryOrder {
+model DeliveryAddress {
   id Int @id @default(autoincrement())
 
   // DELIVERY INFORMATION

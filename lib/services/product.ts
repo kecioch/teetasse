@@ -112,7 +112,7 @@ export async function getProduct(id: number) {
       include: {
         products: { where: { visible: true }, orderBy: { title: "asc" } },
         subcategory: { include: { category: true } },
-        reviews: { include: { author: true } },
+        reviews: { include: { author: true }, orderBy: { created: "desc" } },
       },
     });
 
