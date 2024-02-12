@@ -3,6 +3,7 @@ import { modalSlice } from "./features/modalSlice";
 import { cartSlice } from "./features/cartSlice";
 import { persistReducer, persistStore } from "redux-persist";
 import createWebStorage from "redux-persist/es/storage/createWebStorage";
+import { checkoutSlice } from "./features/checkoutSlice";
 
 const createNoopStorage = () => {
   return {
@@ -31,6 +32,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   [modalSlice.name]: modalSlice.reducer,
   [cartSlice.name]: cartSlice.reducer,
+  [checkoutSlice.name]: checkoutSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

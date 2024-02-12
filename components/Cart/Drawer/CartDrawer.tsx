@@ -3,11 +3,12 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { ModalStates, closeModal } from "@/redux/features/modalSlice";
-import SideBar from "../UI/Modals/SideBar";
-import CartProductItem from "./CartProductItem";
+import SideBar from "../../UI/Modals/SideBar";
+import CartProductItem from "../CartProductItem";
 import { Button } from "flowbite-react";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 const CartDrawer = () => {
   const showModal =
@@ -36,7 +37,11 @@ const CartDrawer = () => {
           }`}
         >
           {products.map((item, index) => (
-            <CartProductItem key={index} data={item} className="w-full py-2 h-28" />
+            <CartProductItem
+              key={index}
+              data={item}
+              className="w-full py-2 h-28"
+            />
           ))}
 
           {isEmpty && (
@@ -50,14 +55,17 @@ const CartDrawer = () => {
         <p className="text-end mb-8 px-4 font-light  text-lg">
           Gesamtbetrag: <span className="font-medium">{totalPrice}€</span>
         </p>
-        <Button
-          className="w-full mt-5 rounded-none [&_span]:text-xl py-5"
-          color="success"
-          disabled={isEmpty}
-        >
-          <FontAwesomeIcon icon={faCoins} className="mr-2" />
-          Zur Kasse
-        </Button>
+        <Link href="/checkout">
+          <Button
+            className="w-full mt-5 rounded-none [&_span]:text-xl py-5"
+            color="success"
+            disabled={isEmpty}
+            onClick={handleClose}
+          >
+            <FontAwesomeIcon icon={faCoins} className="mr-2" />
+            Zur Kasse
+          </Button>
+        </Link>
       </section>
     </SideBar>
   );

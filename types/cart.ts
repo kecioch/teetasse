@@ -8,3 +8,9 @@ export interface CartProduct {
   price: number;
   coverImgUrl?: string;
 }
+
+export enum CheckoutState {
+  CUSTOMER_DATA,
+  DELIVERY,
+  PAYMENT,
+}

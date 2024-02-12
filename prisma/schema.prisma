@@ -96,12 +96,11 @@ model User {
 }
 
 model UserAddress {
-  id      Int    @id @default(autoincrement())
-  street  String
-  nr      String
-  zip     String
-  city    String
-  country String
+  id     Int    @id @default(autoincrement())
+  street String
+  nr     String
+  zip    String
+  city   String
 
   // RELATIONS
   userId Int  @unique

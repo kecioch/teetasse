@@ -1,17 +1,13 @@
 "use client";
 
 import LoadingButton from "@/components/UI/Buttons/LoadingButton";
+import { LoginFormType } from "@/types/loginForm";
 import { FloatingLabel } from "flowbite-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
-interface LoginFormType {
-  email: string;
-  password: string;
-}
 
 const LoginForm = () => {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import React from "react";
 import Backdrop from "./Backdrop";
-import CartDrawer from "@/components/Cart/CartDrawer";
+import CartDrawer from "@/components/Cart/Drawer/CartDrawer";
 import SearchProduct from "@/components/Catalog/SearchProduct";
 import MenuDrawer from "@/components/Menu/MenuDrawer";
 import { Category } from "@/types/category";
