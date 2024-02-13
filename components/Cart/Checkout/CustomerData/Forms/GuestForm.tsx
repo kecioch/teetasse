@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppSelector } from "@/redux/hooks";
 import { Button, Label, TextInput } from "flowbite-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,8 @@ const GuestForm = ({ onSubmit }: Props) => {
     clearErrors,
     formState: { errors },
   } = useForm<GuestFormType>();
+
+  const cartCnt = useAppSelector((state) => state.cart.cartCounter);
 
   const onSubmitHandler = (data: GuestFormType) => {
     onSubmit(data);
@@ -101,7 +104,13 @@ const GuestForm = ({ onSubmit }: Props) => {
           </p>
         )}
       </div>
-      <Button size="lg" color="success" type="submit" className="w-full mt-2">
+      <Button
+        size="lg"
+        color="success"
+        type="submit"
+        className="w-full mt-2"
+        disabled={cartCnt <= 0}
+      >
         Weiter
       </Button>
     </form>

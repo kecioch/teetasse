@@ -13,6 +13,7 @@ const DeliveryPage = () => {
   const router = useRouter();
   const user = session.data?.user;
   const checkout = useAppSelector((state) => state.checkout);
+  const cartCnt = useAppSelector((state) => state.cart.cartCounter);
   const customerInfo = checkout.customerInformation;
   const dispatch = useAppDispatch();
 
@@ -24,14 +25,15 @@ const DeliveryPage = () => {
 
   useEffect(() => {
     if (
-      !user &&
-      (!customerInfo?.firstName ||
-        !customerInfo.lastName ||
-        !customerInfo.email)
+      (!user &&
+        (!customerInfo?.firstName ||
+          !customerInfo.lastName ||
+          !customerInfo.email)) ||
+      cartCnt <= 0
     ) {
       router.push("/checkout");
     }
-  }, [checkout, customerInfo, router, user]);
+  }, [checkout, customerInfo, router, user, cartCnt]);
 
   return (
     <div>

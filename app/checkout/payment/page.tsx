@@ -18,11 +18,12 @@ const PaymentPage = () => {
         (!checkout.customerInformation?.email ||
           !checkout.customerInformation?.firstName ||
           !checkout.customerInformation?.lastName)) ||
-      !checkout.address
+      !checkout.address ||
+      cart.cartCounter <= 0
     ) {
       router.push("/checkout");
     }
-  }, [checkout, router, user]);
+  }, [checkout, router, user, cart]);
 
   return (
     <div>
