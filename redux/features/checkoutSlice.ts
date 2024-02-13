@@ -3,24 +3,28 @@ import { Address, CustomerInformation } from "@/types/customer";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface CartCheckoutState {
-  state: CheckoutState;
-  userId?: number;
   customerInformation?: CustomerInformation;
   address?: Address;
 }
 
-const initialState: CartCheckoutState = {
-  state: CheckoutState.CUSTOMER_DATA,
-};
+const initialState: CartCheckoutState = {};
 
 export const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
-    setState(state, action) {
-      state.state = action.payload;
+    setCustomerInformation(state, action) {
+      state.customerInformation = action.payload;
+    },
+    setAddress(state, action) {
+      state.address = action.payload;
+    },
+    clearCheckout(state) {
+      state.customerInformation = undefined;
+      state.address = undefined;
     },
   },
 });
 
-export const { setState } = checkoutSlice.actions;
+export const { setCustomerInformation, setAddress, clearCheckout } =
+  checkoutSlice.actions;

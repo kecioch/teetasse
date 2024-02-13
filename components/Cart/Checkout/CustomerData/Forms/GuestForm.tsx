@@ -4,14 +4,14 @@ import { Button, Label, TextInput } from "flowbite-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-interface GuestFormType {
+export interface GuestFormType {
   firstName: string;
   lastName: string;
   email: string;
 }
 
 interface Props {
-  onSubmit: () => void;
+  onSubmit: (data: GuestFormType) => void;
 }
 
 const GuestForm = ({ onSubmit }: Props) => {
@@ -24,8 +24,7 @@ const GuestForm = ({ onSubmit }: Props) => {
   } = useForm<GuestFormType>();
 
   const onSubmitHandler = (data: GuestFormType) => {
-    console.log(data);
-    onSubmit();
+    onSubmit(data);
   };
 
   return (

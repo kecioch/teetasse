@@ -2,11 +2,14 @@
 
 import { Address } from "@/types/customer";
 import { Button, Label, TextInput } from "flowbite-react";
-import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
-const AddressForm = () => {
+interface Props {
+  onSubmit: (data: Address) => void;
+}
+
+const AddressForm = ({ onSubmit }: Props) => {
   const {
     register,
     handleSubmit,
@@ -15,19 +18,12 @@ const AddressForm = () => {
     formState: { errors },
   } = useForm<Address>();
 
-  const router = useRouter();
-
   const [savedAddress, setSavedAddress] = useState<Address>();
-
-  const onSubmitHandler = (data: Address) => {
-    console.log(data);
-    router.push("/checkout/payment");
-  };
 
   return (
     <form
       className="flex max-w-md flex-col gap-4"
-      onSubmit={handleSubmit(onSubmitHandler)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex gap-3">
         <div className="flex-1">

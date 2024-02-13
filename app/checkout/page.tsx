@@ -2,19 +2,40 @@
 
 import React from "react";
 import { Button } from "flowbite-react";
-import GuestForm from "@/components/Cart/Checkout/CustomerData/Forms/GuestForm";
+import GuestForm, {
+  GuestFormType,
+} from "@/components/Cart/Checkout/CustomerData/Forms/GuestForm";
 import LoginForm from "@/components/Cart/Checkout/CustomerData/Forms/LoginForm";
 import { useSession } from "next-auth/react";
 import CartSummary from "@/components/Cart/Checkout/CustomerData/Summary/CartSummary";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/hooks";
+import { setCustomerInformation } from "@/redux/features/checkoutSlice";
+import { CustomerInformation } from "@/types/customer";
 
 const CustomerDataPage = () => {
   const session = useSession();
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const isLoggedIn = session.data?.user;
 
   const handleNext = () => {
     router.push("/checkout/delivery");
+  };
+
+  const handleLoginNext = () => {
+    dispatch(setCustomerInformation(undefined));
+    handleNext();
+  };
+
+  const handleGuestSubmit = (data: GuestFormType) => {
+    const customer: CustomerInformation = {
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+    };
+    dispatch(setCustomerInformation(customer));
+    handleNext();
   };
 
   return (
@@ -30,7 +51,7 @@ const CustomerDataPage = () => {
               <h2 className="text-xl uppercase mb-2 mt-7">
                 Als Gast bestellen
               </h2>
-              <GuestForm onSubmit={handleNext} />
+              <GuestForm onSubmit={handleGuestSubmit} />
             </div>
           </>
         )}
@@ -45,7 +66,7 @@ const CustomerDataPage = () => {
               size="lg"
               color="success"
               className="w-full mt-10"
-              onClick={handleNext}
+              onClick={handleLoginNext}
             >
               Weiter
             </Button>
