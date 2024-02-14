@@ -2,7 +2,7 @@ import { Button } from "flowbite-react";
 import Link from "next/link";
 import React from "react";
 
-const CompletedInfo = () => {
+const SuccessInfo = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       <h1 className="mt-16 text-5xl font-light text-center">
@@ -20,4 +20,4 @@ const CompletedInfo = () => {
   );
 };
 
-export default CompletedInfo;
+export default SuccessInfo;
