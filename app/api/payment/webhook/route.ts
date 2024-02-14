@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import prisma from "@/lib/prisma";
-import { PaymentState } from "@prisma/client";
+import { OrderState, PaymentState } from "@prisma/client";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
@@ -32,12 +32,12 @@ export async function POST(req: NextRequest) {
       const paymentIntentSucceeded = event.data.object;
 
       // GET METADATA FROM PAYMENT
-      const metadata = paymentIntentSucceeded.metadata;
-      const { orderId } = metadata;
+      const metaSuccess = paymentIntentSucceeded.metadata;
+      const orderIdSuccess = metaSuccess.orderId;
 
       // UPDATE PAYMENT STATE OF ORDER
       await prisma.order.update({
-        where: { id: parseInt(orderId) },
+        where: { id: parseInt(orderIdSuccess) },
         data: { paymentState: PaymentState.PAYED },
       });
 
@@ -45,7 +45,41 @@ export async function POST(req: NextRequest) {
 
     case "payment_intent.payment_failed":
       console.log("PAYMENT_FAILED", res);
+      const paymentIntetFailed = event.data.object;
+
+      // GET METADATA FROM FAILED PAYMENT
+      const metaFailed = paymentIntetFailed.metadata;
+      const orderIdFailed = metaFailed.orderId;
+
+      // UPDATE PAYMENT STATE OF ORDER
+      await prisma.order.update({
+        where: { id: parseInt(orderIdFailed) },
+        data: {
+          paymentState: PaymentState.FAILED,
+          orderState: OrderState.CANCELED,
+        },
+      });
+
+      // UPDATE STOCK
+      const order = await prisma.order.findUnique({
+        where: { id: parseInt(orderIdFailed) },
+        include: { products: { include: { product: true } } },
+      });
+      if (order?.products) {
+        await Promise.all(
+          order.products.map(async (el) => {
+            const product = await prisma.product.update({
+              where: { id: el.product.id },
+              data: {
+                stock: { increment: el.quantity },
+              },
+            });
+          })
+        );
+      }
+
       break;
+
     default:
       console.log(`Unhandled event type ${event.type}`);
   }

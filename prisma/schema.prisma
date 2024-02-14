@@ -141,6 +141,7 @@ model Order {
   deliveryState DeliveryState @default(IN_PROGRESS)
   paymentState  PaymentState  @default(PENDING)
   orderState    OrderState    @default(IN_PROGRESS)
+  created       DateTime      @default(now())
 
   // RELATIONS
   userId          Int?

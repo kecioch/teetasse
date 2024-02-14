@@ -6,9 +6,12 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Spinner } from "flowbite-react";
 import useFetch from "@/hooks/useFetch";
-import { PaymentData } from "@/types/order";
+import { OrderProduct, PaymentData } from "@/types/order";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setCheckoutClientSecret } from "@/redux/features/checkoutSlice";
+import {
+  setCheckoutClientSecret,
+  setOrderList,
+} from "@/redux/features/checkoutSlice";
 import { clearCart } from "@/redux/features/cartSlice";
 
 interface Props {
@@ -30,11 +33,12 @@ const StripePayment = ({ data }: Props) => {
   );
 
   const fetchClientSecret = async () => {
-    console.log("CREATE PAYMENT INTENT");
     const res = await fetch.post("/api/payment/create-payment-intent", data);
-    console.log(res)
     const clientSecret = res?.data?.clientSecret;
     if (!clientSecret) return setError(true);
+    if (res.status !== 200) return;
+    const orderList: OrderProduct[] = res.data.products;
+    dispatch(setOrderList(orderList));
     setClientSecret(clientSecret);
     dispatch(setCheckoutClientSecret(clientSecret));
     dispatch(clearCart());

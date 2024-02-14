@@ -39,29 +39,6 @@ const PaymentPage = () => {
   return (
     <div className="w-full">
       {showPayment && paymentData && <StripePayment data={paymentData} />}
-
-      {/* <h1 className="mt-20">Payment</h1>
-      <hr />
-      <p>LOGIN</p>
-      <p>{user?.firstName}</p>
-      <p>{user?.lastName}</p>
-      <hr />
-      <p>CHECKOUT DATA</p>
-      <p>{checkout.customerInformation?.email}</p>
-      <p>{checkout.customerInformation?.firstName}</p>
-      <p>{checkout.customerInformation?.lastName}</p>
-      <hr />
-      <p>{checkout.address?.street}</p>
-      <p>{checkout.address?.nr}</p>
-      <p>{checkout.address?.city}</p>
-      <p>{checkout.address?.zip}</p>
-      <hr />
-      <p>CART</p>
-      {cart.products.map((el, index) => (
-        <p key={index}>
-          {el.title} | {el.subtitle} ({el.qty})
-        </p>
-      ))} */}
     </div>
   );
 };

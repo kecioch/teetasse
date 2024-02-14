@@ -44,12 +44,15 @@ export async function POST(req: NextRequest) {
       products.map(async (el: OrderProduct) => {
         const product = await prisma.product.findUnique({
           where: { id: el.id },
+          include: { productgroup: true },
         });
         if (product && product.stock >= el.qty) {
           const orderProduct: OrderProduct = {
             id: el.id,
             qty: el.qty,
             price: product.price.toNumber(),
+            title: product.productgroup.title,
+            subtitle: product.title,
           };
           orderList.push(orderProduct);
         }
@@ -79,12 +82,12 @@ export async function POST(req: NextRequest) {
     await Promise.all(
       orderList.map(async (product) => {
         // UPDATE STOCK
-        // await prisma.product.update({
-        //   where: { id: product.id },
-        //   data: {
-        //     stock: { decrement: product.qty },
-        //   },
-        // });
+        await prisma.product.update({
+          where: { id: product.id },
+          data: {
+            stock: { decrement: product.qty },
+          },
+        });
 
         // CREATE
         await prisma.productOrder.create({
@@ -100,7 +103,7 @@ export async function POST(req: NextRequest) {
     // CREATE PAYMENT INTENT
     const totalPrice = orderList.reduce((acc, curr) => {
       console.log(curr);
-      return curr.price ? acc + curr.price * curr.qty : 0;
+      return curr.price ? acc + curr.price * curr.qty : acc;
     }, 0);
     const amount = Math.round(totalPrice * 100 * 100) / 100;
     const paymentIntent = await stripe.paymentIntents.create({
