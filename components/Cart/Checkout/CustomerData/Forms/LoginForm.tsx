@@ -30,7 +30,7 @@ const LoginForm = () => {
       redirect: false,
     });
     setIsLoading(false);
-    if (res?.ok && res?.error) {
+    if (!res?.ok && res?.error) {
       if (res?.error === "CredentialsSignin") {
         setErrorMsg("Email oder Passwort stimmen nicht überein");
         setError("email", {});

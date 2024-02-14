@@ -47,7 +47,11 @@ export const cartSlice = createSlice({
         state.products[index].qty = qty;
       }
     },
+    clearCart(state) {
+      state.cartCounter = 0;
+      state.products = []
+    }
   },
 });
 
-export const { addProduct, deleteProduct, changeQty } = cartSlice.actions;
+export const { addProduct, deleteProduct, changeQty, clearCart } = cartSlice.actions;

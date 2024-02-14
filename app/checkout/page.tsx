@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "flowbite-react";
 import GuestForm, {
   GuestFormType,
@@ -10,7 +10,10 @@ import { useSession } from "next-auth/react";
 import CartSummary from "@/components/Cart/Checkout/CustomerData/Summary/CartSummary";
 import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { setCustomerInformation } from "@/redux/features/checkoutSlice";
+import {
+  clearClientSecret,
+  setCustomerInformation,
+} from "@/redux/features/checkoutSlice";
 import { CustomerInformation } from "@/types/customer";
 
 const CustomerDataPage = () => {
@@ -19,8 +22,10 @@ const CustomerDataPage = () => {
   const dispatch = useAppDispatch();
   const isLoggedIn = session.data?.user;
   const cartCnt = useAppSelector((state) => state.cart.cartCounter);
+  const checkout = useAppSelector((state) => state.checkout);
 
   const handleNext = () => {
+    dispatch(clearClientSecret());
     router.push("/checkout/delivery");
   };
 
@@ -38,6 +43,10 @@ const CustomerDataPage = () => {
     dispatch(setCustomerInformation(customer));
     handleNext();
   };
+
+  useEffect(() => {
+    if (checkout.clientSecret) router.push("/checkout/payment");
+  }, []);
 
   return (
     <div className="flex flex-col-reverse md:flex-row gap-5 md:gap-10">

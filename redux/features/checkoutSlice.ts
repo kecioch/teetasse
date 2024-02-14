@@ -5,6 +5,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export interface CartCheckoutState {
   customerInformation?: CustomerInformation;
   address?: Address;
+  clientSecret?: string;
 }
 
 const initialState: CartCheckoutState = {};
@@ -19,12 +20,24 @@ export const checkoutSlice = createSlice({
     setAddress(state, action) {
       state.address = action.payload;
     },
+    setCheckoutClientSecret(state, action) {
+      state.clientSecret = action.payload;
+    },
     clearCheckout(state) {
       state.customerInformation = undefined;
       state.address = undefined;
+      state.clientSecret = undefined;
+    },
+    clearClientSecret(state) {
+      state.clientSecret = undefined;
     },
   },
 });
 
-export const { setCustomerInformation, setAddress, clearCheckout } =
-  checkoutSlice.actions;
+export const {
+  setCustomerInformation,
+  setAddress,
+  setCheckoutClientSecret,
+  clearCheckout,
+  clearClientSecret,
+} = checkoutSlice.actions;

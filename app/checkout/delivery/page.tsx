@@ -18,7 +18,6 @@ const DeliveryPage = () => {
   const dispatch = useAppDispatch();
 
   const onSubmitHandler = (data: Address) => {
-    console.log(data);
     dispatch(setAddress(data));
     router.push("/checkout/payment");
   };

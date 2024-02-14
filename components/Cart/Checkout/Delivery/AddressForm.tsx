@@ -22,7 +22,7 @@ const AddressForm = ({ onSubmit }: Props) => {
 
   return (
     <form
-      className="flex max-w-md flex-col gap-4"
+      className="flex w-full md:max-w-[50em] flex-col gap-4"
       onSubmit={handleSubmit(onSubmit)}
     >
       <div className="flex gap-3">

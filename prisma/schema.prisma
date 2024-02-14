@@ -118,8 +118,29 @@ model CustomerInformation {
   order   Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
+enum DeliveryState {
+  IN_PROGRESS
+  SHIPPED
+  DELIVERED
+}
+
+enum PaymentState {
+  PENDING
+  PAYED
+  FAILED
+}
+
+enum OrderState {
+  IN_PROGRESS
+  CANCELED
+  COMPLETED
+}
+
 model Order {
-  id Int @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
+  deliveryState DeliveryState @default(IN_PROGRESS)
+  paymentState  PaymentState  @default(PENDING)
+  orderState    OrderState    @default(IN_PROGRESS)
 
   // RELATIONS
   userId          Int?
@@ -145,14 +166,10 @@ model ProductOrder {
 model DeliveryAddress {
   id Int @id @default(autoincrement())
 
-  // DELIVERY INFORMATION
-  firstName String
-  lastName  String
-  street    String
-  nr        String
-  zip       String
-  city      String
-  country   String
+  street String
+  nr     String
+  zip    String
+  city   String
 
   // RELATIONS
   orderId Int   @unique
