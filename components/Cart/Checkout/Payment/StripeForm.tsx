@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import {
-  CardElement,
   PaymentElement,
   useElements,
   useStripe,
@@ -10,7 +9,6 @@ import {
 import LoadingButton from "@/components/UI/Buttons/LoadingButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
-import { OrderProduct } from "@/types/order";
 import OrderItem from "./OrderItem";
 import { useAppSelector } from "@/redux/hooks";
 
@@ -18,7 +16,7 @@ const StripeForm = () => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string | undefined>("");
   const [isProcessing, setIsProcessing] = useState(false);
 
   const orderList = useAppSelector((state) => state.checkout.orderList);

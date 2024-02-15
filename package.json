@@ -36,7 +36,7 @@
     "stripe": "^14.16.0"
   },
   "devDependencies": {
-    "@stripe/stripe-js": "^3.0.0",
+    "@stripe/stripe-js": "2.4.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
