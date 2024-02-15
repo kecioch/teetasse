@@ -22,8 +22,8 @@ export const authOptions = {
           return null;
 
         // FIND USER
-        const foundUser = await prisma.user.findUnique({
-          where: { email: credentials?.email },
+        const foundUser = await prisma.user.findFirst({
+          where: { email: { equals: credentials?.email, mode: "insensitive" } },
         });
         if (!foundUser) return null;
 
