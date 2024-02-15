@@ -29,7 +29,7 @@ const OrderListItem = ({ data }: Props) => {
     <div className="p-4 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
       <div className="flex justify-between items-start gap-10">
         <div className="flex-1 flex items-center gap-3 flex-wrap">
-          <p className="text-2xl font-semibold">
+          <p className="text-xl md:text-2xl font-semibold">
             Bestellung: {data.created.toLocaleDateString()}
           </p>
           <OrderStateBadge state={data.orderState} />
@@ -38,24 +38,32 @@ const OrderListItem = ({ data }: Props) => {
           <FontAwesomeIcon icon={expand ? faAngleUp : faAngleDown} size="xl" />
         </Button>
       </div>
-      <p>Bestellnummer: #{data.id}</p>
+      <p className="mt-2 md:mt-0">Bestellnummer: #{data.id}</p>
       <table className="w-full mt-4">
         <thead className="border-b">
           <tr>
-            <th className="text-start pb-1">Lieferstatus</th>
-            <th className="text-start pb-1">Zahlungsstatus</th>
-            <th className="text-start pb-1">Gesamtpreis</th>
+            <th className="text-center pb-1 text-sm md:text-base md:text-start">
+              Lieferstatus
+            </th>
+            <th className="text-center pb-1 text-sm md:text-base md:text-start">
+              Zahlungsstatus
+            </th>
+            <th className="text-center pb-1 text-sm md:text-base md:text-start">
+              Gesamtpreis
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td className="pt-2 font-light">
+            <td className="pt-2 font-light text-sm md:text-base text-center md:text-start">
               {DeliveryStateUI[data.deliveryState]}
             </td>
-            <td className="pt-2 font-light">
+            <td className="pt-2 font-light text-sm md:text-base text-center md:text-start">
               {PaymentStateUI[data.paymentState]}
             </td>
-            <td className="pt-2 font-light">{total}€</td>
+            <td className="pt-2 font-light text-sm md:text-base text-center md:text-start">
+              {total}€
+            </td>
           </tr>
         </tbody>
       </table>
@@ -108,7 +116,7 @@ const OrderListItem = ({ data }: Props) => {
           </div>
           <div className="border-t-2 mt-5 pt-5">
             <p className="text-xl font-semibold">Produkte</p>
-            <div className="divide-y flex flex-col w-[50%]">
+            <div className="divide-y flex flex-col md:w-[50%]">
               {data.products.map((el, index) => (
                 <OrderItem key={index} data={el} className="py-3 last:pb-0" />
               ))}
