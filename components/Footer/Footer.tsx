@@ -28,7 +28,7 @@ const Footer = async ({ categories = [] }: Props) => {
     {
       title: "Informationen",
       items: [
-        { title: "Über uns", href: "#" },
+        { title: "Über uns", href: "/about-us" },
         { title: "Blog", href: "#" },
       ],
     },
