@@ -6,7 +6,7 @@ export interface CustomerInformation {
 
 export interface Address {
   street: string;
-  nr: number;
+  nr: string;
   zip: string;
   city: string;
 }

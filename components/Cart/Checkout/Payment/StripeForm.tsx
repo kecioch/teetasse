@@ -58,7 +58,7 @@ const StripeForm = () => {
             <OrderItem key={index} data={el} className="py-3 last:pb-0" />
           ))}
         </div>
-        <p className="text-end mb-8 px-4 font-light text-lg border-t-2 pt-3 mt-5">
+        <p className="text-end mb-8 font-light text-lg border-t-2 pt-3 mt-5">
           Gesamtbetrag:{" "}
           <span className="font-medium">{total?.toFixed(2)}€</span>
         </p>

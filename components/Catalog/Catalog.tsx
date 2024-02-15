@@ -149,12 +149,14 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
         isLoading={isFetching}
       />
       {filter.totalPages && filter.totalPages > 1 ? (
-        <Pagination
-          currentPage={filter.page || 1}
-          totalPages={filter.totalPages || 1}
-          onPageChange={handleChangePage}
-          className="mt-10"
-        />
+        <div className="mt-10 flex flex-row justify-center w-full">
+          <Pagination
+            currentPage={filter.page || 1}
+            totalPages={filter.totalPages || 1}
+            onPageChange={handleChangePage}
+            className="mt-10"
+          />
+        </div>
       ) : null}
     </div>
   );
