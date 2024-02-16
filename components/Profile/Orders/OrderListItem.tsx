@@ -5,14 +5,21 @@ import { Button, Table, TableBody, TableRow } from "flowbite-react";
 import React, { useState } from "react";
 import OrderStateBadge from "./OrderStateBadge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleDown, faAngleUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleUp,
+  faPenToSquare,
+} from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/components/Cart/Checkout/Payment/OrderItem";
+import { faDAndD } from "@fortawesome/free-brands-svg-icons/faDAndD";
 
 interface Props {
   data: Order;
+  staffView?: boolean;
+  onEdit?: (id: number) => void;
 }
 
-const OrderListItem = ({ data }: Props) => {
+const OrderListItem = ({ data, staffView = false, onEdit }: Props) => {
   const [expand, setExpand] = useState(false);
 
   const handleToogleExpand = () => {
@@ -23,7 +30,6 @@ const OrderListItem = ({ data }: Props) => {
     (acc, curr) => (curr.price ? acc + curr.price * curr.qty : acc),
     0
   );
-  console.log(data);
 
   return (
     <div className="p-4 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
@@ -34,9 +40,23 @@ const OrderListItem = ({ data }: Props) => {
           </p>
           <OrderStateBadge state={data.orderState} />
         </div>
-        <Button color="light" size="sm" onClick={handleToogleExpand}>
-          <FontAwesomeIcon icon={expand ? faAngleUp : faAngleDown} size="xl" />
-        </Button>
+        <div className="flex gap-2">
+          {staffView && (
+            <Button
+              color="light"
+              size="sm"
+              onClick={() => onEdit && onEdit(data.id)}
+            >
+              <FontAwesomeIcon icon={faPenToSquare} size="xl" />
+            </Button>
+          )}
+          <Button color="light" size="sm" onClick={handleToogleExpand}>
+            <FontAwesomeIcon
+              icon={expand ? faAngleUp : faAngleDown}
+              size="xl"
+            />
+          </Button>
+        </div>
       </div>
       <p className="mt-2 md:mt-0">Bestellnummer: #{data.id}</p>
       <table className="w-full mt-4">

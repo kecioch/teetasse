@@ -12,15 +12,16 @@ import {
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import ProductsTableRow from "./ProductsTableRow";
 import { Product } from "@/types/product";
-import { FilterOptions } from "@/types/filterOptions";
+import { ProductFilterOptions } from "@/types/filterOptions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Pagination from "@/components/UI/Pagination/Pagination";
+import Search from "@/components/UI/Forms/Search/Search";
 
 interface Props {
   data: Product[];
-  filter: FilterOptions;
-  onChangeFilter: (options: FilterOptions) => void;
+  filter: ProductFilterOptions;
+  onChangeFilter: (options: ProductFilterOptions) => void;
   isLoading?: boolean;
   onEdit: (index: number) => void;
   onDelete: (index: number) => void;
@@ -39,38 +40,18 @@ const ProductsTable = ({
     onChangeFilter({ page });
   };
 
-  const [search, setSearch] = useState(filter.search || "");
-
-  const handleChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    setSearch(value);
-  };
-
-  const handleSearch = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onChangeFilter({ search, page: 1 });
+  const handleSearch = (searchText: string) => {
+    onChangeFilter({ search: searchText, page: 1 });
   };
 
   return (
     <div>
-      <div>
-        <form onSubmit={handleSearch} className="flex gap-2 mb-5">
-          <TextInput
-            value={search}
-            onChange={handleChangeSearch}
-            className="w-80"
-            addon={<FontAwesomeIcon icon={faSearch} />}
-          />
-          <Button
-            type="submit"
-            disabled={isLoading}
-            color="light"
-            className="w-32"
-          >
-            Suchen
-          </Button>
-        </form>
-      </div>
+      <Search
+        onSubmit={handleSearch}
+        placeholder="Nach Titel suchen"
+        isLoading={isLoading}
+        className="mb-10 w-full md:max-w-[40em]"
+      />
       <div className="overflow-x-auto">
         <Table striped hoverable className="bg-transparent">
           <TableHead>

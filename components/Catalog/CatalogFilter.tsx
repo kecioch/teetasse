@@ -1,7 +1,7 @@
 "use client";
 
 import { Category } from "@/types/category";
-import { FilterOptions, SortBy } from "@/types/filterOptions";
+import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 import { faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Label, Select } from "flowbite-react";
@@ -11,8 +11,8 @@ interface Props {
   categories?: Category[];
   isLoading?: boolean;
   className?: string;
-  filter: FilterOptions;
-  onChange: (options: FilterOptions) => void;
+  filter: ProductFilterOptions;
+  onChange: (options: ProductFilterOptions) => void;
 }
 
 const CatalogFilter = ({
@@ -120,16 +120,16 @@ const CatalogFilter = ({
               disabled={isLoading}
               value={filter.sortBy}
             >
-              <option value={SortBy.NEW_DESC}>
+              <option value={ProductSortBy.NEW_DESC}>
                 Neueste Produkte absteigend
               </option>
-              <option value={SortBy.NEW_ASC}>
+              <option value={ProductSortBy.NEW_ASC}>
                 Neueste Produkte aufsteigend
               </option>
-              <option value={SortBy.BEST_RATING_DESC}>
+              <option value={ProductSortBy.BEST_RATING_DESC}>
                 Beste Bewertungen absteigend
               </option>
-              <option value={SortBy.BEST_RATING_ASC}>
+              <option value={ProductSortBy.BEST_RATING_ASC}>
                 Beste Bewertungen aufsteigend
               </option>
             </Select>

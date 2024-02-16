@@ -13,12 +13,12 @@ import useFetch from "@/hooks/useFetch";
 import ConfirmDeleteModal, {
   ConfirmDeleteModalProps,
 } from "@/components/UI/Modals/ConfirmDeleteModal";
-import { FilterOptions, SortBy } from "@/types/filterOptions";
+import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 import { usePathname, useRouter } from "next/navigation";
 
 interface Props {
   categories?: Category[];
-  initFilter?: FilterOptions;
+  initFilter?: ProductFilterOptions;
   initProducts?: Product[];
 }
 
@@ -31,15 +31,15 @@ const ProductManagement = ({
   const router = useRouter();
   const { fetch, errorMsg, isFetching, clearErrorMsg } = useFetch();
 
-  const [filter, setFilter] = useState<FilterOptions>({
-    sortBy: initFilter?.sortBy || SortBy.NEW_DESC,
+  const [filter, setFilter] = useState<ProductFilterOptions>({
+    sortBy: initFilter?.sortBy || ProductSortBy.NEW_DESC,
     page: initFilter?.page,
     pageSize: initFilter?.pageSize,
     totalPages: initFilter?.totalPages,
     search: initFilter?.search,
   });
 
-  const handleChangeFilter = (options: FilterOptions) => {
+  const handleChangeFilter = (options: ProductFilterOptions) => {
     const newFilter = { ...filter, ...options };
     setFilter((prev) => ({ ...prev, ...options }));
 

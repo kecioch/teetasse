@@ -27,7 +27,7 @@ const NavBar = () => {
   useEffect(() => {
     const handleScroll = () => {
       // Check if the scroll position is greater than a specific point
-      const isScrolledToSpecificPoint = window.scrollY > 200;
+      const isScrolledToSpecificPoint = window.scrollY > 100;
       // Update the state based on the scroll position
       setIsScrolled(isScrolledToSpecificPoint);
     };

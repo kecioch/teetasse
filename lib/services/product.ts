@@ -1,19 +1,19 @@
 import { Features, Product } from "@/types/product";
 import prisma from "../prisma";
 import { Prisma } from "@prisma/client";
-import { FilterOptions, SortBy } from "@/types/filterOptions";
+import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 
 const getOrderConfig = (
-  sortBy?: SortBy
+  sortBy?: ProductSortBy
 ): Prisma.ProductgroupOrderByWithRelationInput => {
   switch (sortBy) {
-    case SortBy.NEW_ASC:
+    case ProductSortBy.NEW_ASC:
       return { created: "asc" };
-    case SortBy.NEW_DESC:
+    case ProductSortBy.NEW_DESC:
       return { created: "desc" };
-    case SortBy.BEST_RATING_ASC:
+    case ProductSortBy.BEST_RATING_ASC:
       return { rating: "asc" };
-    case SortBy.BEST_RATING_DESC:
+    case ProductSortBy.BEST_RATING_DESC:
       return { rating: "desc" };
     default: {
       return { created: "desc" };
@@ -23,7 +23,7 @@ const getOrderConfig = (
 
 const PAGE_SIZE_DEFAULT = 15;
 
-export async function getProducts(options?: FilterOptions): Promise<{
+export async function getProducts(options?: ProductFilterOptions): Promise<{
   products?: Product[];
   totalPages?: number;
   page?: number;

@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { getProducts, hasDuplicateProductTitle } from "@/lib/services/product";
 import { authenticateServer } from "@/services/auth/authentication";
-import { FilterOptions, SortBy } from "@/types/filterOptions";
+import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 import { CustomError } from "@/utils/errors/CustomError";
 import { Role } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,10 +15,10 @@ export async function GET(req: NextRequest) {
     const pageSize = req.nextUrl.searchParams.get("pageSize");
     const search = req.nextUrl.searchParams.get("search");
 
-    const options: FilterOptions = {
+    const options: ProductFilterOptions = {
       categoryId: categoryId ? parseInt(categoryId) : undefined,
       subcategoryId: subcategoryId ? parseInt(subcategoryId) : undefined,
-      sortBy: sortBy ? (parseInt(sortBy) as SortBy) : undefined,
+      sortBy: sortBy ? (parseInt(sortBy) as ProductSortBy) : undefined,
       page: page ? parseInt(page) : undefined,
       pageSize: pageSize ? parseInt(pageSize) : undefined,
       search: search || undefined,

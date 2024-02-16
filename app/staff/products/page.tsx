@@ -1,7 +1,7 @@
 import ProductManagement from "@/components/Staff/Products/ProductManagement/ProductManagement";
 import { getCategories } from "@/lib/services/category";
 import { getProducts } from "@/lib/services/product";
-import { FilterOptions } from "@/types/filterOptions";
+import { ProductFilterOptions } from "@/types/filterOptions";
 import { SearchParams } from "@/types/params/searchParams";
 import React from "react";
 
@@ -23,7 +23,7 @@ const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
     typeof searchParams.search === "string" ? searchParams.search : undefined;
 
   // CREATE FILTER
-  const filter: FilterOptions = {
+  const filter: ProductFilterOptions = {
     sortBy,
     page: pageParam,
     pageSize: pageSizeParam,

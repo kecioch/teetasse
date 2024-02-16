@@ -5,7 +5,7 @@ import React from "react";
 const AboutUsPage = () => {
   return (
     <div>
-      <div className="w-fill  h-72 md:h-96 relative">
+      <div className="w-full h-72 md:h-96 relative">
         <Image
           src="/static/about-us-header.jpg"
           alt="Über uns Header"

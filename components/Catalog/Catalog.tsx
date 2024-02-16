@@ -6,14 +6,14 @@ import React, { useEffect, useRef, useState } from "react";
 import ProductList from "./ProductList";
 import CatalogFilter from "./CatalogFilter";
 import useFetch from "@/hooks/useFetch";
-import { FilterOptions, SortBy } from "@/types/filterOptions";
+import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Pagination from "../UI/Pagination/Pagination";
 
 interface Props {
   initProducts?: Product[];
-  initFilter?: FilterOptions;
+  initFilter?: ProductFilterOptions;
   categories?: Category[];
 }
 
@@ -37,11 +37,11 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
 
   const initSubcategoryId: number | undefined = initFilter?.subcategoryId;
 
-  const [filter, setFilter] = useState<FilterOptions>({
+  const [filter, setFilter] = useState<ProductFilterOptions>({
     categoryId: initCategory ? initCategoryId : undefined,
     categoryIndex: initCategoryIndex,
     subcategoryId: initSubcategoryId,
-    sortBy: initFilter?.sortBy || SortBy.NEW_DESC,
+    sortBy: initFilter?.sortBy || ProductSortBy.NEW_DESC,
     page: initFilter?.page,
     pageSize: initFilter?.pageSize,
     totalPages: initFilter?.totalPages,
@@ -50,7 +50,7 @@ const Catalog = ({ initProducts = [], categories = [], initFilter }: Props) => {
 
   const [products, setProducts] = useState<Product[]>(initProducts);
 
-  const handleChangeFilter = (options: FilterOptions) => {
+  const handleChangeFilter = (options: ProductFilterOptions) => {
     const newFilter = { ...filter, ...options };
     setFilter((prev) => ({ ...prev, ...options }));
 
