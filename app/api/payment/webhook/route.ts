@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 import prisma from "@/lib/prisma";
 import { OrderState, PaymentState } from "@prisma/client";
+import { sendOrderConfirmation } from "@/services/mail/SendMail";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-10-16",
@@ -33,13 +34,16 @@ export async function POST(req: NextRequest) {
 
       // GET METADATA FROM PAYMENT
       const metaSuccess = paymentIntentSucceeded.metadata;
-      const orderIdSuccess = metaSuccess.orderId;
+      const orderIdSuccess = parseInt(metaSuccess.orderId);
 
       // UPDATE PAYMENT STATE OF ORDER
       await prisma.order.update({
-        where: { id: parseInt(orderIdSuccess) },
+        where: { id: orderIdSuccess },
         data: { paymentState: PaymentState.PAYED },
       });
+
+      // SEND USER CONFIRMATION MAIL
+      await sendOrderConfirmation(orderIdSuccess);
 
       break;
 
