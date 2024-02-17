@@ -1,5 +1,4 @@
 import {
-  Button,
   Spinner,
   Table,
   TableBody,
@@ -7,14 +6,11 @@ import {
   TableHead,
   TableHeadCell,
   TableRow,
-  TextInput,
 } from "flowbite-react";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React from "react";
 import ProductsTableRow from "./ProductsTableRow";
 import { Product } from "@/types/product";
 import { ProductFilterOptions } from "@/types/filterOptions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Pagination from "@/components/UI/Pagination/Pagination";
 import Search from "@/components/UI/Forms/Search/Search";
 

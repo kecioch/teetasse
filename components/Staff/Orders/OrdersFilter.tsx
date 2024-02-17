@@ -1,19 +1,12 @@
 "use client";
 import Search from "@/components/UI/Forms/Search/Search";
 import { OrderFilterOptions, SortBy, StateFilter } from "@/types/filterOptions";
-import { OrderStateUI } from "@/types/order";
-import { faFilter, faSearch, faSort } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DeliveryState, OrderState, PaymentState } from "@prisma/client";
 import {
-  Button,
-  Checkbox,
-  Dropdown,
-  Label,
   Select,
-  TextInput,
 } from "flowbite-react";
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { useState } from "react";
 import OrdersStateFilter from "./OrdersStateFilter";
 
 interface Props {

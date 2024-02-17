@@ -1,7 +1,7 @@
 import { Order, OrderProduct } from "@/types/order";
 import prisma from "../prisma";
 import { OrderFilterOptions, SortBy } from "@/types/filterOptions";
-import { OrderState, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 const getSortConfig = (
   sortBy?: SortBy

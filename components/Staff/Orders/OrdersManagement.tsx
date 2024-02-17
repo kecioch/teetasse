@@ -5,7 +5,7 @@ import { Order } from "@/types/order";
 import React, { useState } from "react";
 import OrderEditModal from "./OrderEditModal";
 import OrdersFilter from "./OrdersFilter";
-import { OrderFilterOptions, SortBy } from "@/types/filterOptions";
+import { OrderFilterOptions } from "@/types/filterOptions";
 import { usePathname, useRouter } from "next/navigation";
 import useFetch from "@/hooks/useFetch";
 import Pagination from "@/components/UI/Pagination/Pagination";
