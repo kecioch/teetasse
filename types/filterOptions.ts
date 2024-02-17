@@ -1,3 +1,5 @@
+import { DeliveryState, OrderState, PaymentState } from "@prisma/client";
+
 export enum ProductSortBy {
   NEW_ASC,
   NEW_DESC,
@@ -7,7 +9,7 @@ export enum ProductSortBy {
 
 export enum SortBy {
   NEW_ASC,
-  NEW_DESC
+  NEW_DESC,
 }
 
 export interface ProductFilterOptions {
@@ -21,10 +23,17 @@ export interface ProductFilterOptions {
   search?: string;
 }
 
+export interface StateFilter {
+  orderState: OrderState[];
+  paymentState: PaymentState[];
+  deliveryState: DeliveryState[];
+}
+
 export interface OrderFilterOptions {
   sortBy?: SortBy;
   page?: number;
   pageSize?: number;
   totalPages?: number;
   search?: string;
+  states?: StateFilter;
 }

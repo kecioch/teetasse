@@ -1,10 +1,10 @@
 "use client";
 import Search from "@/components/UI/Forms/Search/Search";
-import { OrderFilterOptions, SortBy } from "@/types/filterOptions";
+import { OrderFilterOptions, SortBy, StateFilter } from "@/types/filterOptions";
 import { OrderStateUI } from "@/types/order";
 import { faFilter, faSearch, faSort } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { DeliveryState, OrderState } from "@prisma/client";
+import { DeliveryState, OrderState, PaymentState } from "@prisma/client";
 import {
   Button,
   Checkbox,
@@ -14,6 +14,7 @@ import {
   TextInput,
 } from "flowbite-react";
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import OrdersStateFilter from "./OrdersStateFilter";
 
 interface Props {
   isLoading?: boolean;
@@ -23,6 +24,17 @@ interface Props {
 }
 
 const OrdersFilter = ({ isLoading, className, filter, onChange }: Props) => {
+  const [stateFilter, setStateFilter] = useState<StateFilter>({
+    orderState: filter.states?.orderState || [],
+    paymentState: filter.states?.paymentState || [],
+    deliveryState: filter.states?.deliveryState || [],
+  });
+
+  const handleChangeStateFilter = (stateFilter: StateFilter) => {
+    setStateFilter(stateFilter);
+    onChange({ states: stateFilter });
+  };
+
   const handleChangeSortBy = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = parseInt(e.currentTarget.value);
     onChange({ sortBy: value });
@@ -47,31 +59,10 @@ const OrdersFilter = ({ isLoading, className, filter, onChange }: Props) => {
       <div className="flex gap-5">
         <div className="flex gap-3 items-center">
           <FontAwesomeIcon icon={faFilter} className="text-gray-600" />
-          <Dropdown label="Status Filter" color="light">
-            <Dropdown.Header className="font-semibold">
-              Bestellstatus
-            </Dropdown.Header>
-            <div className="px-4 py-2 flex flex-col gap-2">
-              {Object.values(OrderState).map((el, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <Checkbox id={"ORDERSTATE_" + el + "_" + index} />
-                  <Label
-                    htmlFor={"ORDERSTATE_" + el + "_" + index}
-                    className="font-light"
-                  >
-                    {OrderStateUI[el]}
-                  </Label>
-                </div>
-              ))}
-            </div>
-            <Dropdown.Divider />
-            <Dropdown.Header className="font-semibold">
-              Zahlungsstatus
-            </Dropdown.Header>
-            <Dropdown.Header className="font-semibold">
-              Lieferstatus
-            </Dropdown.Header>
-          </Dropdown>
+          <OrdersStateFilter
+            filter={stateFilter}
+            onChange={handleChangeStateFilter}
+          />
         </div>
         <div className="flex gap-3 items-center">
           <FontAwesomeIcon icon={faSort} className="text-gray-600" />

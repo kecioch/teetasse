@@ -47,19 +47,41 @@ const OrdersManagement = ({ data = [], initFilter }: Props) => {
 
     // UPDATE SEARCH PARAMS
     const params = new URLSearchParams();
-    if (newFilter.sortBy !== undefined)
+    if (newFilter.sortBy !== undefined && newFilter.sortBy !== null)
       params.set("sortBy", newFilter.sortBy.toString());
     if (newFilter.page) params.set("page", newFilter.page.toString());
     if (newFilter.pageSize)
       params.set("pageSize", newFilter.pageSize.toString());
     if (newFilter.search) params.set("search", newFilter.search);
+    if (newFilter.states?.orderState && newFilter.states?.orderState.length > 0)
+      params.set("orderStates", newFilter.states.orderState.join(","));
+    if (
+      newFilter.states?.paymentState &&
+      newFilter.states?.paymentState.length > 0
+    )
+      params.set("paymentStates", newFilter.states.paymentState.join(","));
+    if (
+      newFilter.states?.deliveryState &&
+      newFilter.states?.deliveryState.length > 0
+    )
+      params.set("deliveryStates", newFilter.states.deliveryState.join(","));
     router.push(pathname + "?" + params.toString());
 
     // FETCH NEW FILTER
     fetch
       .get(
-        `/api/orders?${
-          newFilter.search ? "search=" + newFilter.search : ""
+        `/api/orders?${newFilter.search ? "search=" + newFilter.search : ""}&${
+          newFilter.states?.orderState
+            ? "orderStates=" + newFilter.states.orderState
+            : ""
+        }&${
+          newFilter.states?.paymentState
+            ? "paymentStates=" + newFilter.states.paymentState
+            : ""
+        }&${
+          newFilter.states?.deliveryState
+            ? "deliveryStates=" + newFilter.states.deliveryState
+            : ""
         }&sortBy=${newFilter.sortBy}&page=${newFilter.page}&pageSize=${
           newFilter.pageSize
         }`

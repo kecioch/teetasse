@@ -1,7 +1,7 @@
 import { Order, OrderProduct } from "@/types/order";
 import prisma from "../prisma";
 import { OrderFilterOptions, SortBy } from "@/types/filterOptions";
-import { Prisma } from "@prisma/client";
+import { OrderState, Prisma } from "@prisma/client";
 
 const getSortConfig = (
   sortBy?: SortBy
@@ -47,6 +47,29 @@ export const getOrders = async (
       !isNaN(Number(options.search))
     )
       whereCondition.id = parseInt(options.search);
+
+    // States Filter
+    if (options?.states?.orderState && options.states.orderState.length > 0) {
+      whereCondition.orderState = {
+        in: options.states.orderState,
+      };
+    }
+    if (
+      options?.states?.paymentState &&
+      options.states.paymentState.length > 0
+    ) {
+      whereCondition.paymentState = {
+        in: options.states.paymentState,
+      };
+    }
+    if (
+      options?.states?.deliveryState &&
+      options.states.deliveryState.length > 0
+    ) {
+      whereCondition.deliveryState = {
+        in: options.states.deliveryState,
+      };
+    }
 
     // FETCH DATA
     const data = await prisma.order.findMany({
