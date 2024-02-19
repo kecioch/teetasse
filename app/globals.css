@@ -23,6 +23,7 @@ body {
 * {
   scrollbar-width: thin;
   scrollbar-color: #5a5a5a #212529;
+  scroll-behavior: smooth;
 }
 
 option {

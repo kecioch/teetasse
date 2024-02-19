@@ -15,6 +15,7 @@ import ConfirmDeleteModal, {
 } from "@/components/UI/Modals/ConfirmDeleteModal";
 import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 import { usePathname, useRouter } from "next/navigation";
+import { CustomError } from "@/utils/errors/CustomError";
 
 interface Props {
   categories?: Category[];
@@ -158,7 +159,8 @@ const ProductManagement = ({
     fetch
       .put(`/api/products/${product.id}`, { ...product })
       .then((res) => {
-        if (res.status !== 200) return;
+        if (res.status !== 200)
+          throw new CustomError("Fehler beim Updaten des Produktes");
 
         const data = res.data;
         updatetProduct = {
@@ -194,8 +196,7 @@ const ProductManagement = ({
       })
       .then((res) => {
         if (!res) return;
-        if (res?.status !== 200) return console.error("Error Image Upload");
-
+        if (res?.status !== 200) return;
         const data = res.data;
         updatetProduct.imageIds = data.imageIds;
       })
@@ -206,7 +207,9 @@ const ProductManagement = ({
         setProductsData(newProductsData);
         setProductModal({ show: false });
       })
-      .catch((e) => {})
+      .catch((e) => {
+        console.error(e);
+      })
       .finally(() => {
         setProductModal((prev) => ({
           ...prev,

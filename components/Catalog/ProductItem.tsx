@@ -13,7 +13,6 @@ interface Props {
 }
 
 const ProductItem = ({ data, className }: Props) => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const isSoldOut = data.variants.findIndex((item) => item.stock > 0) === -1;
 
   return (
