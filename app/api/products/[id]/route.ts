@@ -87,7 +87,11 @@ export async function PUT(req: Request, { params }: IdSlug) {
         // VARIANTE UPDATE
         await prisma.product.update({
           where: { id: product.id },
-          data: { ...variants[i] },
+          data: {
+            title: variants[i].title,
+            price: variants[i].price,
+            stock: variants[i].stock,
+          },
         });
       }
     }
