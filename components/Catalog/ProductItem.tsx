@@ -18,7 +18,7 @@ const ProductItem = ({ data, className }: Props) => {
   return (
     <Link
       href={`/products/${data.id}`}
-      className={`h-64 flex flex-shrink-0 w-full xs:w-[48%] sm:w-[31%] md:w-[23%] lg:w-[18.5%] xl:w-[19%]  ${className}`}
+      className={`h-64 flex flex-shrink-0 ${className}`}
     >
       <div className="flex-1 relative text-center rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
         {isSoldOut && (

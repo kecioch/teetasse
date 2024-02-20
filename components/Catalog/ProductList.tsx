@@ -32,7 +32,11 @@ const ProductList = ({
       )}
       {!isLoading &&
         products.map((product, index) => (
-          <ProductItem key={index} data={product} />
+          <ProductItem
+            key={index}
+            data={product}
+            className="w-full xs:w-[48%] sm:w-[31%] md:w-[23%] lg:w-[18.5%] xl:w-[19%]"
+          />
         ))}
     </div>
   );

@@ -8,7 +8,7 @@ interface Props {
 const ButtonOutline = ({ children, className }: Props) => {
   return (
     <button
-      className={`bg-transparent border-2 border-solid border-green-800 p-2 hover:bg-green-800 hover:text-white ${className}`}
+      className={`bg-transparent border-2 border-solid border-green-800 p-2 hover:bg-green-800 hover:text-white transition-all ease-in ${className}`}
     >
       {children}
     </button>

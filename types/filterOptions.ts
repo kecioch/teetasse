@@ -21,6 +21,7 @@ export interface ProductFilterOptions {
   pageSize?: number;
   totalPages?: number;
   search?: string;
+  recommended?: boolean;
 }
 
 export interface StateFilter {

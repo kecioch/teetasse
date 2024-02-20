@@ -7,7 +7,7 @@ const AboutUsPage = () => {
     <div>
       <div className="w-full h-72 md:h-96 relative">
         <Image
-          src="/static/about-us-header.jpg"
+          src="/static/about-us/about-us-header.jpg"
           alt="Über uns Header"
           fill
           style={{ objectFit: "cover" }}
