@@ -10,26 +10,27 @@ export const upload = async (
   file: File,
   ressourceType: "image" | "video" | "raw" | "auto" = "image"
 ) => {
-  const arrayBuffer = await file.arrayBuffer();
   // Convert to Buffer
+  const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
 
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream(
-        {
-          resource_type: ressourceType,
-          folder: process.env.CLOUDINARY_PROJECT_FOLDER,
-        },
-        onDone
-      )
-      .end(buffer);
+  var mime = file.type;
+  var encoding = "base64";
+  var base64Data = buffer.toString("base64");
+  var fileUri = "data:" + mime + ";" + encoding + "," + base64Data;
 
-    function onDone(error: any, result: any) {
-      if (error) {
-        return reject({ success: false, error });
-      }
-      return resolve({ success: true, result });
-    }
+  return new Promise((resolve, reject) => {
+    const res = cloudinary.uploader
+      .upload(fileUri, {
+        resource_type: ressourceType,
+        folder: process.env.CLOUDINARY_PROJECT_FOLDER,
+        invalidate: true,
+      })
+      .then((res) => {
+        resolve({ success: true, result: res });
+      })
+      .catch((e) => {
+        reject({ success: false, error: e });
+      });
   });
 };
