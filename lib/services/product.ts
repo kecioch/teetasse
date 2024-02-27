@@ -161,6 +161,15 @@ export async function getProduct(id: number) {
   }
 }
 
+export async function getAllProductIds() {
+  try {
+    const products = await prisma.productgroup.findMany();
+    return products.map((el) => el.id);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 export function hasDuplicateProductTitle(objectsArray: any[]) {
   const titleSet = new Set();
 

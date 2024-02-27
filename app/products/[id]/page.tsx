@@ -5,7 +5,7 @@ import ReviewSection from "@/components/Product/Reviews/ReviewSection";
 import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
-import { getProduct } from "@/lib/services/product";
+import { getAllProductIds, getProduct } from "@/lib/services/product";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { Product } from "@/types/product";
 import { IdSlug } from "@/types/slugs/Id";
@@ -20,10 +20,19 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
 
+export async function generateStaticParams() {
+  // GENERATE STATIC PAGES
+  console.log("GENERATE STATIC PARAMS /product/:id");
+  const productIds = await getAllProductIds();
+  console.log(productIds);
+  return productIds || [];
+}
+
 const ProductPage = async ({ params }: IdSlug) => {
   const product: Product | undefined = await getProduct(parseInt(params.id));
   if (!product) redirect("/");
 
+  // Create Features-Array
   const features: { key: string; value: string }[] = [];
   Object.values(product.features).forEach((feature) => {
     Object.entries(feature).forEach(([subKey, value]) => {

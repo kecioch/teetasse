@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { authenticateServer } from "@/services/auth/authentication";
 import { CustomError } from "@/utils/errors/CustomError";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 interface Slugs {
@@ -52,7 +53,7 @@ export async function DELETE(req: Request, { params }: Slugs) {
       (sum, review) => sum + review.rating,
       0
     );
-    const avgReview = totalRating / totalReviews;
+    const avgReview = totalReviews > 0 ? totalRating / totalReviews : 0;
 
     const updatedProduct = await prisma.productgroup.update({
       where: { id },
@@ -62,10 +63,14 @@ export async function DELETE(req: Request, { params }: Slugs) {
       },
     });
 
+    // Revalidate
+    revalidatePath("/");
+    revalidatePath("/products/" + updatedProduct?.id);
+
     return NextResponse.json(deletedReview);
   } catch (e) {
     let msg = "Fehler bei Serveranfrage";
-
+    console.log(e);
     if (e instanceof CustomError) {
       msg = e.message;
     }

@@ -5,6 +5,7 @@ import { deleteFile } from "@/services/cloudinary/delete";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
 import { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request, { params }: IdSlug) {
@@ -124,6 +125,10 @@ export async function PUT(req: Request, { params }: IdSlug) {
       },
     });
 
+    // Revalidate
+    revalidatePath("/");
+    revalidatePath("/products/" + updatetProductgroup?.id);
+
     // Send newProduct
     return NextResponse.json(updatetProductgroup);
   } catch (e: any) {
@@ -191,6 +196,10 @@ export async function DELETE(req: Request, { params }: IdSlug) {
         where: { id },
         data: { visible: false, imageIds: [] },
       });
+
+    // Revalidate
+    revalidatePath("/");
+    revalidatePath("/products/" + deletedProductgroup?.id);
 
     return NextResponse.json(deletedProductgroup);
   } catch (e: any) {

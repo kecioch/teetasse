@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { IdSlug } from "@/types/slugs/Id";
 import { authenticateServer } from "@/services/auth/authentication";
 import { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request, { params }: IdSlug) {
   try {
@@ -46,6 +47,10 @@ export async function POST(req: Request, { params }: IdSlug) {
       where: { id },
       data: { imageIds },
     });
+
+    // Revalidate
+    revalidatePath("/");
+    revalidatePath("/products/" + productgroup?.id);
 
     return NextResponse.json(productgroup);
   } catch (error) {

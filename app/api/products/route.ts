@@ -4,6 +4,7 @@ import { authenticateServer } from "@/services/auth/authentication";
 import { ProductFilterOptions, ProductSortBy } from "@/types/filterOptions";
 import { CustomError } from "@/utils/errors/CustomError";
 import { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -112,6 +113,10 @@ export async function POST(req: Request) {
         products: true,
       },
     });
+
+    // Revalidate
+    revalidatePath("/");
+    revalidatePath("/products/" + updatetNewProduct?.id);
 
     // Send newProduct
     return NextResponse.json(updatetNewProduct);

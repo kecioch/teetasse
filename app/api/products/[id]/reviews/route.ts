@@ -3,6 +3,7 @@ import { authenticateServer } from "@/services/auth/authentication";
 import { Review } from "@/types/review";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request, { params }: IdSlug) {
@@ -65,6 +66,10 @@ export async function POST(req: Request, { params }: IdSlug) {
         ratingCnt: totalReviews,
       },
     });
+
+    // Revalidate
+    revalidatePath("/");
+    revalidatePath("/products/" + updatedProduct?.id);
 
     // RETURN CREATED REVIEW
     const createdReview: Review = {
