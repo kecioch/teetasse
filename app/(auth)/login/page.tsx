@@ -1,9 +1,14 @@
 import LoginForm from "@/components/Auth/Login/LoginForm";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { authOptions } from "@/services/auth/authOptions";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Login",
+};
 
 const LoginPage = async () => {
   const session = await getServerSession(authOptions);

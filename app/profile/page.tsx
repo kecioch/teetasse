@@ -1,9 +1,14 @@
 import AccountSettings from "@/components/Profile/Account/AccountSettings";
 import { authOptions } from "@/services/auth/authOptions";
 import { User } from "@/types/user";
+import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Profil",
+};
 
 const AccountPage = async () => {
   const session = await getServerSession(authOptions);

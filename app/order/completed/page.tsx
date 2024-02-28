@@ -4,8 +4,13 @@ import SuccessInfo from "@/components/Cart/Checkout/Completed/SuccessInfo";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { SearchParams } from "@/types/params/searchParams";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Bestellung",
+};
 
 const OrderCompletedPage = ({
   searchParams,

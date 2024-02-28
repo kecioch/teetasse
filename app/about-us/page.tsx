@@ -1,6 +1,27 @@
 import ContentContainer from "@/components/UI/Container/ContentContainer";
+import { Metadata } from "next";
 import Image from "next/image";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Über uns",
+  keywords: [
+    "Teetasse",
+    "Tee",
+    "Teeshop",
+    "Über uns",
+    "Unsere Geschichte",
+    "Unsere Mission",
+  ],
+  openGraph: {
+    title: "Über uns",
+    description:
+      "Willkommen bei Teetasse! Unsere Leidenschaft für hochwertigen Tee und unsere Liebe zur Teekultur haben uns dazu inspiriert, Teetasse zu gründen. Wir sind mehr als nur ein Teeshop. Wir sind ein Ort, an dem sich Teeliebhaber treffen, um die Aromen, Traditionen und Geschichten hinter jedem Schluck zu entdecken.",
+    siteName: "Teetasse",
+    url: process.env.BASE_URL + "/about-us",
+    type: "website",
+  },
+};
 
 const AboutUsPage = () => {
   return (

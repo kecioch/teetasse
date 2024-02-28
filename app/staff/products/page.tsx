@@ -3,7 +3,12 @@ import { getCategories } from "@/lib/services/category";
 import { getProducts } from "@/lib/services/product";
 import { ProductFilterOptions } from "@/types/filterOptions";
 import { SearchParams } from "@/types/params/searchParams";
+import { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Produktverwaltung",
+};
 
 const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
   // GET SEARCH PARAMS

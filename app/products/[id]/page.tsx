@@ -16,6 +16,7 @@ import {
   TableCell,
   TableRow,
 } from "flowbite-react";
+import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -26,6 +27,36 @@ export async function generateStaticParams() {
   const productIds = await getAllProductIds();
   console.log(productIds);
   return productIds || [];
+}
+
+export async function generateMetadata(
+  { params }: IdSlug,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const product: Product | undefined = await getProduct(parseInt(params.id));
+
+  return {
+    title: product?.title,
+    description: product?.description,
+    keywords: [
+      "Teetasse",
+      "Tee",
+      "Teeshop",
+      product?.title || "",
+      product?.subcategory?.category?.title || "",
+      product?.subcategory?.title || "",
+    ],
+    openGraph: {
+      title: product?.title + " | Teetasse",
+      description: product?.description,
+      siteName: "Teetasse",
+      url: process.env.BASE_URL + "/products/" + product?.id,
+      type: "website",
+      images: product?.imageIds.map(
+        (id) => `${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${id}`
+      ),
+    },
+  };
 }
 
 const ProductPage = async ({ params }: IdSlug) => {

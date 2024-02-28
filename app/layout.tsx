@@ -17,11 +17,37 @@ config.autoAddCss = false; /* eslint-disable import/first */
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Teetasse",
-  description: "Der online Tee-Shop",
-  authors: { name: "Kevin Cioch", url: "https://www.kevincioch.com" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const categories = await getCategories();
+  const keywords = ["Teetasse", "Tee", "Teeshop"];
+
+  // ADD CATEGORIES & SUBCATEGORIES TO KEYWORDS ARRAY
+  categories?.forEach((el) => {
+    keywords.push(el.title);
+    el.subs.forEach((el) => {
+      keywords.push(el.title);
+    });
+  });
+
+  return {
+    title: {
+      default: "Teetasse",
+      template: "%s | Teetasse",
+    },
+    description:
+      "Die Kunst des Teetrinkens - Erlesene Auswahl, unvergleichlicher Genuss!",
+    keywords,
+    authors: { name: "Kevin Cioch", url: "https://www.kevincioch.com" },
+    openGraph: {
+      title: "Teetasse",
+      description:
+        "Die Kunst des Teetrinkens - Erlesene Auswahl, unvergleichlicher Genuss!",
+      siteName: "Teetasse",
+      url: process.env.BASE_URL,
+      type: "website",
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

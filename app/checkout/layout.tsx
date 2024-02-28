@@ -1,6 +1,11 @@
 import StateBreadcrump from "@/components/Cart/Checkout/StateBreadcrump";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import { ReduxProvider } from "@/redux/ReduxProvider";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Kasse",
+};
 
 export default async function CheckoutLayout({
   children,

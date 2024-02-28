@@ -3,8 +3,13 @@ import { getOrders } from "@/lib/services/orders";
 import { authenticateServer } from "@/services/auth/authentication";
 import { OrderFilterOptions } from "@/types/filterOptions";
 import { SearchParams } from "@/types/params/searchParams";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Bestellungen",
+};
 
 const OrdersPage = async ({ searchParams }: { searchParams: SearchParams }) => {
   // AUTHENTICATION

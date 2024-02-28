@@ -4,8 +4,13 @@ import { authenticateServer } from "@/services/auth/authentication";
 import { OrderFilterOptions, StateFilter } from "@/types/filterOptions";
 import { SearchParams } from "@/types/params/searchParams";
 import { DeliveryState, OrderState, PaymentState, Role } from "@prisma/client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Bestellungen",
+};
 
 const OrderStaffPage = async ({
   searchParams,
