@@ -56,6 +56,7 @@ export async function getProducts(options?: ProductFilterOptions): Promise<{
       include: {
         products: { where: { visible: true }, orderBy: { title: "asc" } },
         subcategory: { include: { category: true } },
+        reviews: true,
       },
       where: whereCondition,
       // where: {subcategory: {categoryId: {}}}
@@ -72,7 +73,7 @@ export async function getProducts(options?: ProductFilterOptions): Promise<{
           description: item.description,
           features: item.features as Features,
           rating: item.rating.toNumber(),
-          ratingCnt: item.ratingCnt,
+          ratingCnt: item.reviews.length || 0,
           imageIds: item.imageIds,
           recommended: item.recommended,
           subcategory: {
@@ -124,7 +125,7 @@ export async function getProduct(id: number) {
       description: data.description,
       features: data.features as Features,
       rating: data.rating.toNumber(),
-      ratingCnt: data.ratingCnt,
+      ratingCnt: data.reviews.length || 0,
       imageIds: data.imageIds,
       recommended: data.recommended,
       subcategory: {

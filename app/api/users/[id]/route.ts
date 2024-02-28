@@ -3,6 +3,7 @@ import { authenticateServer } from "@/services/auth/authentication";
 import { IdSlug } from "@/types/slugs/Id";
 import { CustomError } from "@/utils/errors/CustomError";
 import { Role } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
 export async function PUT(req: Request, { params }: IdSlug) {
@@ -84,13 +85,34 @@ export async function DELETE(req: Request, { params }: IdSlug) {
     // CHECK REVIEWS AND UPDATE RATINGS
     if (foundUser.reviews.length > 0) {
       foundUser.reviews.forEach(async (review) => {
+        const productgroup = await prisma.productgroup.findUnique({
+          where: {
+            id: review.productgroupId,
+          },
+          include: { reviews: true },
+        });
+        if (!productgroup) throw new CustomError("Produkt nicht gefunden");
+
+        // CALCULATE NEW AVG RATING
+        const reviews = productgroup.reviews.filter((el) => el.authorId !== id);
+        const totalReviews = reviews.length;
+        const totalRating = reviews.reduce(
+          (sum, review) => sum + review.rating,
+          0
+        );
+        const avgReview = totalReviews > 0 ? totalRating / totalReviews : 0;
+
+        // UPDATE PRODUCTGROUP
         await prisma.productgroup.update({
           where: { id: review.productgroupId },
           data: {
-            rating: { decrement: review.rating },
-            ratingCnt: { decrement: 1 },
+            rating: avgReview,
           },
         });
+
+        // REVALIDATE
+        revalidatePath("/");
+        revalidatePath("/products/" + review.productgroupId);
       });
     }
 

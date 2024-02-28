@@ -40,7 +40,6 @@ model Productgroup {
   features    Json?
   imageIds    String[]
   rating      Decimal  @default(0.0) @db.Decimal(2, 1)
-  ratingCnt   Int      @default(0)
 
   // RELATIONS
   reviews       Review[]

@@ -59,7 +59,6 @@ export async function DELETE(req: Request, { params }: Slugs) {
       where: { id },
       data: {
         rating: avgReview,
-        ratingCnt: totalReviews,
       },
     });
 

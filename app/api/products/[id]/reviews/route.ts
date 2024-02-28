@@ -57,13 +57,12 @@ export async function POST(req: Request, { params }: IdSlug) {
       (sum, review) => sum + review.rating,
       0
     );
-    const avgReview = totalRating / totalReviews;
+    const avgReview = totalReviews > 0 ? totalRating / totalReviews : 0;
 
     const updatedProduct = await prisma.productgroup.update({
       where: { id },
       data: {
         rating: avgReview,
-        ratingCnt: totalReviews,
       },
     });
 
