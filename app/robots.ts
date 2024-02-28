@@ -14,6 +14,7 @@ export default function robots(): MetadataRoute.Robots {
         "/order/completed",
         "/login",
         "/register",
+        "/api/",
       ],
     },
     sitemap: BASE_URL + "/sitemap.xml",
