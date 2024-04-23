@@ -8,7 +8,7 @@ import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
 import { getAllProductIds, getProduct } from "@/lib/services/product";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { Product } from "@/types/product";
-import { IdSlug } from "@/types/slugs/Id";
+import { IdSlug, IdSlugArr } from "@/types/slugs/Id";
 import {
   Breadcrumb,
   Table,
@@ -30,10 +30,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  { params }: IdSlug,
+  { params }: IdSlugArr,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const product: Product | undefined = await getProduct(parseInt(params.id));
+  const product: Product | undefined = await getProduct(parseInt(params.id[0]));
 
   return {
     title: product?.title,
@@ -59,8 +59,8 @@ export async function generateMetadata(
   };
 }
 
-const ProductPage = async ({ params }: IdSlug) => {
-  const product: Product | undefined = await getProduct(parseInt(params.id));
+const ProductPage = async ({ params }: IdSlugArr) => {
+  const product: Product | undefined = await getProduct(parseInt(params.id[0]));
   if (!product) redirect("/");
 
   // Create Features-Array

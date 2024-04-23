@@ -53,7 +53,7 @@ const CartProductItem = ({ data, className }: Props) => {
         <p className="text-md font-normal truncate">
           {data.productGroupId ? (
             <Link
-              href={"/products/" + data.productGroupId}
+              href={"/products/" + data.productGroupId + "/" + data.title}
               onClick={handleCloseModal}
             >
               <span title={data.title}>{data.title}</span>

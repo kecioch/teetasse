@@ -3,3 +3,9 @@ export interface IdSlug {
     id: string;
   };
 }
+
+export interface IdSlugArr {
+  params: {
+    id: string[];
+  };
+}
