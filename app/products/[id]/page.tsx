@@ -50,7 +50,7 @@ export async function generateMetadata(
       title: product?.title + " | Teetasse",
       description: product?.description,
       siteName: "Teetasse",
-      url: process.env.BASE_URL + "/products/" + product?.id,
+      url: process.env.BASE_URL + "products/" + product?.id,
       type: "website",
       images: product?.imageIds.map(
         (id) => `${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${id}`
@@ -82,7 +82,7 @@ const ProductPage = async ({ params }: IdSlug) => {
         : "",
     description: product.description,
     category: product.subcategory?.title,
-    url: process.env.BASE_URL + "/products/" + product?.id,
+    url: process.env.BASE_URL + "products/" + product?.id,
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: product.rating,
