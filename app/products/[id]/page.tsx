@@ -71,8 +71,41 @@ const ProductPage = async ({ params }: IdSlug) => {
     });
   });
 
+  // Create JSON-LD
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.title,
+    image:
+      product.imageIds.length >= 1
+        ? `${process.env.NEXT_PUBLIC_CLOUDINARY_PREFIX}/${product.imageIds[0]}`
+        : "",
+    description: product.description,
+    category: product.subcategory?.title,
+    url: process.env.BASE_URL + "/products/" + product?.id,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: product.rating,
+      reviewCount: product.ratingCnt,
+    },
+    offers: product.variants.map((variant) => {
+      return {
+        "@type": "Offer",
+        availability: "http://schema.org/InStock",
+        price: variant.price,
+        name: variant.title,
+        priceCurrency: "EUR",
+      };
+    }),
+  };
+
   return (
     <ContentContainer className="mt-12 mb-5 p-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <header className="mt-3">
         <Breadcrumb>
           <Breadcrumb.Item>
