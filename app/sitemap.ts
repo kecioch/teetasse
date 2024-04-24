@@ -26,12 +26,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = await prisma.productgroup.findMany();
   products.forEach((product) => {
     sitemap.push({
-      url: BASE_URL + "/products/" + product.id,
+      url: BASE_URL + "/products/" + product.id + "/" + product.title,
       priority: 0.6,
     });
   });
 
   // RETURN SITEMAP
-  //   console.log(sitemap);
   return sitemap;
 }
