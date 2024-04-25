@@ -38,6 +38,7 @@ const ImageCarousel = ({ imageUrls, className }: Props) => {
               onClick={clickHandler}
               icon={faChevronLeft}
               className="left-0"
+              ariaLabel="Vorheriges Bild"
             />
           );
         }}
@@ -48,6 +49,7 @@ const ImageCarousel = ({ imageUrls, className }: Props) => {
               onClick={clickHandler}
               icon={faChevronRight}
               className="right-0"
+              ariaLabel="Nächstes Bild"
             />
           );
         }}
@@ -64,6 +66,7 @@ const ImageCarousel = ({ imageUrls, className }: Props) => {
               fill
               style={{ objectFit: "contain" }}
               draggable={false}
+              priority={currImgIndex === index}
             />
           </div>
         ))}

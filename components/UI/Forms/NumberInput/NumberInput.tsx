@@ -34,6 +34,7 @@ const NumberInput = ({
         }`}
         onClick={() => onChange(value > 1 ? value - 1 : 1)}
         disabled={value <= 1}
+        aria-label="Anzahl verringern"
       >
         <svg
           className="w-3 h-3"
@@ -73,6 +74,7 @@ const NumberInput = ({
         }`}
         onClick={() => onChange(value < max ? value + 1 : value)}
         disabled={value >= max}
+        aria-label="Anzahl erhöhen"
       >
         <svg
           className="w-3 h-3"

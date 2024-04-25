@@ -58,13 +58,13 @@ const Footer = async ({ categories = [] }: Props) => {
             ))}
           </div>
           <div className="w-full md:w-auto flex flex-row md:flex-col justify-center items-center gap-7 md:gap-2">
-            <a href="#" target="_blank">
+            <a href="#" target="_blank" aria-label="Instagram">
               <FontAwesomeIcon icon={faInstagram} style={{ height: "40px" }} />
             </a>
-            <a href="#" target="_blank">
+            <a href="#" target="_blank" aria-label="Facebook">
               <FontAwesomeIcon icon={faFacebook} style={{ height: "35px" }} />
             </a>
-            <a href="#" target="_blank">
+            <a href="#" target="_blank" aria-label="Youtube">
               <FontAwesomeIcon icon={faYoutube} style={{ height: "35px" }} />
             </a>
           </div>
@@ -75,6 +75,7 @@ const Footer = async ({ categories = [] }: Props) => {
           className="flex flex-col w-52"
           href="https://github.com/kecioch/teetasse"
           target="_blank"
+          aria-label="Github"
         >
           <FontAwesomeIcon icon={faGithub} style={{ height: "20px" }} />
           <span className="font-light">developed by Kevin Cioch</span>

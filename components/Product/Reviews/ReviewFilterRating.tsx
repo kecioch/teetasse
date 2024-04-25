@@ -35,6 +35,7 @@ const ReviewFilterRating = ({
           checked={checked}
           onChange={onChange}
           className="text-green-600 focus:ring-green-500"
+          title={`Filter für alle ${label} Bewertungen auswählen`}
         />
       </div>
     </div>

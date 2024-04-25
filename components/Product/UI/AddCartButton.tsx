@@ -49,6 +49,7 @@ const AddCartButton = ({ className, variant, onClick }: Props) => {
         }`}
         onClick={handleClick}
         disabled={disabled}
+        aria-label="Zum Warenkorb hinzufügen"
       >
         In den Warenkorb
       </button>

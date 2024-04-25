@@ -76,6 +76,7 @@ const CartProductItem = ({ data, className }: Props) => {
         <button
           onClick={handleDeleteItem}
           className="absolute -top-1 right-2 text-gray-500 md:hover:text-red-900 transition-all ease-in"
+          aria-label="Produkt aus dem Warenkorb entfernen"
         >
           <FontAwesomeIcon icon={faTrash} />
         </button>

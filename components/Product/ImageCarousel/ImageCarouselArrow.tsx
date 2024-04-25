@@ -8,10 +8,11 @@ interface Props {
   show: boolean;
   className?: string;
   icon: IconProp;
+  ariaLabel?: string;
   onClick: () => void;
 }
 
-const ImageCarouselArrow = ({ show, className, icon, onClick }: Props) => {
+const ImageCarouselArrow = ({ show, className, icon, ariaLabel, onClick }: Props) => {
   return (
     <div
       className={`${
@@ -21,6 +22,7 @@ const ImageCarouselArrow = ({ show, className, icon, onClick }: Props) => {
       <button
         className="p-3 text-gray-700 hover:text-gray-400"
         onClick={onClick}
+        aria-label={ariaLabel}
       >
         <FontAwesomeIcon icon={icon} size="2xl" />
       </button>

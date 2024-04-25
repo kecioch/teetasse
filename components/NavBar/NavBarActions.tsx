@@ -42,14 +42,14 @@ const NavBarActions = () => {
 
   return (
     <div className="flex flex-row gap-4">
-      <button type="button" onClick={handleOpenSearch}>
+      <button type="button" onClick={handleOpenSearch} aria-label="Produktsuche">
         <FontAwesomeIcon icon={faSearch} style={{ height: "20px" }} />
       </button>
       <Dropdown
         label=""
         dismissOnClick={true}
         renderTrigger={() => (
-          <button type="button">
+          <button type="button" aria-label="Profil">
             <FontAwesomeIcon icon={faUser} style={{ height: "20px" }} />
           </button>
         )}
@@ -117,6 +117,7 @@ const NavBarActions = () => {
         type="button"
         className="relative "
         onClick={handleOpenCartDrawer}
+        aria-label="Warenkorb"
       >
         <FontAwesomeIcon icon={faCartShopping} style={{ height: "20px" }} />
         {cartCnt > 0 && (
@@ -128,7 +129,7 @@ const NavBarActions = () => {
           </>
         )}
       </button>
-      <button type="button" onClick={handleOpenMenu} className="ml-2">
+      <button type="button" onClick={handleOpenMenu} className="ml-2" aria-label="Menü">
         <FontAwesomeIcon icon={faBars} style={{ height: "20px" }} />
       </button>
     </div>
