@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { hasDuplicateProductTitle } from "@/lib/services/product";
+import { getProduct, hasDuplicateProductTitle } from "@/lib/services/product";
 import { authenticateServer } from "@/services/auth/authentication";
 import { deleteFile } from "@/services/cloudinary/delete";
 import { IdSlug } from "@/types/slugs/Id";
@@ -202,6 +202,26 @@ export async function DELETE(req: Request, { params }: IdSlug) {
     revalidatePath("/products/" + deletedProductgroup?.id);
 
     return NextResponse.json(deletedProductgroup);
+  } catch (e: any) {
+    let msg = "Fehler bei Serveranfrage";
+
+    if (e instanceof CustomError) {
+      msg = e.message;
+    }
+
+    return NextResponse.json({ status: 500, msg }, { status: 500 });
+  }
+}
+
+export async function GET(req: Request, { params }: IdSlug) {
+  try {
+    const id = parseInt(params.id);
+    if (!id || id === null)
+      throw new CustomError("ProduktId darf nicht leer sein");
+
+    const product = await getProduct(id);
+
+    return NextResponse.json(product);
   } catch (e: any) {
     let msg = "Fehler bei Serveranfrage";
 
