@@ -32,6 +32,7 @@ const AboutUsPage = () => {
           alt="Über uns Header"
           fill
           style={{ objectFit: "cover" }}
+          priority={true}
         />
       </div>
       <ContentContainer className="mt-7 mb-5 p-4">
