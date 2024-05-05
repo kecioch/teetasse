@@ -104,4 +104,4 @@ $ npm run build && npm run start
 - [Cloudinary](https://cloudinary.com/)
 
 # Licenses
- - [Tea icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/tea)
+ - [Tea icons created by Freepik - Flaticon](https://www.flaticon.com/free-icon/tea_2418214?related_id=2418214)
