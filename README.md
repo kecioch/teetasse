@@ -1,5 +1,5 @@
 <h1 align="center">
-  Teetasse 🍵
+  TEETASSE 🍵
   <p style="font-style: italic ">A Next.js E-Commerce Platform For Tea Enthusiasts</p>
 </h1>
 
@@ -104,4 +104,4 @@ $ npm run build && npm run start
 - [Cloudinary](https://cloudinary.com/)
 
 # Licenses
- - [Tea icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/tea)
+ - [Tea icons created by Freepik - Flaticon](https://www.flaticon.com/free-icon/tea_2418214?related_id=2418214)
