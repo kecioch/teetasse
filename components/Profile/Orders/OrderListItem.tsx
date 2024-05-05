@@ -32,7 +32,7 @@ const OrderListItem = ({ data, staffView = false, onEdit }: Props) => {
   );
 
   return (
-    <div className="p-4 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
+    <div className="p-4 bg-stone-50 shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)]">
       <div className="flex justify-between items-start gap-10">
         <div className="flex-1 flex items-center gap-3 flex-wrap">
           <p className="text-xl md:text-2xl font-semibold">
