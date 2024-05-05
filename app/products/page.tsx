@@ -53,19 +53,70 @@ const Products = async ({ searchParams }: { searchParams: SearchParams }) => {
     pageSize: pageSizeParam,
     search,
   };
-
+  console.log(filter);
   // FETCH DATA
-  const { products, page, totalPages, pageSize } = await getProducts(filter);
+  // const { products, page, totalPages, pageSize } = await getProducts(filter);
 
-  filter.page = page || 0;
-  filter.pageSize = pageSize || 0;
-  filter.totalPages = totalPages || 0;
+  // const res = await fetch(
+  //   `/api/products?${
+  //     filter.search ? "search=" + filter.search : ""
+  //   }&categoryId=${filter.categoryId}&subcategoryId=${
+  //     filter.subcategoryId
+  //   }&sortBy=${filter.sortBy}&page=${filter.page}&pageSize=${
+  //     filter.pageSize
+  //   }`
+  // )
+  var params = `${
+    filter.search != undefined ? `search=${filter.search}&` : ""
+  }`;
+  params = params.concat(
+    `${
+      filter.categoryId != undefined ? `categoryId=${filter.categoryId}&` : ""
+    }`
+  );
+  params = params.concat(
+    `${
+      filter.subcategoryId != undefined
+        ? `subcategoryId=${filter.subcategoryId}&`
+        : ""
+    }`
+  );
+  params = params.concat(
+    `${filter.sortBy != undefined ? `sortBy=${filter.sortBy}&` : ""}`
+  );
+  params = params.concat(
+    `${filter.page != undefined ? `page=${filter.page}&` : ""}`
+  );
+  params = params.concat(
+    `${filter.pageSize != undefined ? `pageSize=${filter.pageSize}` : ""}`
+  );
+
+  console.log("PARAMS", params);
+  const res = await fetch(`${process.env.BASE_URL}/api/products?${params}`, {
+    next: { revalidate: 3600 },
+  });
+  if (res.status !== 200) return;
+
+  const data = await res.json();
+
+  // {
+  //   const newProducts = res.data.products;
+  //   const page = res.data.page;
+  //   const pageSize = res.data.pageSize;
+  //   const totalPages = res.data.totalPages;
+  //   setFilter((prev) => ({ ...prev, page, pageSize, totalPages }));
+  //   setProducts(newProducts);
+  // });
+
+  filter.page = data.page || 0;
+  filter.pageSize = data.pageSize || 0;
+  filter.totalPages = data.totalPages || 0;
   const categories = await getCategories();
 
   return (
     <ContentContainer className="mt-12 mb-5 p-4 pt-10">
       <Catalog
-        initProducts={products}
+        initProducts={data.products}
         initFilter={filter}
         categories={categories}
       />
