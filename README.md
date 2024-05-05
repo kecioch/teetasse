@@ -102,3 +102,6 @@ $ npm run build && npm run start
 
 - [Stripe](https://stripe.com/)
 - [Cloudinary](https://cloudinary.com/)
+
+# Licenses
+ - [Tea icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/tea)
