@@ -1,6 +1,6 @@
 <h1 align="center">
   Teetasse 🍵
-  <p style="font-style: italic ">A Next.js E-commerce Platform for Tea Enthusiasts</p>
+  <p style="font-style: italic ">A Next.js E-Commerce Platform For Tea Enthusiasts</p>
 </h1>
 
 `Teetasse` is an e-commerce platform to sell different types of tea and equipment. As a central part of my bachelor thesis, this fullstack web application showcases the implementation of SEO optimization techniques and the integration and comparison of different rendering methods (CSR / SSR / SSG). Its core functionalities include the authentication of users, searching & filtering for products, implementation of the order & payment process and management of products & categories. 
