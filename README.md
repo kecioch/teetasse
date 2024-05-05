@@ -1,5 +1,5 @@
 <h1 align="center">
-  Teetasse 🍵
+  TEETASSE 🍵
   <p style="font-style: italic ">A Next.js E-Commerce Platform For Tea Enthusiasts</p>
 </h1>
 
