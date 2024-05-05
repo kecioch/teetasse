@@ -23,5 +23,5 @@ const send = async (mail: Mail) => {
 };
 
 export const sendMail = async (mail: Mail) => {
-  send(mail).catch(console.error);
+  await send(mail).catch(console.error);
 };

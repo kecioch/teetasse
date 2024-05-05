@@ -3,6 +3,7 @@ import { sendMail } from "./Nodemailer";
 import prisma from "@/lib/prisma";
 
 export const sendOrderConfirmation = async (orderId: number) => {
+  console.log("SEND ORDER CONFIRMATION")
   // FIND ORDER
   const order = await prisma.order.findFirst({
     where: { id: orderId },
@@ -13,9 +14,11 @@ export const sendOrderConfirmation = async (orderId: number) => {
     },
   });
   if (!order) return;
-
+  console.log("ORDER FOUND")
+  
   const to = order.user?.email || order.customerInfo?.email;
   if (!to) return;
+  console.log("TO FOUND")
 
   // Create mail information
   const orderIdHTML = `<h2>Bestell-Nr: #${order.id}</h2>`;
@@ -41,5 +44,6 @@ export const sendOrderConfirmation = async (orderId: number) => {
   };
 
   // Send mail to customer
+  console.log("SEND MAIL")
   await sendMail(mail);
 };
