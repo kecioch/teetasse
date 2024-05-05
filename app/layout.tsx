@@ -58,7 +58,7 @@ export default async function RootLayout({
 
   return (
     <html lang="de">
-      <body className={inter.className}>
+      <body className={`${inter.className} content`}>
         <AuthProvider>
           <div className="flex flex-col min-h-screen">
             <NavBar />
