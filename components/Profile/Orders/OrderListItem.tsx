@@ -1,7 +1,7 @@
 "use client";
 
 import { DeliveryStateUI, Order, PaymentStateUI } from "@/types/order";
-import { Button, Table, TableBody, TableRow } from "flowbite-react";
+import { Button } from "flowbite-react";
 import React, { useState } from "react";
 import OrderStateBadge from "./OrderStateBadge";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,7 +11,6 @@ import {
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import OrderItem from "@/components/Cart/Checkout/Payment/OrderItem";
-import { faDAndD } from "@fortawesome/free-brands-svg-icons/faDAndD";
 
 interface Props {
   data: Order;

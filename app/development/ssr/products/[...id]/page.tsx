@@ -5,10 +5,10 @@ import ReviewSection from "@/components/Product/Reviews/ReviewSection";
 import SubHeader from "@/components/Product/UI/SubHeader";
 import ContentContainer from "@/components/UI/Container/ContentContainer";
 import ImageSkeleton from "@/components/UI/Skeleton/ImageSkeleton";
-import { getAllProductIds, getProduct } from "@/lib/services/product";
+import { getProduct } from "@/lib/services/product";
 import { ReduxProvider } from "@/redux/ReduxProvider";
 import { Product } from "@/types/product";
-import { IdSlug, IdSlugArr } from "@/types/slugs/Id";
+import { IdSlugArr } from "@/types/slugs/Id";
 import {
   Breadcrumb,
   Table,

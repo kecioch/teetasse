@@ -19,7 +19,6 @@ import {
   TableRow,
 } from "flowbite-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 const ProductPage = ({ params }: IdSlugArr) => {
