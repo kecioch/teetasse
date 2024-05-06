@@ -69,28 +69,28 @@ const Home = async () => {
           </h2>
           <section className="px-5 flex flex-row justify-center gap-7 flex-wrap">
             <DiscoverLinkItem
-              src="/static/home/teesorten/schwarze-tees.jpg"
-              href="/products?categoryId=45&subcategoryId=24"
+              src="/static/home/teesorten/schwarztee.png"
+              href="/products?categoryId=1&subcategoryId=1"
               description="Schwarztee"
             />
             <DiscoverLinkItem
-              src="/static/home/teesorten/gruene-tees.jpg"
-              href="/products?categoryId=45&subcategoryId=26"
+              src="/static/home/teesorten/gruentee.png"
+              href="/products?categoryId=1&subcategoryId=2"
               description="Grüntee"
             />
             <DiscoverLinkItem
-              src="/static/home/teesorten/fruechtetees.jpg"
-              href="/products?categoryId=45&subcategoryId=34"
+              src="/static/home/teesorten/fruechtetee.png"
+              href="/products?categoryId=1&subcategoryId=3"
               description="Früchtetee"
             />
             <DiscoverLinkItem
-              src="/static/home/teesorten/bio-kraeutertee.jpg"
-              href="/products?categoryId=45&subcategoryId=45"
+              src="/static/home/teesorten/bio-kraeutertee.png"
+              href="/products?categoryId=1&subcategoryId=4"
               description="Bio-Kräutertee"
             />
           </section>
           <div className="flex justify-center">
-            <Link href="/products?categoryId=45" className="mt-10 mx-4">
+            <Link href="/products?categoryId=1" className="mt-10 mx-4">
               <ButtonOutline className="py-3 px-20">
                 Alle Teesorten
               </ButtonOutline>
@@ -111,23 +111,23 @@ const Home = async () => {
           </h2>
           <section className="px-5 flex flex-row justify-center gap-7 flex-wrap">
             <DiscoverLinkItem
-              src="/static/home/zubehoer/tassen.jpeg"
-              href="/products?categoryId=49&subcategoryId=27"
+              src="/static/home/zubehoer/tassen.png"
+              href="/products?categoryId=2&subcategoryId=5"
               description="Tassen"
             />
             <DiscoverLinkItem
-              src="/static/home/zubehoer/kannen.jpg"
-              href="/products?categoryId=49&subcategoryId=28"
+              src="/static/home/zubehoer/kannen.png"
+              href="/products?categoryId=2&subcategoryId=7"
               description="Kannen"
             />
             <DiscoverLinkItem
-              src="/static/home/zubehoer/dosen.jpg"
-              href="/products?categoryId=49&subcategoryId=46"
+              src="/static/home/zubehoer/dosen.png"
+              href="/products?categoryId=2&subcategoryId=6"
               description="Dosen"
             />
           </section>
           <div className="flex justify-center">
-            <Link href="/products?categoryId=49" className="mt-10 mx-4">
+            <Link href="/products?categoryId=2" className="mt-10 mx-4">
               <ButtonOutline className="py-3 px-20">
                 Alle Zubehör Kategorien
               </ButtonOutline>
